@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block left_sidebar %}
+<p id="signup_text1" class="signup_text">Вход для клиентов...</p>
+<p id="signup_text2" class="signup_text">Регистрация</p>
+<form id="signup">
+	<input type="text" value="Логин" id="login" />
+	<input type="password" value="" id="password" />
+	<input id="submit" value="OK" type="submit"/>
+</form>
+{% endblock%}
+
+{% block main %}
+
+<h1>Activation needed</h1>
+An activation letter was sent to your e-mail.
+
+{% endblock %}

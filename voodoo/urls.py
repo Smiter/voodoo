@@ -1,18 +1,29 @@
 from django.conf.urls import patterns, include, url
-from mainsite.views import index
+from mainsite.views import *
 # Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.contrib import admin
+from registration.views import register
+from mainsite.forms import UserRegistrationForm
+from django.views.generic.simple import direct_to_template
+from django.contrib.auth import views as auth_views
+import regbackend
 
-urlpatterns = patterns('', ('^index/$',index),
-	# url(r'^admin/', include(admin.site.urls)),
-    # Examples:
-    # url(r'^$', 'voodoo.views.home', name='home'),
-    # url(r'^voodoo/', include('voodoo.foo.urls')),
+admin.autodiscover()
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+urlpatterns = patterns('',  ('^signup/$', signup),
 
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
-)
+                       url(r'^index/$',
+                           auth_views.login,
+                           {'template_name': 'index.html'},
+                           name='auth_login'),
+
+
+                       url(r'^accounts/register/$',
+                           register,
+                           {'backend': 'registration.backends.default.DefaultBackend',
+                            'form_class': UserRegistrationForm
+                            },
+                           name='registration_register'),
+                       url(r'^admin/', include(admin.site.urls)),
+                       (r'^accounts/', include('registration.backends.default.urls')),
+                       )
