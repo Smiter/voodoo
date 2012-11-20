@@ -5,6 +5,19 @@
   <title>Тут имя сайта</title>
   <meta name="application-name" content="Тут имя сайта" />
   <meta http-equiv="X-UA-Compatible" content="IE=8" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="http://malsup.github.com/jquery.form.js"></script> 
+
+     <script> 
+        // wait for the DOM to be loaded 
+        $(document).ready(function() { 
+            // bind 'myForm' and provide a simple callback function 
+            $('#myForm').ajaxForm(function(e) { 
+            	console.log(e)
+                // alert("Thank you for your comment!"); 
+            }); 
+        }); 
+    </script> 
 
   <style type="text/css">
 
@@ -275,6 +288,7 @@
 	    		</div>
 	    		<div id="middle">
 	    				<form id="search">
+	    					{% csrf_token %}
 		    				<input type="text" id="search_box" />
 		    				<input id="search_submit" value = "OK" type="submit" id="search_box_submit"/><br>
 		    				<a href="#">Пример поиска: 40202-JG01A</a>
@@ -294,7 +308,52 @@
             <div id="container">
             	
             	<div id="left_sidebar">
-            		{% block left_sidebar %} {% endblock %}
+            		<p>Login</p>
+            		{% if request.user.is_authenticated %}
+            		My name is, ({{ request.user.username }}).
+            		<br>
+            		<a href="{% url auth_logout %}">Logout</a>
+
+            		<div id="menu">
+            			<ul>
+            				<li>Пункт меню 1</li>
+            				<li>Пункт меню 2</li>
+            				<li>Пункт меню 3</li>
+            				<li>Пункт меню 4</li>
+            				<li>Пункт меню 5</li>
+            			</ul>
+            		</div>
+
+            		{% else %}
+
+            		{% if errors %}
+            		       <ul>
+            		           {% for error in errors %}
+            		           <li>{{ error }}</li>
+            		           {% endfor %}
+            		       </ul>
+            		{% endif %}
+            		{{request.path}}
+            		<form id="myForm" method="post" action="/login/" name="login">
+            			  {% csrf_token %}
+            		      <p><label for="id_username">username:</label> <input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" /></p>
+            		      <p><label for="id_password">password:</label> <input type="password" name="password" id="id_password" /></p>
+            		      <input type="hidden" name="next" value="{{request.path}}" />
+            		      <input type="submit" value="Log In" />
+            		</form>
+
+            		<ul>
+            		    <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
+            		    <li><a href="{% url registration_register %}">Регистрация</a></li>
+            		</ul> 
+            		{% endif %}
+
+
+
+            	<!-- 	{% block left_sidebar %} 
+
+
+            		{% endblock %} -->
             	</div>
 
             	<div id="right_sidebar">

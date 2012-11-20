@@ -10,12 +10,13 @@ import regbackend
 
 admin.autodiscover()
 
-urlpatterns = patterns('',  ('^signup/$', signup),
-
-                       url(r'^index/$',
-                           auth_views.login,
-                           {'template_name': 'index.html'},
-                           name='auth_login'),
+urlpatterns = patterns('', ('^signup/$', signup),
+                      ('^index/$', index),
+                      ('^login/$', login),
+                       # url(r'^index/$',
+                       #     auth_views.login,
+                       #     {'template_name': 'index.html'},
+                       #     name='auth_login'),
 
 
                        url(r'^accounts/register/$',

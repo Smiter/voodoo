@@ -2,8 +2,8 @@
 
 {% block left_sidebar %}
 
-<p>Login</p>
-{% if user.is_authenticated %}
+<!-- <p>Login</p> -->
+<!-- {% if user.is_authenticated %}
 My name is, ({{ user.username }}). My city is {{request.user.get_profile.city}} 
 <br>
 <a href="{% url auth_logout %}">Logout</a>
@@ -18,7 +18,7 @@ My name is, ({{ user.username }}). My city is {{request.user.get_profile.city}}
 	</ul>
 </div>
 
-{% else %}
+{% else %} -->
 
 <!-- <form id="register">
 		<a href="/signup"><span>Регистрация</span></a><br>
@@ -28,7 +28,7 @@ My name is, ({{ user.username }}). My city is {{request.user.get_profile.city}}
 	<input id="submit" value="OK" type="submit"/>
 </form> -->
 
-<form method="post" action="{% url auth_login %}" name="login">
+<!-- <form method="post" action="/login/" name="login">
       {% csrf_token %}
       <p><label for="id_username">username:</label> <input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" /></p>
       <p><label for="id_password">password:</label> <input type="password" name="password" id="id_password" /></p>
@@ -64,13 +64,11 @@ My name is, ({{ user.username }}). My city is {{request.user.get_profile.city}}
 <input type="submit" value="Вход" / class="clearfix">
 </form>
    
-<script type="text/javascript">
-document.getElementById('id_username').focus()
-</script>
+
 
  <br/><br/>
 {% endif %}
-
+ -->
 
 {% endblock%}
 
