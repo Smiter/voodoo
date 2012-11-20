@@ -11,12 +11,17 @@
      <script> 
         // wait for the DOM to be loaded 
         $(document).ready(function() { 
-            // bind 'myForm' and provide a simple callback function 
             $('#myForm').ajaxForm(function(e) { 
-            	console.log(e)
-                // alert("Thank you for your comment!"); 
-            }); 
-        }); 
+            	$("#username_error").text(e.username_error)
+            	$("#password_error").text(e.password_error)
+            	if (e.user){
+            		location.reload();
+            	}
+            	else{
+            		$("#login_msg").text(e.msg)
+            	}
+        	}); 
+        })
     </script> 
 
   <style type="text/css">
@@ -192,6 +197,20 @@
 	    	width: 140px;
 	    	margin: 5px 5px 5px 5px;
 	    }
+
+	    #username_error {
+	    	color: red;
+	    }
+
+	    #password_error {
+	    	color: red;
+	    }
+
+	    #login_msg {
+	    	color: red;
+	    	margin-left: 100px;
+	    	margin-bottom: 10px;
+	    }
 	    #container #right_sidebar {
 	    	float: right;
 	    	overflow: hidden;
@@ -309,8 +328,9 @@
             	
             	<div id="left_sidebar">
             		<p>Login</p>
+            		<p id="login_msg"></p>
             		{% if request.user.is_authenticated %}
-            		My name is, ({{ request.user.username }}).
+            		<p id="login_message">Добро пожаловать, {{ request.user.username }}.</p>
             		<br>
             		<a href="{% url auth_logout %}">Logout</a>
 
@@ -333,11 +353,10 @@
             		           {% endfor %}
             		       </ul>
             		{% endif %}
-            		{{request.path}}
             		<form id="myForm" method="post" action="/login/" name="login">
             			  {% csrf_token %}
-            		      <p><label for="id_username">username:</label> <input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" /></p>
-            		      <p><label for="id_password">password:</label> <input type="password" name="password" id="id_password" /></p>
+            		      <p><label for="id_username">username:</label> <input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" /><label id="username_error"></label></p>
+            		      <p><label for="id_password">password:</label> <input type="password" name="password" id="id_password" /><label id="password_error"></label></p>
             		      <input type="hidden" name="next" value="{{request.path}}" />
             		      <input type="submit" value="Log In" />
             		</form>

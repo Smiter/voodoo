@@ -69,6 +69,8 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -131,7 +133,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_countries',
     'voodoo.mainsite',
     'registration',
     'django.contrib.admin',
