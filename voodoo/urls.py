@@ -20,7 +20,7 @@ urlpatterns = patterns('', ('^signup/$', signup),
                        #     {'template_name': 'index.html'},
                        #     name='auth_login'),
 
-
+                      # url(r'^captcha/', include('captcha.urls')),
                        url(r'^accounts/register/$',
                            register,
                            {'backend': 'registration.backends.default.DefaultBackend',

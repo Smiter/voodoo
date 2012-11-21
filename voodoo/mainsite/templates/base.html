@@ -355,9 +355,30 @@
             		{% endif %}
             		<form id="myForm" method="post" action="/login/" name="login">
             			  {% csrf_token %}
-            		      <p><label for="id_username">username:</label> <input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" /><label id="username_error"></label></p>
-            		      <p><label for="id_password">password:</label> <input type="password" name="password" id="id_password" /><label id="password_error"></label></p>
-            		      <input type="hidden" name="next" value="{{request.path}}" />
+            			  <table>
+            			  		<tr>
+            			  			<td>
+            			  				<label for="id_username">username:</label>
+            			  			</td>
+            			  			<td>
+            			  				<input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" />
+            			  			</td>
+            			  			<td>
+            			  				<label id="username_error"></label>
+            			  			</td>
+            			  		</tr>
+            			  		<tr>
+            			  			<td>
+            			  				<label for="id_password">password: </label>
+            			  			</td>
+            			  			<td>
+            			  				<input type="password" name="password" id="id_password" />
+            			  			</td>
+            			  			<td>
+            			  				<label id="password_error"></label>
+            			  			</td>
+            			  		</tr>
+            			  </table>            		    
             		      <input type="submit" value="Log In" />
             		</form>
 
@@ -366,9 +387,6 @@
             		    <li><a href="{% url registration_register %}">Регистрация</a></li>
             		</ul> 
             		{% endif %}
-
-
-
             	<!-- 	{% block left_sidebar %} 
 
 
