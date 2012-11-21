@@ -332,7 +332,7 @@
             		{% if request.user.is_authenticated %}
             		<p id="login_message">Добро пожаловать, {{ request.user.username }}.</p>
             		<br>
-            		<a href="{% url auth_logout %}">Logout</a>
+            		<a href="{% url auth_logout %}?next={{request.path}}">Logout</a>
 
             		<div id="menu">
             			<ul>

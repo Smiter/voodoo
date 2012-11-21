@@ -1,3 +1,5 @@
+#coding=utf-8
+
 from django.conf.urls import patterns, include, url
 from mainsite.views import *
 # Uncomment the next two lines to enable the admin:
@@ -25,6 +27,7 @@ urlpatterns = patterns('', ('^signup/$', signup),
                             'form_class': UserRegistrationForm
                             },
                            name='registration_register'),
+                       # url(r'^logout/(?P<next_page>.*)/$', 'django.contrib.auth.views.logout', name='auth_logout_next'),
                        url(r'^admin/', include(admin.site.urls)),
                        (r'^accounts/', include('registration.backends.default.urls')),
                        )

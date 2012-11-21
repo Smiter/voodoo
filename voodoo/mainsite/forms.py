@@ -7,12 +7,13 @@ from django.forms import *
 from registration.forms import RegistrationForm
 
 class UserRegistrationForm(RegistrationForm):
+    required_css_class = 'required'
     fio = CharField(label="Ф.И.О")
     client_type = ChoiceField(label="Тип клиента",widget=Select(),
                               choices=([
                                        ('1', 'выберите из списка'),
-                             ('2', 'Автосервис/СТО'),
-                                  ('3', 'Автопарк'),
+                             ('Автосервис/СТО', 'Автосервис/СТО'),
+                                  ('Автопарк', 'Автопарк'),
                                   ('4', 'Автомагазин'),
                                   ('5', 'Автосалон'),
                                   ('6', 'Автоэксперт страховщик'),

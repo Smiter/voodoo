@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 
-{% block left_sidebar %}
-<p id="signup_text1" class="signup_text">Вход для клиентов...</p>
-<p id="signup_text2" class="signup_text">Регистрация</p>
-<form id="signup">
-	<input type="text" value="Логин" id="login" />
-	<input type="password" value="" id="password" />
-	<input id="submit" value="OK" type="submit"/>
-</form>
-{% endblock%}
-
 {% block main %}
 <p>Добро пожаловать в наш интернет магазин в котором вы сможете приобрести любые запчасти на Ваше авто по самым доступным ценам.</p>
 <p>Для удобного пользования нашим сайтом Вам необходимо заполнить регистрационную форму размещенную ниже.</p>
@@ -19,19 +9,9 @@
 <p>Пароль не должен быть равным логину и его длина должна быть не менее 6 символов.</p>
 <p style="text-align:center; font-weight:bold;">Форма регистрации</p>
 <form method="post" action="">
-<!-- <dl class="register">
-{% for field in form %}
-    <dt>{{ field.label_tag }}</dt>
-    <dd class="clearfix">{{ field }}
-    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
-    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
-    </dd>
-{% endfor %}
-</dl> -->
 <table>
 	{{form.as_table}}
 </table>
-
 <input type="submit" value="Зарегистрироваться" / class="clearfix">
 </form>
 {% endblock %}

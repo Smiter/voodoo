@@ -24,10 +24,10 @@ def index(request):
 def signup(request):
     if request.method == 'POST':
         form = SignupForm()
-        return render_to_response('signup.html', {'form': form})
+        return direct_to_template(request,'signup.html', {'form': form})
     else:
         form = SignupForm()
-        return render_to_response('signup.html', {'form': form})
+        return direct_to_template(request,'signup.html', {'form': form})
 
 
 def login(request):
