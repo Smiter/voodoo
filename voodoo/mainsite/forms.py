@@ -5,7 +5,7 @@ from django.forms import *
 from django.core import validators
 import logging
 import re
-# from captcha.fields import CaptchaField
+from captcha.fields import CaptchaField
 from registration.forms import RegistrationForm
 
 
@@ -14,6 +14,9 @@ def check_pass_on_numbers(text):
 
 
 class UserRegistrationForm(RegistrationForm):
+    username = CharField(label='Логин')
+    password1 = CharField(label="Пароль", widget=PasswordInput())
+    password2 = CharField(label="Пароль(ещё раз)", widget=PasswordInput())
     required_css_class = 'required'
     fio = CharField(label="Ф.И.О")
     client_type = ChoiceField(label="Тип клиента", widget=Select(),
@@ -27,6 +30,7 @@ class UserRegistrationForm(RegistrationForm):
                                   ('Частный клиент', 'Частный клиент'), ]),
                               initial='выберите из списка',
                               required = False)
+    email = EmailField(label="E-mail")
     country = CharField(label="Страна", initial='Украина')
     city = CharField(label="Город")
     phiz_adress = CharField(label="Физический адресс")
@@ -42,7 +46,18 @@ class UserRegistrationForm(RegistrationForm):
                                   ]),
                                   initial='1', required = False)
     carrier_select = CharField(label="Ваш перевозчик", required=False)
-    # captcha = CaptchaField()
+    captcha = CaptchaField()
+
+    def clean(self):
+        password1 = self.cleaned_data.get('password1',None)
+        password2 = self.cleaned_data.get('password2',None)
+        name = self.cleaned_data.get('username', None)
+        if password1 and name and (password1 == name):
+            raise forms.ValidationError('Пароль должен отличатся от имени.')
+        if password1 and password2 and (password1 != password2):
+            raise forms.ValidationError('Пароли не совпадают.')
+            
+        return self.cleaned_data  
 
     def clean_username(self):
         name = self.cleaned_data['username']
@@ -55,10 +70,6 @@ class UserRegistrationForm(RegistrationForm):
 
     def clean_password1(self):
         password = self.cleaned_data['password1']
-        name = self.cleaned_data['username']
-
-        if password == name:
-            raise forms.ValidationError('Пароль должен отличатся от имени.')
 
         if len(password) < 6:
             raise forms.ValidationError('Должно быть минимум 6 символа.')

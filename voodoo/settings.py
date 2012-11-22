@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'voodoo.mainsite',
     'registration',
     'django.contrib.admin',
+    'captcha',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
