@@ -1,0 +1,235 @@
+/* global styles*/
+
+  html {
+    height: 100%;
+  }
+  body{
+    min-height: 100%;
+  }
+  div {
+    border: 1px solid black;
+  }
+
+  a{
+    text-decoration: underline;
+    font-size: 12px;
+  }
+
+  p{
+    font-size: 12px;
+  }
+
+  .float-left /* Or whatever name you like */ {
+      float: left;
+  }
+   
+  .float-right /* Or whatever name you like */ {
+      float: right;
+  }
+
+  .hide {
+      display: none;
+  }
+   
+  .show {
+      display: block;
+  }
+
+  .content {
+      font: 1em/1.4 Segoe, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+   
+  .title {
+      font: 1.7em/1.2 Baskerville, "Baskerville old face", "Hoefler Text", Garamond, "Times New Roman", serif;
+  }
+
+  *, *:before, *:after {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+  }
+
+  pre {
+      white-space: pre-wrap;       /* Chrome & Safari */
+      white-space: -moz-pre-wrap;  /* Mozilla since 1999 */
+      white-space: -pre-wrap;      /* Opera 4-6 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  }
+
+  #wrap {
+    height: 100%;
+    width: 1024px;
+    margin: 0 auto;
+  }
+
+  #header {
+    height: 100px;
+    /*overflow: hidden;*/
+  }
+
+  #header #left{
+    float:left;
+    /*height: 100px;*/
+    min-width: 250px;
+    overflow: hidden;
+    margin-top: 40px;
+  }
+  #header #left a {
+    display: block;
+    text-align: center;
+  }
+  #header #middle{
+    /*height: 100px;*/
+    overflow: hidden;
+  }
+  #header #middle #search{
+    float: left;
+    overflow: hidden;
+    padding: 30px 20px 20px 20px;
+  }
+
+  #header #middle #search a{
+    font-size: 11px;
+  }
+
+  #header #middle #contacts{
+    overflow: hidden;
+    padding: 10px 0 0 0px;
+  }
+  #header #middle #search #search_submit{
+    width: 50px;
+  }
+  #header #right  {
+    /*height: 100px;*/
+    width: 300px;
+    overflow: hidden;
+    /*word-wrap: break-word;*/
+    float: right;
+  }
+  /*#container {
+    width: 100%;
+    height: 100%;
+  }*/
+  #container #left_sidebar {
+    float: left;
+    overflow: hidden;
+    /*min-width: 200px;*/
+  }
+  #container #left_sidebar #menu {
+    padding: 10px 10px 10px 10px;
+  }
+  #container #left_sidebar #register #submit {
+    width: 30px;
+  }
+
+  #left_sidebar #register{
+    padding-top: 30px;
+  }
+  #left_sidebar #register a {
+    margin-left: 70px;
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  #left_sidebar #register #login {
+    width: 170px;
+    margin: 5px 5px 5px 5px;
+  }
+  #left_sidebar #register #password {
+    width: 140px;
+    margin: 5px 5px 5px 5px;
+  }
+
+  #username_error {
+    color: red;
+  }
+
+  #password_error {
+    color: red;
+  }
+
+  #login_msg {
+    color: red;
+    margin-left: 100px;
+    margin-bottom: 10px;
+  }
+  #container #right_sidebar {
+    float: right;
+    overflow: hidden;
+    width: 200px;
+  }
+  #container #main {
+    overflow: hidden;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #container #right_sidebar #right_top {
+    height: 200px;
+    overflow: hidden;
+    padding: 5px 5px 5px 5px;
+  }
+
+  #container #right_sidebar #right_bottom {
+    height: 200px;
+    overflow: hidden;
+    padding: 5px 5px 5px 5px;
+  }
+
+
+  /* Signup */
+  #signup {
+    clear: both;
+    overflow: hidden;
+    border: 1px solid #AAAAAA;
+    margin: 2px 2px;
+    border-radius: 6px;
+  }
+  #signup #login {
+    float: left;
+    width: 100px;
+    margin-left: 20px;
+  }
+  #signup #password {
+    width: 100px;
+    margin-left: 20px;
+  }
+  #signup #submit {
+    margin-right: 20px;
+  }
+  #signup input {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  #signup_text1 {
+    border-right: 1px solid black;
+  }
+
+  .signup_text {
+    float: left;
+    padding-left: 5px;
+    padding-right:5px;
+    margin: 5px 5px;
+  }
+
+  .required label:after { color:red;content: '*'; }
+
+  #registration_form #submit {
+    margin-top:15px;
+    float: right;
+  }
+
+  ul.errorlist {
+    margin: 0;
+    padding:0;
+  }
+  .errorlist li {
+    background-color: red;
+    color: white;
+    display: block;
+    font-size: 10px;
+    margin: 0 0 3px;
+    padding: 4px 5px;
+    width: 240px;
+  }
