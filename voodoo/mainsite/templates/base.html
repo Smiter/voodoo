@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   	<meta charset="utf-8" />
   	<title>Тут имя сайта</title>
@@ -11,6 +11,9 @@
 {% block extrahead %}{{ block.super }}
 <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
 <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
+<script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
+
+
 <script type="text/javascript" src="/admin/jsi18n/"></script>
 <script type="text/javascript" src="/static/admin/js/core.js"></script>
 {{ form.media }}
@@ -66,7 +69,7 @@
             		{% if request.user.is_authenticated %}
             		<p id="login_message">Добро пожаловать, {{ request.user.username }}.</p>
             		<br>
-            		<a href="{% url auth_logout %}?next={{request.path}}">Logout</a>
+            		<a href="{% url auth_logout %}?next=/index">Logout</a>
 
             		<div id="menu">
             			<ul>

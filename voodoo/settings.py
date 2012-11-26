@@ -28,7 +28,8 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us
+LANGUAGE_CODE = 'ru-RU'
 
 SITE_ID = 1
 
@@ -59,6 +60,8 @@ MEDIA_URL = ''
 STATIC_ROOT = ''
 
 admin_media_prefix = '/static/admin/'
+ADMIN_MEDIA_PREFIX = '/static/admin/'
+
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -110,6 +113,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
