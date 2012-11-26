@@ -129,3 +129,9 @@ class UserRegistrationForm(forms.Form):
         if not re.match(u'^[a-zA-Zа-яА-Я ]+$', contacts):
             raise forms.ValidationError('Поле должно содержать латиницу или кирилицу без цифр')
         return contacts
+
+from django.contrib.admin.widgets import AdminDateWidget
+
+
+class NoticeOfPaymentForm(forms.Form):
+    date =  DateField(widget = AdminDateWidget)

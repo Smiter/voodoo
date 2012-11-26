@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from forms import NoticeOfPaymentForm
 import json
 
 
@@ -39,3 +42,11 @@ def login(request):
                             response_data['password_error'] = field.html_name + ' is requered.'
 
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+
+def notice_of_payment(request):
+    form = NoticeOfPaymentForm
+    return render_to_response('notice_of_payment.html',
+                               {'form': form},
+                              context_instance=RequestContext(request))
+    # return direct_to_template(request, 'notice_of_payment.html',{'form',form})

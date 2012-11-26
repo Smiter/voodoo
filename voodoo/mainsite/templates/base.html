@@ -7,7 +7,14 @@
   	<meta http-equiv="X-UA-Compatible" content="IE=8" />
   	<LINK href="{{STATIC_URL}}css/reset.css" rel="stylesheet" type="text/css"> 
   	<LINK href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
-
+    {% load i18n admin_modify adminmedia %}
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+{{ form.media }}
+{% endblock %}
   	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="http://malsup.github.com/jquery.form.js"></script> 
 
@@ -63,7 +70,7 @@
 
             		<div id="menu">
             			<ul>
-            				<li>Пункт меню 1</li>
+            				<li><a href="/notice_of_payment">Уведомить об оплате</a></li>
             				<li>Пункт меню 2</li>
             				<li>Пункт меню 3</li>
             				<li>Пункт меню 4</li>
