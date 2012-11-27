@@ -1,4 +1,15 @@
 # Django settings for voodoo project.
+# -*- coding:utf-8 -*-
+
+
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('..'))
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+at_project_root = lambda *args: os.path.join(PROJECT_ROOT, *args)
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -59,7 +70,6 @@ MEDIA_URL = ''
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = ''
 
-admin_media_prefix = '/static/admin/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 
@@ -132,6 +142,18 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+
+
+# прописываем dashboards для нашего экземпляра AdminSite
+ADMIN_TOOLS_INDEX_DASHBOARD = {
+    'russian_admin.admin.site': 'voodoo.mainsite.dashboard.CustomIndexDashboard',
+}
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = {
+    'russian_admin.admin.site': 'voodoo.mainsite.dashboard.CustomAppIndexDashboard',
+}
+
+
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,8 +163,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'voodoo.mainsite',
     'registration',
-    'django.contrib.admin',
+    
     'captcha',
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
+    'russian_admin',
+    'pymorphy',
+    'django.contrib.admin',
+    'voodoo.custom_admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -177,3 +207,8 @@ LOGGING = {
         },
     }
 }
+
+
+
+PYMORPHY_DICTS = {'ru': { 'dir': at_project_root('files', 'dicts')}}
+

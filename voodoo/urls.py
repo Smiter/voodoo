@@ -2,11 +2,11 @@
 
 from django.conf.urls import patterns, include, url
 from mainsite.views import *
-from django.contrib import admin
+from russian_admin import admin
 admin.autodiscover()
-from registration.models import RegistrationProfile
-admin.site.unregister(RegistrationProfile)
-
+# from registration.models import RegistrationProfile
+# admin.site.unregister(RegistrationProfile)
+# from django.contrib import admin
 
 urlpatterns = patterns('',
     ('^index/$', index),
@@ -15,5 +15,6 @@ urlpatterns = patterns('',
     ('^notice_of_payment/$', notice_of_payment),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin-tools/', include('admin_tools.urls')),
     (r'^accounts/', include('voodoo.mainsite.RegistrationBackend.urls')),
 )
