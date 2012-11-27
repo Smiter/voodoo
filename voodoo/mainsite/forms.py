@@ -4,6 +4,7 @@ from django import forms
 from django.forms import *
 import re
 from captcha.fields import CaptchaField
+from models import *
 
 
 def check_pass_on_numbers(text):
@@ -133,5 +134,15 @@ class UserRegistrationForm(forms.Form):
 from django.contrib.admin.widgets import AdminDateWidget
 
 
-class NoticeOfPaymentForm(forms.Form):
-    date =  DateField(widget = AdminDateWidget)
+class NoticeOfPaymentForm(ModelForm):
+    class Meta:
+        model = NoticeOfPayment
+        fields = ('date', 'summa', 'valuta', 'type_of_payment', 'additional_info')
+        widgets = {
+            'date': AdminDateWidget(attrs={'readonly': True}),
+            'additional_info': Textarea(
+            attrs={'style': 'max-height:60px;min-height:60px;'
+                  + 'max-width:400px;min-width:400px'}
+        ),
+        }
+

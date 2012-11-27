@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import *
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.views.generic.simple import direct_to_template
@@ -7,6 +7,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import NoticeOfPaymentForm
 import json
+from django.shortcuts import redirect
+import logging
 
 
 def index(request):
@@ -45,8 +47,21 @@ def login(request):
 
 
 def notice_of_payment(request):
-    form = NoticeOfPaymentForm
+    success = False
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            form = NoticeOfPaymentForm(request.POST)
+            if form.is_valid():
+                success = True
+                # form.save()
+                notice = form.save(commit=False)
+                notice.user = request.user
+                notice.save()
+
+                form = NoticeOfPaymentForm()
+    else:
+        form = NoticeOfPaymentForm()
+
     return render_to_response('notice_of_payment.html',
-                               {'form': form},
-                              context_instance=RequestContext(request))
-    # return direct_to_template(request, 'notice_of_payment.html',{'form',form})
+                               {'form': form, 'success': success}, context_instance=RequestContext(request))
+

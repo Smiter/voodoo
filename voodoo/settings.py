@@ -146,10 +146,10 @@ TEMPLATE_DIRS = (
 
 # прописываем dashboards для нашего экземпляра AdminSite
 ADMIN_TOOLS_INDEX_DASHBOARD = {
-    'russian_admin.admin.site': 'voodoo.mainsite.dashboard.CustomIndexDashboard',
+    'russian_admin.admin.site': 'voodoo.custom_admin.dashboard.CustomIndexDashboard',
 }
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = {
-    'russian_admin.admin.site': 'voodoo.mainsite.dashboard.CustomAppIndexDashboard',
+    'russian_admin.admin.site': 'voodoo.custom_admin.dashboard.CustomAppIndexDashboard',
 }
 
 

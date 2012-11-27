@@ -11,7 +11,7 @@ And to activate the app index dashboard::
 """
 
 from django.utils.translation import ugettext_lazy as _
-from russian_admin.dashboard import modules, Dashboard, AppIndexDashboard
+from admin_tools.dashboard import modules, Dashboard, AppIndexDashboard
 
 class CustomIndexDashboard(Dashboard):
     """
