@@ -81,3 +81,25 @@ class NoticeOfPayment(models.Model):
         verbose_name = "NoticeOfPayment"
         verbose_name_plural = "NoticeOfPayment"
 
+
+CARRIER_CHOICES = (
+            ('Гюнсел', 'Гюнсел'),
+            ('САТ', 'САТ'),
+            ('Новая почта', 'Новая почта'),
+)
+
+
+class OrderDispatch(models.Model):
+    user = models.ForeignKey(User, unique=False)
+    carrier = models.CharField(max_length=30, choices=CARRIER_CHOICES, verbose_name='Перевозчик')
+    summa = models.CharField(max_length=50, verbose_name='Сумма')
+    valuta = models.CharField(max_length=30, choices=VALUTA_CHOICES, verbose_name='Валюта')
+    type_of_payment = models.CharField(max_length=30, choices=TYPE_OF_PAYMENT_CHOICES, verbose_name='Тип платежа')
+    additional_info = models.CharField(max_length=500, verbose_name='Информация об оплате')
+
+    def __unicode__(self):
+        return "%s" % self.user
+
+    class Meta:
+        verbose_name = "OrderDispatch"
+        verbose_name_plural = "OrderDispatch"

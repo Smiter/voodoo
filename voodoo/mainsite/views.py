@@ -65,3 +65,21 @@ def notice_of_payment(request):
     return render_to_response('notice_of_payment.html',
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
+
+def order_dispatch(request):
+    success = False
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            form = OrderDispatchForm(request.POST)
+            if form.is_valid():
+                success = True
+                # form.save()
+                # notice = form.save(commit=False)
+                # notice.user = request.user
+                # notice.save()
+                form = OrderDispatchForm()
+    else:
+        form = OrderDispatchForm()
+
+    return render_to_response('order_dispatch.html',
+                               {'form': form, 'success': success}, context_instance=RequestContext(request))
