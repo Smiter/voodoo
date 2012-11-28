@@ -82,3 +82,7 @@ def order_dispatch(request):
 
     return render_to_response('order_dispatch.html',
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
+
+
+def sendings(request):
+     return render_to_response('sendings.html', context_instance=RequestContext(request))
