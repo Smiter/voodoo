@@ -5,7 +5,7 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from forms import NoticeOfPaymentForm
+from forms import *
 import json
 from django.shortcuts import redirect
 import logging
@@ -73,10 +73,9 @@ def order_dispatch(request):
             form = OrderDispatchForm(request.POST)
             if form.is_valid():
                 success = True
-                # form.save()
-                # notice = form.save(commit=False)
-                # notice.user = request.user
-                # notice.save()
+                order = form.save(commit=False)
+                order.user = request.user
+                order.save()
                 form = OrderDispatchForm()
     else:
         form = OrderDispatchForm()

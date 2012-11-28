@@ -135,6 +135,7 @@ from django.contrib.admin.widgets import AdminDateWidget
 
 
 class NoticeOfPaymentForm(ModelForm):
+    required_css_class = 'required'
     class Meta:
         model = NoticeOfPayment
         fields = ('date', 'summa', 'valuta', 'type_of_payment', 'additional_info')
@@ -145,4 +146,21 @@ class NoticeOfPaymentForm(ModelForm):
                   + 'max-width:400px;min-width:400px'}
         ),
         }
+
+
+class OrderDispatchForm(ModelForm):
+    required_css_class = 'required'
+    class Meta:
+        model = OrderDispatch
+        fields = ('carrier', 'department', 'city_recipient', 'type_of_payment', 'comment')
+        widgets = {
+            'comment': Textarea(
+            attrs={'style': 'max-height:60px;min-height:60px;'
+                  + 'max-width:400px;min-width:400px'}
+        ),
+            'department': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+            'type_of_payment': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+        }
+
 

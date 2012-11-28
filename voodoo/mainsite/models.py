@@ -83,19 +83,19 @@ class NoticeOfPayment(models.Model):
 
 
 CARRIER_CHOICES = (
-            ('Гюнсел', 'Гюнсел'),
-            ('САТ', 'САТ'),
-            ('Новая почта', 'Новая почта'),
+            (u'Гюнсел', u'Гюнсел'),
+            (u'САТ', u'САТ'),
+            (u'Новая почта', u'Новая почта'),
 )
 
 
 class OrderDispatch(models.Model):
     user = models.ForeignKey(User, unique=False)
     carrier = models.CharField(max_length=30, choices=CARRIER_CHOICES, verbose_name='Перевозчик')
-    summa = models.CharField(max_length=50, verbose_name='Сумма')
-    valuta = models.CharField(max_length=30, choices=VALUTA_CHOICES, verbose_name='Валюта')
-    type_of_payment = models.CharField(max_length=30, choices=TYPE_OF_PAYMENT_CHOICES, verbose_name='Тип платежа')
-    additional_info = models.CharField(max_length=500, verbose_name='Информация об оплате')
+    department = models.CharField(max_length=150, verbose_name='Отделение транспортной компании', blank=True, null=True)
+    city_recipient = models.CharField(max_length=100, verbose_name='Город получателя')
+    type_of_payment = models.CharField(max_length=150, verbose_name='Имя получателя')
+    comment = models.CharField(max_length=500, verbose_name='Комментарии', blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % self.user
