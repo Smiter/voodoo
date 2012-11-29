@@ -85,4 +85,6 @@ def order_dispatch(request):
 
 
 def sendings(request):
-     return render_to_response('sendings.html', context_instance=RequestContext(request))
+    form = SendingsForm()
+    
+    return render_to_response('sendings.html', {'form': form}, context_instance=RequestContext(request))

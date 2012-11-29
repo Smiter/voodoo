@@ -164,3 +164,12 @@ class OrderDispatchForm(ModelForm):
         }
 
 
+class FancyCalendarWidget(AdminDateWidget):
+    class Media:
+        pass
+        # js = ('../static/admin/js/calendar.js',)
+
+
+class SendingsForm(forms.Form):
+    min_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
+    max_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
