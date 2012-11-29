@@ -96,16 +96,34 @@ def order_dispatch(request):
 def sendings(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/index')
-    sendings = None
+    result = None
     error = ''
     form = SendingsForm()
     if request.method == 'POST':
         form = SendingsForm(request.POST)
         if form.is_valid():
-            sendings = Sendings.objects.filter(date__range=(request.POST["min_date"], request.POST["max_date"]))
-            if not sendings:
+            result = Sendings.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+            if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:
         form = SendingsForm()
 
-    return render_to_response('sendings.html', {'form': form, 'sendings': sendings, 'error': error}, context_instance=RequestContext(request))
+    return render_to_response('sendings.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
+
+
+def prepays(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/index')
+    result = None
+    error = ''
+    form = SendingsForm()
+    if request.method == 'POST':
+        form = SendingsForm(request.POST)
+        if form.is_valid():
+            result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+            if not result:
+                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+    else:
+        form = SendingsForm()
+
+    return render_to_response('prepays.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))

@@ -73,7 +73,6 @@ class Prepays(models.Model):
     valuta = models.CharField(max_length=30, choices=VALUTA_CHOICES, verbose_name='Валюта')
     type_of_payment = models.CharField(max_length=30, choices=TYPE_OF_PAYMENT_CHOICES, verbose_name='Тип платежа')
     additional_info = models.CharField(max_length=500, verbose_name='Информация об оплате')
-    additional_info = models.CharField(max_length=500, verbose_name='Информация об оплате')
     confirmed = models.BooleanField(max_length=1, default=0)
 
     def __unicode__(self):
