@@ -134,10 +134,10 @@ class UserRegistrationForm(forms.Form):
 from django.contrib.admin.widgets import AdminDateWidget
 
 
-class NoticeOfPaymentForm(ModelForm):
+class PrepaysForm(ModelForm):
     required_css_class = 'required'
     class Meta:
-        model = NoticeOfPayment
+        model = Prepays
         fields = ('date', 'summa', 'valuta', 'type_of_payment', 'additional_info')
         widgets = {
             'date': AdminDateWidget(attrs={'readonly': True}),
@@ -152,7 +152,7 @@ class OrderDispatchForm(ModelForm):
     required_css_class = 'required'
     class Meta:
         model = OrderDispatch
-        fields = ('carrier', 'department', 'city_recipient', 'type_of_payment', 'comment')
+        fields = ('carrier', 'department', 'city_recipient', 'name_recipient', 'comment')
         widgets = {
             'comment': Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
@@ -160,7 +160,7 @@ class OrderDispatchForm(ModelForm):
         ),
             'department': TextInput(attrs={'size': '63', 'maxlength': '63'}),
             'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
-            'type_of_payment': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
         }
 
 

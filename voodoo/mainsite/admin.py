@@ -2,7 +2,7 @@ from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 # from django.contrib import admin
 from russian_admin import admin
-from voodoo.mainsite.models import MyRegistrationProfile, Profile, NoticeOfPayment, OrderDispatch
+from voodoo.mainsite.models import MyRegistrationProfile, Profile, Prepays, OrderDispatch, Sendings
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -43,5 +43,6 @@ class MyRegistrationAdmin(admin.ModelAdmin):
 
 admin.site.register(MyRegistrationProfile, MyRegistrationAdmin)
 admin.site.register(Profile)
-admin.site.register(NoticeOfPayment)
+admin.site.register(Prepays)
 admin.site.register(OrderDispatch)
+admin.site.register(Sendings)
