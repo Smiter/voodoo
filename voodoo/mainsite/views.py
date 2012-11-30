@@ -138,3 +138,7 @@ def prepays(request):
         form = SendingsForm()
 
     return render_to_response('prepays.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
+
+
+# def vin_request(request):
+    

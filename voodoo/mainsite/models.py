@@ -123,3 +123,44 @@ class Sendings(models.Model):
         verbose_name = "Sendings"
         verbose_name_plural = "Sendings"
 
+
+
+CAR_ADDITIONS = (
+            (u'ABS', u'ABS'),
+            (u'Гидроусилитель', u'Гидроусилитель'),
+            (u'Кондиционер', u'Кондиционер'),
+)
+
+
+class VinRequest(models.Model):
+    user = models.ForeignKey(User, unique=False)
+    car_brand = models.CharField(max_length=120, verbose_name='Марка автомобиля')
+    car_vin = models.CharField(max_length=120, verbose_name='VIN')
+    car_model = models.CharField(max_length=120, verbose_name='Модель/Серия')
+    car_engine = models.CharField(max_length=120, verbose_name='Двигатель', blank=True, null=True)
+    car_year = models.CharField(max_length=120, verbose_name='Год выпуска')
+    engine_capacity = models.CharField(max_length=120, verbose_name='Объем двигателя', blank=True, null=True)
+    car_body = models.CharField(max_length=120, verbose_name='Кузов', blank=True, null=True)
+    car_kpp = models.CharField(max_length=120, verbose_name='КПП', blank=True, null=True)
+    car_additionals = models.CharField(max_length=100, choices=CAR_ADDITIONS, verbose_name='Дополнительно', blank=True, null=True)
+    additional_info = models.CharField(max_length=500, verbose_name='Номер декларации')
+
+    def __unicode__(self):
+        return "%s" % self.user
+
+    class Meta:
+        verbose_name = "VinRequest"
+        verbose_name_plural = "VinRequest"
+
+
+
+
+
+
+# CARRIER_CHOICES = (
+#             (u'Гюнсел', u'Гюнсел'),
+#             (u'САТ', u'САТ'),
+#             (u'Новая почта', u'Новая почта'),
+# )
+
+#  my_field = MultipleChoiceField(choices=CARRIER_CHOICES, widget=CheckboxSelectMultiple())
