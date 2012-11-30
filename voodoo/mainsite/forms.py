@@ -1,4 +1,5 @@
-# -*- coding:utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from django import forms
 from django.forms import *
@@ -162,12 +163,6 @@ class OrderDispatchForm(ModelForm):
             'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
             'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
         }
-
-
-class FancyCalendarWidget(AdminDateWidget):
-    class Media:
-        pass
-        # js = ('../static/admin/js/calendar.js',)
 
 
 class SendingsForm(forms.Form):

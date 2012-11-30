@@ -12,7 +12,7 @@ from django.db import models
 import json
 from django.shortcuts import redirect
 import logging
-
+from datetime import datetime
 
 def index(request):
     return direct_to_template(request, 'index.html')
@@ -102,7 +102,13 @@ def sendings(request):
     if request.method == 'POST':
         form = SendingsForm(request.POST)
         if form.is_valid():
-            result = Sendings.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+            try:
+                min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
+                max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
+                result = Sendings.objects.filter(user=request.user, date__range=(min_date, max_date))
+            except:
+                result = Sendings.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+
             if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:
@@ -120,7 +126,12 @@ def prepays(request):
     if request.method == 'POST':
         form = SendingsForm(request.POST)
         if form.is_valid():
-            result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+            try:
+                min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
+                max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
+                result = Prepays.objects.filter(user=request.user, date__range=(min_date, max_date))
+            except:
+                result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
             if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:
