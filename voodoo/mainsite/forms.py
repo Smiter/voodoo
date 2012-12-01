@@ -1,9 +1,11 @@
-# -*- coding:utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from django import forms
 from django.forms import *
 import re
 from captcha.fields import CaptchaField
+from models import *
 
 
 def check_pass_on_numbers(text):
@@ -129,3 +131,40 @@ class UserRegistrationForm(forms.Form):
         if not re.match(u'^[a-zA-Zа-яА-Я ]+$', contacts):
             raise forms.ValidationError('Поле должно содержать латиницу или кирилицу без цифр')
         return contacts
+
+from django.contrib.admin.widgets import AdminDateWidget
+
+
+class PrepaysForm(ModelForm):
+    required_css_class = 'required'
+    class Meta:
+        model = Prepays
+        fields = ('date', 'summa', 'valuta', 'type_of_payment', 'additional_info')
+        widgets = {
+            'date': AdminDateWidget(attrs={'readonly': True}),
+            'additional_info': Textarea(
+            attrs={'style': 'max-height:60px;min-height:60px;'
+                  + 'max-width:400px;min-width:400px'}
+        ),
+        }
+
+
+class OrderDispatchForm(ModelForm):
+    required_css_class = 'required'
+    class Meta:
+        model = OrderDispatch
+        fields = ('carrier', 'department', 'city_recipient', 'name_recipient', 'comment')
+        widgets = {
+            'comment': Textarea(
+            attrs={'style': 'max-height:60px;min-height:60px;'
+                  + 'max-width:400px;min-width:400px'}
+        ),
+            'department': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+        }
+
+
+class SendingsForm(forms.Form):
+    min_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
+    max_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))

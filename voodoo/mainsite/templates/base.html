@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   	<meta charset="utf-8" />
   	<title>Тут имя сайта</title>
@@ -7,7 +7,21 @@
   	<meta http-equiv="X-UA-Compatible" content="IE=8" />
   	<LINK href="{{STATIC_URL}}css/reset.css" rel="stylesheet" type="text/css"> 
   	<LINK href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
-
+    {% load i18n admin_modify adminmedia %}
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
+    <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
+    <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+    <script type="text/javascript" src="/static/admin/js/core.js"></script>
+    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+    <script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+    <script type="text/javascript" src="/static/admin/js/actions.js"></script>
+    <script type="text/javascript" src="/static/admin/js/SelectBox.js"></script>
+    <script type="text/javascript" src="/static/admin/js/SelectFilter2.js"></script>
+    <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+    <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="http://malsup.github.com/jquery.form.js"></script> 
 
@@ -59,13 +73,14 @@
             		{% if request.user.is_authenticated %}
             		<p id="login_message">Добро пожаловать, {{ request.user.username }}.</p>
             		<br>
-            		<a href="{% url auth_logout %}?next={{request.path}}">Logout</a>
+            		<a href="{% url auth_logout %}?next=/index">Logout</a>
 
             		<div id="menu">
             			<ul>
-            				<li>Пункт меню 1</li>
-            				<li>Пункт меню 2</li>
-            				<li>Пункт меню 3</li>
+            				<li><a href="/notice_of_payment">Уведомить об оплате</a></li>
+                            <li><a href="/prepays">Проплаты</a></li>
+            				<li><a href="/order_dispatch">Заказ отправки</a></li>
+            				<li><a href="/sendings">Отправки</a></li>
             				<li>Пункт меню 4</li>
             				<li>Пункт меню 5</li>
             			</ul>

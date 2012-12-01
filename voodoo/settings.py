@@ -1,4 +1,15 @@
 # Django settings for voodoo project.
+# -*- coding:utf-8 -*-
+
+
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('..'))
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+at_project_root = lambda *args: os.path.join(PROJECT_ROOT, *args)
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -28,7 +39,8 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us
+LANGUAGE_CODE = 'ru-RU'
 
 SITE_ID = 1
 
@@ -39,6 +51,10 @@ USE_I18N = True
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
 USE_L10N = True
+
+# DATE_FORMAT = 'd-m-Y'
+# DATETIME_FORMAT = 'd-m-Y H:i'
+
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
@@ -57,6 +73,9 @@ MEDIA_URL = ''
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = ''
+
+ADMIN_MEDIA_PREFIX = '/static/admin/'
+
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -108,6 +127,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -126,6 +146,18 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+
+
+# прописываем dashboards для нашего экземпляра AdminSite
+ADMIN_TOOLS_INDEX_DASHBOARD = {
+    'russian_admin.admin.site': 'voodoo.custom_admin.dashboard.CustomIndexDashboard',
+}
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = {
+    'russian_admin.admin.site': 'voodoo.custom_admin.dashboard.CustomAppIndexDashboard',
+}
+
+
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,8 +167,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'voodoo.mainsite',
     'registration',
-    'django.contrib.admin',
+    
     'captcha',
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
+    'russian_admin',
+    'pymorphy',
+    'django.contrib.admin',
+    'voodoo.custom_admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -171,3 +211,8 @@ LOGGING = {
         },
     }
 }
+
+
+
+PYMORPHY_DICTS = {'ru': { 'dir': at_project_root('files', 'dicts')}}
+

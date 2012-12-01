@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block main %}
+<h3>Отправки...</h3>
+
+<form style="border: 1px solid black; border-radius: 6px;" action="/sendings/" method="post">
+			<!-- <div style="padding-left:100px;">{{ form.min_date.errors }}</div> -->
+            <pre style="margin: 10px 10px;">Создана/редактирована между {{ form.min_date }}    и     {{form.max_date}}</pre>
+	<input style="margin: 10px 0 10px 240px;" type="submit" value="Применить фильтр" />
+</form>
+
+{% if result %}
+<table>
+	<thead>
+		<tr>
+			<td>Дата</td>
+			<td>Получатель</td>
+			<td>Город</td>
+			<td>Склад</td>
+			<td>Номер декларации</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in result %}
+		
+			<tr>
+			  <td>{{ row.date }}</td>
+			  <td>{{ row.receiver }}</td>
+			  <td>{{ row.city }}</td>
+			  <td>{{ row.warehouse }}</td>
+			  <td>{{ row.declaration_number }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+{% else %}
+<h3>{{error}}</h3>
+{% endif %}
+
+{% endblock %}
