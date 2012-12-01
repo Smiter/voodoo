@@ -140,5 +140,24 @@ def prepays(request):
     return render_to_response('prepays.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
-# def vin_request(request):
+def vin_request(request):
+    success = False
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/index')
+
+    if request.method == 'POST':
+        form = VinRequestForm(request.POST)
+        if form.is_valid():
+            success = True
+            order = form.save(commit=False)
+            order.user = request.user
+            order.save()
+            
+            form = VinRequestForm(initial=initial)
+    else:
+        form = VinRequestForm(initial=initial)
+
+    return render_to_response('vin_request.html',
+                               {'form': form, 'success': success}, context_instance=RequestContext(request))
+
     

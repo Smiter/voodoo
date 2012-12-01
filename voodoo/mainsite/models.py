@@ -144,7 +144,7 @@ class VinRequest(models.Model):
     car_kpp = models.CharField(max_length=120, verbose_name='КПП', blank=True, null=True)
     car_additionals = models.CharField(max_length=100, choices=CAR_ADDITIONS, verbose_name='Дополнительно', blank=True, null=True)
     additional_info = models.CharField(max_length=500, verbose_name='Номер декларации')
-
+    
     def __unicode__(self):
         return "%s" % self.user
 
@@ -153,7 +153,10 @@ class VinRequest(models.Model):
         verbose_name_plural = "VinRequest"
 
 
-
+class VinDetails(models.Model):
+    vin = models.ForeignKey(VinRequest, unique=False)
+    name = models.CharField(max_length=500, verbose_name='Название детали')
+    number = models.IntegerField(max_length=10, verbose_name='Колличество деталей')
 
 
 
