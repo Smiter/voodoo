@@ -25,7 +25,7 @@
   	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="http://malsup.github.com/jquery.form.js"></script> 
 
-    <script> 
+    <script type="text/javascript"> 
         $('#loginForm').ajaxForm(function(e) { 
         	$("#username_error").text(e.username_error)
         	$("#password_error").text(e.password_error)
@@ -37,7 +37,8 @@
         	}
     	}); 
     </script>
-  
+    {% block javascript %} {% endblock %} 
+    {% block css %} {% endblock %}  
 </head>
 
 <body>

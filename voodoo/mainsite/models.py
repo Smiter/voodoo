@@ -124,12 +124,15 @@ class Sendings(models.Model):
         verbose_name_plural = "Sendings"
 
 
+class CarAdditional(models.Model):
+    name = models.CharField(max_length=50)
 
-CAR_ADDITIONS = (
-            (u'ABS', u'ABS'),
-            (u'Гидроусилитель', u'Гидроусилитель'),
-            (u'Кондиционер', u'Кондиционер'),
-)
+    def __unicode__(self):
+        return "%s" % self.name
+
+    class Meta:
+        verbose_name = "CarAdditional"
+        verbose_name_plural = "CarAdditional"
 
 
 class VinRequest(models.Model):
@@ -142,11 +145,11 @@ class VinRequest(models.Model):
     engine_capacity = models.CharField(max_length=120, verbose_name='Объем двигателя', blank=True, null=True)
     car_body = models.CharField(max_length=120, verbose_name='Кузов', blank=True, null=True)
     car_kpp = models.CharField(max_length=120, verbose_name='КПП', blank=True, null=True)
-    car_additionals = models.CharField(max_length=100, choices=CAR_ADDITIONS, verbose_name='Дополнительно', blank=True, null=True)
-    additional_info = models.CharField(max_length=500, verbose_name='Номер декларации')
+    car_additionals = models.ManyToManyField(CarAdditional)
+    additional_info = models.CharField(max_length=500, verbose_name='Дополнительная информация', blank=True, null=True)
     
     def __unicode__(self):
-        return "%s" % self.user
+        return "request from user = %s" % self.user
 
     class Meta:
         verbose_name = "VinRequest"
@@ -158,12 +161,10 @@ class VinDetails(models.Model):
     name = models.CharField(max_length=500, verbose_name='Название детали')
     number = models.IntegerField(max_length=10, verbose_name='Колличество деталей')
 
+    def __unicode__(self):
+        return "vin id = %d" % self.vin.id
 
+    class Meta:
+        verbose_name = "VinDetails"
+        verbose_name_plural = "VinDetails"
 
-# CARRIER_CHOICES = (
-#             (u'Гюнсел', u'Гюнсел'),
-#             (u'САТ', u'САТ'),
-#             (u'Новая почта', u'Новая почта'),
-# )
-
-#  my_field = MultipleChoiceField(choices=CARRIER_CHOICES, widget=CheckboxSelectMultiple())

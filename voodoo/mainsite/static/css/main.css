@@ -233,3 +233,9 @@
     padding: 4px 5px;
     width: 240px;
   }
+
+  #vin_request_table ul li {
+    float: left;
+    list-style-type: none;
+    margin-right: 5px;
+  }

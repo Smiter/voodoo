@@ -1,4 +1,69 @@
 {% extends "base.html" %}
+
+{% block javascript %}
+<script type="text/javascript"> 
+	$(function(){
+		var details_count = 1;
+		$('#add_to_details').live('click',function () {
+			console.log("add new line")
+			$("#vin_details_list").append
+			(
+				  '<li>'
+				+	'<label>'+ ++details_count +'.</label>'
+				+	'<input name="details_name" class="detail_name" type="text"/>'
+				+	'<input name="details_number" class="detail_number" type="text" value="1"/>'
+				+  '</li>'
+			);
+		});
+
+		$('#delete_from_details').live('click',function () {
+			$('#vin_details_list li:last').remove();
+			details_count--;
+		});
+	})
+
+</script>
+{% endblock %}
+	
+{% block css %}
+<style>
+	#vin_details {
+		margin: 10px 0 10px 60px;
+	}
+
+	#vin_details p {
+		margin-left: 60px;
+	}
+	#vin_details_list li{
+		list-style-type: none;
+	}
+
+	.detail_name {
+		width: 390px;
+		margin-left: 10px;
+	}
+
+	.detail_number {
+		width: 30px;
+		margin-left: 10px;
+	}
+
+	#div_with_add_and_delete{
+		margin-left: 120px;
+		width: 300px;
+	}
+
+	#div_with_add_and_delete input {
+		margin-right: 10px;
+	}
+
+	#submit {
+		margin-left: 250px;
+	}
+
+</style>
+{% endblock %}
+
 {% block main %}
 <h3>Уведомить об оплате...</h3>
 <pre>	Если вы провели оплату заказа, нужно уведомить нас об этом с помощью формы, представленной ниже.	
@@ -6,11 +71,20 @@
 
 </pre>
 
-<form action="/vin_request/" method="post">
-	<table>
+<form id="vin_form" action="/vin_request/" method="post">
+	<table id="vin_request_table">
 		{{ form.as_table }}
 	</table>
-	<input type="submit" value="Отправить запрос" />
+	<div id="vin_details">
+		<p>Опишите подробно запрашиваемые запчасти и их колличество</p>
+		<ul id="vin_details_list">
+			<li> 
+				<label>1.</label><input name="details_name" class="detail_name" type="text"/><input class="detail_number" name="details_number" type="text" value="1"/>
+			</li>
+		</ul>
+		<div id="div_with_add_and_delete"><input type="button" value="Добавить строку" id="add_to_details"></input> <input type="button" id="delete_from_details" value="Удалить строку"></input></div>
+	</div>
+	<input id="submit" type="submit" value="Отправить запрос" />
 </form>
 
 {% if success %}

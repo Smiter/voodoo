@@ -142,6 +142,8 @@ def prepays(request):
 
 def vin_request(request):
     success = False
+    import json
+    
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/index')
 
@@ -149,13 +151,22 @@ def vin_request(request):
         form = VinRequestForm(request.POST)
         if form.is_valid():
             success = True
-            order = form.save(commit=False)
-            order.user = request.user
-            order.save()
+            vin_request = form.save(commit=False)
+            vin_request.user = request.user
+            vin_request.save()
+            for i in range(len(request.POST.getlist("details_name"))):
+                vin_details = VinDetails(vin=vin_request,
+                 name=request.POST.getlist("details_name")[i],
+                 number=request.POST.getlist("details_number")[i])
+                vin_details.save()
             
-            form = VinRequestForm(initial=initial)
+            for i in request.POST.getlist("car_additionals"):
+                car_additional = CarAdditional(name=i)
+                car_additional.save()
+                vin_request.car_additionals.add(car_additional)
+            form = VinRequestForm()
     else:
-        form = VinRequestForm(initial=initial)
+        form = VinRequestForm()
 
     return render_to_response('vin_request.html',
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
