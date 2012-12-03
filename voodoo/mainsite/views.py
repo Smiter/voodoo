@@ -172,3 +172,25 @@ def vin_request(request):
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
     
+def show_vin(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/index')
+    result = None
+    error = ''
+    form = SendingsForm()
+    if request.method == 'POST':
+        form = SendingsForm(request.POST)
+        if form.is_valid():
+            try:
+                min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
+                max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
+                # result = Prepays.objects.filter(user=request.user, date__range=(min_date, max_date))
+            except:
+                pass
+                # result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+            if not result:
+                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+    else:
+        form = SendingsForm()
+
+    return render_to_response('show_vin.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
