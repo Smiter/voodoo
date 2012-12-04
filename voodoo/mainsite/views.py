@@ -164,6 +164,7 @@ def vin_request(request):
                 car_additional = CarAdditional(name=i)
                 car_additional.save()
                 vin_request.car_additionals.add(car_additional)
+                
             form = VinRequestForm()
     else:
         form = VinRequestForm()

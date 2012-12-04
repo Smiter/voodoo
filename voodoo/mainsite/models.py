@@ -134,6 +134,8 @@ class CarAdditional(models.Model):
         verbose_name = "CarAdditional"
         verbose_name_plural = "CarAdditional"
 
+from datetime import datetime
+
 
 class VinRequest(models.Model):
     user = models.ForeignKey(User, unique=False)
@@ -147,7 +149,11 @@ class VinRequest(models.Model):
     car_kpp = models.CharField(max_length=120, verbose_name='КПП', blank=True, null=True)
     car_additionals = models.ManyToManyField(CarAdditional)
     additional_info = models.CharField(max_length=500, verbose_name='Дополнительная информация', blank=True, null=True)
-    
+    date = models.DateTimeField(max_length=50, default=datetime.now, blank=True, verbose_name='Дата запроса')
+    comment = models.CharField(max_length=220, verbose_name='Комментарии')
+    status_site = models.CharField(max_length=220, verbose_name='Статус для сайта')
+    status_admin_center = models.CharField(max_length=220, verbose_name='Статус для админки')
+
     def __unicode__(self):
         return "request from user = %s" % self.user
 
