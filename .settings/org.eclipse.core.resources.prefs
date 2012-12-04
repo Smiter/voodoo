@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//voodoo/custom_admin/__init__.py=utf-8
+encoding//voodoo/custom_admin/admin.py=utf-8
+encoding//voodoo/custom_admin/dashboard.py=utf-8
+encoding//voodoo/custom_admin/models.py=utf-8
+encoding//voodoo/mainsite/forms.py=utf-8
+encoding//voodoo/mainsite/models.py=utf-8
+encoding//voodoo/mainsite/views.py=utf-8
+encoding//voodoo/settings.py=utf-8
+encoding//voodoo/urls.py=utf-8

@@ -166,6 +166,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'voodoo.mainsite',
+    'voodoo.admin_center',
     'registration',
     
     'captcha',
