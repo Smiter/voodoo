@@ -181,14 +181,17 @@ def show_vin(request):
     form = SendingsForm()
     if request.method == 'POST':
         form = SendingsForm(request.POST)
+        
         if form.is_valid():
             try:
-                min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
-                max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
-                # result = Prepays.objects.filter(user=request.user, date__range=(min_date, max_date))
+
+                min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 00:00:01'
+                max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 23:59:00'
+                logging.error(min_date)
+                logging.error(max_date)
+                result = VinRequest.objects.filter(user=request.user, date__range=(min_date, max_date))
             except:
-                pass
-                # result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+                result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
             if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:

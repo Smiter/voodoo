@@ -151,8 +151,7 @@ class VinRequest(models.Model):
     additional_info = models.CharField(max_length=500, verbose_name='Дополнительная информация', blank=True, null=True)
     date = models.DateTimeField(max_length=50, default=datetime.now, blank=True, verbose_name='Дата запроса')
     comment = models.CharField(max_length=220, verbose_name='Комментарии')
-    status_site = models.CharField(max_length=220, verbose_name='Статус для сайта')
-    status_admin_center = models.CharField(max_length=220, verbose_name='Статус для админки')
+    status = models.CharField(max_length=220, default=u'Принят', verbose_name='Статус')
 
     def __unicode__(self):
         return "request from user = %s" % self.user

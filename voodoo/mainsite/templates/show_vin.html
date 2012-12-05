@@ -2,7 +2,7 @@
 {% block main %}
 <h3>Фильтр по VIN запросам...</h3>
 
-<form style="border: 1px solid black; border-radius: 6px;" action="/prepays/" method="post">
+<form style="border: 1px solid black; border-radius: 6px;" action="/show_vin/" method="post">
 			<!-- <div style="padding-left:100px;">{{ form.min_date.errors }}</div> -->
             <pre style="margin: 10px 10px;">Создана/редактирована между  {{ form.min_date }}    и     {{form.max_date}}</pre>
 	<input style="margin: 10px 0 10px 240px;" type="submit" value="Применить фильтр" />
@@ -12,24 +12,28 @@
 <table>
 	<thead>
 		<tr>
-			<td>Дата</td>
-			<td>Сумма</td>
-			<td>Валюта</td>
-			<td>Тип платежа</td>
-			<td>Информация об оплате</td>
-			<td>Подтвержденный платеж ?</td>
+			<td>Номер №</td>
+			<td>Дата запроса</td>
+			<td>VIN</td>
+			<td>Комментарии</td>
+			<td>Статус</td>
 		</tr>
 	</thead>
 	<tbody>
 		{% for row in result %}
 		
 			<tr>
+			  <td>{{ row.id }}</td>
 			  <td>{{ row.date }}</td>
-			  <td>{{ row.summa }}</td>
-			  <td>{{ row.valuta }}</td>
-			  <td>{{ row.type_of_payment }}</td>
-			  <td>{{ row.additional_info }}</td>
-			  <td>{{ row.confirmed }}</td>
+			  <td>{{ row.car_vin }}</td>
+			  <td>{{ row.comments }}</td>
+			  <td>
+			  	{% if row.status == 'Принят' %}
+			  		Обрабатывается
+			  	{% else %}
+			  		Обработан
+			  	{% endif %}
+			  </td>
 			</tr>
 		{% endfor %}
 	</tbody>
