@@ -128,7 +128,10 @@ class CarAdditional(models.Model):
     name = models.CharField(max_length=50)
 
     def __unicode__(self):
-        return "%s" % self.name
+        return self.name
+
+    def natural_key(self):
+        return (self.name)
 
     class Meta:
         verbose_name = "CarAdditional"
@@ -136,6 +139,13 @@ class CarAdditional(models.Model):
 
 from datetime import datetime
 
+
+
+
+# class VinRequest_CarAdditionals(models.Model):
+#     department = models.ForeignKey(Department)
+#     crossfunctionalproject = models.ForeignKey(Crossfunctonalproject)
+#     membership = models.ManyToManyField(Employee, through="Membership")
 
 class VinRequest(models.Model):
     user = models.ForeignKey(User, unique=False)
@@ -159,6 +169,11 @@ class VinRequest(models.Model):
     class Meta:
         verbose_name = "VinRequest"
         verbose_name_plural = "VinRequest"
+
+
+# class Vin_Car_Additional(models.Model):
+#     vinrequest_id = models.ForeignKey(VinRequest)
+#     caradditional_id = models.ForeignKey(CarAdditional)
 
 
 class VinDetails(models.Model):

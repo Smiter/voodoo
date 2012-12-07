@@ -16,12 +16,13 @@ from datetime import datetime
 from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.db.models.query import QuerySet
+from django.contrib.auth.decorators import login_required
 
 
 class DjangoJSONEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, QuerySet):
-            return loads(serialize('json', obj))
+            return loads(serialize('json', obj, use_natural_keys=True))
         return JSONEncoder.default(self, obj)
 
 
@@ -60,10 +61,9 @@ def login(request):
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
 
+@login_required(login_url='/index')
 def notice_of_payment(request):
     success = False
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/index')
     if request.method == 'POST':
         form = PrepaysForm(request.POST)
         if form.is_valid():
@@ -81,11 +81,9 @@ def notice_of_payment(request):
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
 
+@login_required(login_url='/index')
 def order_dispatch(request):
     success = False
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/index')
-
     profile = Profile.objects.get(user=request.user)
     initial = {"city_recipient": profile.city, "name_recipient": request.user.username}
     if request.method == 'POST':
@@ -95,7 +93,6 @@ def order_dispatch(request):
             order = form.save(commit=False)
             order.user = request.user
             order.save()
-            
             form = OrderDispatchForm(initial=initial)
     else:
         form = OrderDispatchForm(initial=initial)
@@ -104,9 +101,8 @@ def order_dispatch(request):
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
 
+@login_required(login_url='/index')
 def sendings(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/index')
     result = None
     error = ''
     form = SendingsForm()
@@ -128,9 +124,8 @@ def sendings(request):
     return render_to_response('sendings.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
+@login_required(login_url='/index')
 def prepays(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/index')
     result = None
     error = ''
     form = SendingsForm()
@@ -151,13 +146,9 @@ def prepays(request):
     return render_to_response('prepays.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
+@login_required(login_url='/index')
 def vin_request(request):
     success = False
-    import json
-    
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/index')
-
     if request.method == 'POST':
         form = VinRequestForm(request.POST)
         if form.is_valid():
@@ -170,12 +161,10 @@ def vin_request(request):
                  name=request.POST.getlist("details_name")[i],
                  number=request.POST.getlist("details_number")[i])
                 vin_details.save()
-            
             for i in request.POST.getlist("car_additionals"):
                 car_additional = CarAdditional(name=i)
                 car_additional.save()
                 vin_request.car_additionals.add(car_additional)
-                
             form = VinRequestForm()
     else:
         form = VinRequestForm()
@@ -183,10 +172,8 @@ def vin_request(request):
     return render_to_response('vin_request.html',
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
-    
+@login_required(login_url='/index')
 def show_vin(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/index')
     result = None
     error = ''
     form = SendingsForm()
@@ -202,7 +189,7 @@ def show_vin(request):
                 logging.error(max_date)
                 result = VinRequest.objects.filter(user=request.user, date__range=(min_date, max_date))
             except:
-                result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+                result = VinRequest.objects.filter(user=request.user, date__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
             if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:
@@ -214,7 +201,9 @@ def show_vin(request):
 
 def get_vin_by_id(request):
     logging.error("get_vin_by_id")
-    result = VinRequest.objects.filter(user=request.user,
+    vin_request = VinRequest.objects.filter(user=request.user,
         id=request.POST["vin_id"])
-    output = dumps(result, cls=DjangoJSONEncoder)
+    vin_details = VinDetails.objects.filter(vin=vin_request)
+    data = {'vin_request': vin_request, 'vin_details': vin_details}
+    output = dumps(data, cls=DjangoJSONEncoder)
     return HttpResponse(output, mimetype="application/json")

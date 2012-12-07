@@ -12,7 +12,69 @@
                   url: '/get_vin_by_id/',
                   data: {"vin_id":vin_id}
                   }).done(function( msg ) {
-                  	console.log(msg[0].fields.car_vin)
+                  	$("#vin_info").html('<p>Содержимое VIN-запроса №__ (импортирован в ОЦ, заказ №__)</p>'
+                  		+ '<table>'
+	                  		+ '<tr>'
+		                  		+ '<td>Марка автомобиля</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_brand +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>VIN</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_vin +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Модель серия</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_model +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Двигатель</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_engine +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Год выпуска</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_year +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Объем двигателя</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.engine_capacity +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Кузов</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_body +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>КПП</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_kpp +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Дополнительно</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_additionals +'</td>'
+	                  		+ '</tr>'
+	                  		+ '<tr>'
+		                  		+ '<td>Дополнительная информация</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.additional_info +'</td>'
+	                  		+ '<tr>'
+                  		+ '</table>'
+                  		+ '<p>Заказываемые Вами запчасти</p>'
+						+ '<table id="vin_details">'
+							+ '<thead>'
+								+ '<tr>'
+									+ '<td>№</td>'
+									+ '<td>Описание</td>'
+									+ '<td>Кол.</td>'
+								+ '</tr>'
+							+ '</thead>'
+                  		+ '</table>'                  		
+                  		);
+
+					$.each(msg["vin_details"],function(index, value) {
+						$("#vin_details").append(
+							  '<tr>'
+								+ '<td>'+ (index+1) +'</td>'
+								+ '<td>'+ msg["vin_details"][index].fields.name +'</td>'
+								+ '<td>'+ msg["vin_details"][index].fields.number +'</td>'
+							+ '</tr>')
+					})
                   })
 			event.preventDefault();
 		})
@@ -60,6 +122,9 @@
 		{% endfor %}
 	</tbody>
 </table>
+
+<div id="vin_info">
+</div>
 
 
 {% else %}
