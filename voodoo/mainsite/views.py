@@ -13,6 +13,17 @@ import json
 from django.shortcuts import redirect
 import logging
 from datetime import datetime
+from django.core.serializers import serialize
+from django.utils.simplejson import dumps, loads, JSONEncoder
+from django.db.models.query import QuerySet
+
+
+class DjangoJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, QuerySet):
+            return loads(serialize('json', obj))
+        return JSONEncoder.default(self, obj)
+
 
 def index(request):
     return direct_to_template(request, 'index.html')
@@ -198,3 +209,12 @@ def show_vin(request):
         form = SendingsForm()
 
     return render_to_response('show_vin.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
+
+
+
+def get_vin_by_id(request):
+    logging.error("get_vin_by_id")
+    result = VinRequest.objects.filter(user=request.user,
+        id=request.POST["vin_id"])
+    output = dumps(result, cls=DjangoJSONEncoder)
+    return HttpResponse(output, mimetype="application/json")

@@ -1,4 +1,26 @@
 {% extends "base.html" %}
+
+{% block javascript %}
+<script type="text/javascript"> 
+	$(function(){
+		var details_count = 1;
+		$('a.vin_link').live('click',function (event) {
+			var vin_id = $(this).attr('href')
+			console.log("show vin "+vin_id)
+			$.ajax({
+                  type: "POST",
+                  url: '/get_vin_by_id/',
+                  data: {"vin_id":vin_id}
+                  }).done(function( msg ) {
+                  	console.log(msg[0].fields.car_vin)
+                  })
+			event.preventDefault();
+		})
+	})
+
+</script>
+{% endblock %}
+
 {% block main %}
 <h3>Фильтр по VIN запросам...</h3>
 
@@ -25,7 +47,7 @@
 			<tr>
 			  <td>{{ row.id }}</td>
 			  <td>{{ row.date }}</td>
-			  <td>{{ row.car_vin }}</td>
+			  <td><a class="vin_link" href="{{row.id}}">{{ row.car_vin }}</a></td>
 			  <td>{{ row.comments }}</td>
 			  <td>
 			  	{% if row.status == 'Принят' %}
