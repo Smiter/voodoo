@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Admin Center</title>
+	<link rel=StyleSheet href="{{STATIC_URL}}css/admin_main.css" type="text/css" media=screen>
+</head>
+<body>
+    <div>{% include 'admin_header.html' %}</div>
+    <div class="admin-container">
+    	{% include 'admin_menu.html' %}
+    	<div>
+    		{% block content %}{% endblock %}
+    	</div>
+    </div>
+    <div>{% include 'admin_footer.html' %}</div>
+</body>
+</html>

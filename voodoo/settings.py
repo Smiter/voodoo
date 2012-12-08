@@ -178,6 +178,7 @@ INSTALLED_APPS = (
     'pymorphy',
     'django.contrib.admin',
     'voodoo.custom_admin',
+    'voodoo.admin_center',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -212,8 +213,6 @@ LOGGING = {
         },
     }
 }
-
-
 
 PYMORPHY_DICTS = {'ru': { 'dir': at_project_root('files', 'dicts')}}
 
