@@ -34,7 +34,7 @@ urlpatterns = patterns('',
        activate,
        {'backend': 'voodoo.mainsite.RegistrationBackend.DefaultBackend'},
        name='registration_activate'),
-    url(r'^accounts/register/$',
+    url(r'^register/$',
         register,
         {'backend': 'voodoo.mainsite.RegistrationBackend.DefaultBackend',
           'form_class': UserRegistrationForm

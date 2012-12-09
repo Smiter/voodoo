@@ -168,3 +168,33 @@ class OrderDispatchForm(ModelForm):
 class SendingsForm(forms.Form):
     min_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
     max_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
+
+
+
+
+CAR_ADDITIONS = (
+            ('ABS', 'ABS'),
+            (u'Гидроусилитель', u'Гидроусилитель'),
+            (u'Кондиционер', u'Кондиционер'),
+)
+
+
+class VinRequestForm(ModelForm):
+    required_css_class = 'required'
+    car_additionals = MultipleChoiceField(label="Дополнительно",
+     widget=CheckboxSelectMultiple, choices=CAR_ADDITIONS, required=False)
+
+    class Meta:
+        model = VinRequest
+        fields = ('car_brand', 'car_vin', 'car_model', 'car_engine', 'car_year', 'engine_capacity',
+            'car_body', 'car_kpp', 'car_additionals', 'additional_info')
+        # widgets = {
+        #     'car_additionals': CheckboxSelectMultiple()}
+    
+    # def __init__(self, *args, **kwargs):
+    #     super(VinRequestForm, self).__init__(*args, **kwargs)
+    #     tmp_choices = self.fields['car_additionals'].choices
+    #     del tmp_choices[0]
+    #     self.fields['car_additionals'].choices = tmp_choices
+
+# my_field = MultipleChoiceField(choices=CARRIER_CHOICES, widget=CheckboxSelectMultiple())

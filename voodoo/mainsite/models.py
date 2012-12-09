@@ -123,3 +123,68 @@ class Sendings(models.Model):
         verbose_name = "Sendings"
         verbose_name_plural = "Sendings"
 
+
+class CarAdditional(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.name
+
+    def natural_key(self):
+        return (self.name)
+
+    class Meta:
+        verbose_name = "CarAdditional"
+        verbose_name_plural = "CarAdditional"
+
+from datetime import datetime
+
+
+
+
+# class VinRequest_CarAdditionals(models.Model):
+#     department = models.ForeignKey(Department)
+#     crossfunctionalproject = models.ForeignKey(Crossfunctonalproject)
+#     membership = models.ManyToManyField(Employee, through="Membership")
+
+class VinRequest(models.Model):
+    user = models.ForeignKey(User, unique=False)
+    car_brand = models.CharField(max_length=120, verbose_name='Марка автомобиля')
+    car_vin = models.CharField(max_length=120, verbose_name='VIN')
+    car_model = models.CharField(max_length=120, verbose_name='Модель/Серия')
+    car_engine = models.CharField(max_length=120, verbose_name='Двигатель', blank=True, null=True)
+    car_year = models.CharField(max_length=120, verbose_name='Год выпуска')
+    engine_capacity = models.CharField(max_length=120, verbose_name='Объем двигателя', blank=True, null=True)
+    car_body = models.CharField(max_length=120, verbose_name='Кузов', blank=True, null=True)
+    car_kpp = models.CharField(max_length=120, verbose_name='КПП', blank=True, null=True)
+    car_additionals = models.ManyToManyField(CarAdditional)
+    additional_info = models.CharField(max_length=500, verbose_name='Дополнительная информация', blank=True, null=True)
+    date = models.DateTimeField(max_length=50, default=datetime.now, blank=True, verbose_name='Дата запроса')
+    comment = models.CharField(max_length=220, verbose_name='Комментарии')
+    status = models.CharField(max_length=220, default=u'Принят', verbose_name='Статус')
+
+    def __unicode__(self):
+        return "request from user = %s" % self.user
+
+    class Meta:
+        verbose_name = "VinRequest"
+        verbose_name_plural = "VinRequest"
+
+
+# class Vin_Car_Additional(models.Model):
+#     vinrequest_id = models.ForeignKey(VinRequest)
+#     caradditional_id = models.ForeignKey(CarAdditional)
+
+
+class VinDetails(models.Model):
+    vin = models.ForeignKey(VinRequest, unique=False)
+    name = models.CharField(max_length=500, verbose_name='Название детали')
+    number = models.IntegerField(max_length=10, verbose_name='Колличество деталей')
+
+    def __unicode__(self):
+        return "vin id = %d" % self.vin.id
+
+    class Meta:
+        verbose_name = "VinDetails"
+        verbose_name_plural = "VinDetails"
+
