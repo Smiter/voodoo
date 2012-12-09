@@ -13,24 +13,24 @@ And to activate the app index dashboard::
 
 from django.utils.translation import ugettext_lazy as _
 from admin_tools.dashboard import modules, Dashboard, AppIndexDashboard
-from voodoo.custom_admin.models import MyModule
+
 
 class CustomIndexDashboard(Dashboard):
     """
     Custom index dashboard for test_project.
     """
     def init_with_context(self, context):
-#        self.children += [
-#            modules.AppList(
-#                _('Applications'),
-#                exclude=('django.contrib.*',),
-#            ),
-#            modules.AppList(
-#                _('Administration'),
-#                models=('django.contrib.*',),
-#            )
-#        ]
-		self.children.append(MyModule(title=u"Приветствие", message = u'Привет!'))
+       self.children += [
+           modules.AppList(
+               _('Applications'),
+               exclude=('django.contrib.*',),
+           ),
+           modules.AppList(
+               _('Administration'),
+               models=('django.contrib.*',),
+           )
+       ]
+
 
 class CustomAppIndexDashboard(AppIndexDashboard):
     """
