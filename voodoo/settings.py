@@ -35,7 +35,7 @@ DATABASES = {
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Kiev'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -178,13 +178,12 @@ INSTALLED_APPS = (
     'pymorphy',
     'django.contrib.admin',
     'voodoo.custom_admin',
-    'voodoo.admin_center',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
-LOGIN_REDIRECT_URL='/index/'
+#LOGIN_REDIRECT_URL='/index/'
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -214,5 +213,6 @@ LOGGING = {
     }
 }
 
-PYMORPHY_DICTS = {'ru': { 'dir': at_project_root('files', 'dicts')}}
 
+
+PYMORPHY_DICTS = {'ru': { 'dir': at_project_root('files', 'dicts')}}
