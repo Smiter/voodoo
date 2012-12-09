@@ -1,17 +1,25 @@
 {% extends "base.html" %}
 
+{% block css %}
+<style>
+</style>
+{% endblock %}
 {% block javascript %}
 <script type="text/javascript"> 
 	$(function(){
-		var details_count = 1;
+		var details_count = 0;
+		var offered_details_count = 0;
+		var vin_id = -1
 		$('a.vin_link').live('click',function (event) {
-			var vin_id = $(this).attr('href')
+			vin_id = $(this).attr('href')
 			console.log("show vin "+vin_id)
 			$.ajax({
                   type: "POST",
                   url: '/get_vin_by_id/',
                   data: {"vin_id":vin_id}
                   }).done(function( msg ) {
+                  	details_count = 0
+                  	offered_details_count = 0
                   	$("#vin_info").html('<p>Содержимое VIN-запроса №__ (импортирован в ОЦ, заказ №__)</p>'
                   		+ '<table>'
 	                  		+ '<tr>'
@@ -70,14 +78,134 @@
 					$.each(msg["vin_details"],function(index, value) {
 						$("#vin_details").append(
 							  '<tr>'
-								+ '<td>'+ (index+1) +'</td>'
-								+ '<td>'+ msg["vin_details"][index].fields.name +'</td>'
-								+ '<td>'+ msg["vin_details"][index].fields.number +'</td>'
+								+ '<td>'+ ++details_count +'</td>'
+								+ '<td><input type="text" class="detail_name" value="'+ msg["vin_details"][index].fields.name +'"></td>'
+								+ '<td><input type="text" class="detail_number" value="'+ msg["vin_details"][index].fields.number +'"></td><td><label class="error_label"></label></td>'
 							+ '</tr>')
 					})
+					$("#vin_info").append(
+					'<input type="button" value="Добавить строку" id="add_to_details"></input>'
+					+'<input type="button" id="delete_details" value="Удалить строку"></input>'
+					+'<input type="button" id="save_details" value="Сохранить"></input>'
+					)
+					$("#vin_info").append(
+						'<p>Предлагаемые вам запчасти</p>'
+						+ '<table id="offered_details">'
+							+ '<thead>'
+								+ '<tr>'
+									+ '<td>№</td>'
+									+ '<td>Бренд</td>'
+									+ '<td>Описание</td>'
+									+ '<td>Цена</td>'
+									+ '<td>Кол.</td>'
+									+ '<td>Срок поставки</td>'
+									+ '<td>Статус</td>'
+								+ '</tr>'
+							+ '</thead>'
+                  		+ '</table>'     
+					)
+
+					$.each(msg["vin_details"],function(index, value) {
+						$("#offered_details").append(
+							  '<tr>'
+								+ '<td>'+ ++offered_details_count +'</td>'
+								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
+								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
+								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
+								+ '<td><input class="num_offered_detail" type="text" value="'+ msg["vin_details"][index].fields.name + '"></td>'
+								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
+								+ '<td><input type="checkbox" checked></td>'
+							+ '</tr>')
+					})
+
+					$("#vin_info").append(
+					'<input type="button" value="Оформить заказ" id="order_details"></input>'
+					)
+
                   })
 			event.preventDefault();
 		})
+
+		$('#add_to_details').live('click',function () {
+			$("#vin_details").append
+			(
+				  '<tr>'
+				+ '<td>'+ ++details_count +'</td>'
+				+ '<td><input type="text" class="detail_name"></td>'
+				+ '<td><input type="text" class="detail_number"></td><td><label class="error_label"></label></td>'
+				+ '</tr>'
+			);
+		});
+
+		$('#delete_details').live('click',function () {
+			$('#vin_details tbody tr:last').remove();
+			if($('#vin_details tbody tr:last').length > 0){
+				details_count--;
+			}
+			if($('#vin_details tbody tr:last').length == 0){
+				details_count=0
+			}
+		});
+
+		$('#save_details').live('click',function () {
+				var details_name = Array()
+				var details_number = Array()
+				var can_request = true
+				$("#vin_details tbody tr").each(function() {
+					if($('.detail_name',this).val()==""){
+						$('.error_label', this).text('Необходимо заполнить описание')
+						can_request = false
+					}
+					else{
+						$('.error_label', this).text('')
+						details_name.push($('.detail_name',this).val())	
+					}
+
+					if($('.detail_number',this).val()==""){
+						if($('.error_label', this).text()==""){
+							$('.error_label', this).text('Необходимо заполнить колличество деталей')
+						}else{
+							$('.error_label', this).text('Необходимо заполнить описание и колличество деталей')
+						}
+						can_request = false
+					}
+					else{
+						if($('.error_label', this).text()==""){
+							$('.error_label', this).text('')	
+						}
+						var intRegex = /^\d+$/;
+						if(!intRegex.test($('.detail_number',this).val())){
+							$('.error_label', this).text('Пожалуйства используйте только цифры для колличества деталей.')		
+							can_request = false
+						}
+						details_number.push($('.detail_number',this).val())	
+					}
+				    
+				});
+				if(can_request){
+					$.ajax({
+	                  type: "POST",
+	                  url: '/save_del_details/',
+	                  data: {"details_name":details_name, "details_number":details_number, "vin_id": vin_id}
+	                  }).done(function( msg ) {
+
+	                  })
+              }
+		});
+
+		$('#order_details').live('click',function () {
+			$("#offered_details .num_offered_detail").each(function() {
+				console.log($(this).val())
+			})
+			$.ajax({
+              type: "POST",
+              url: '/order_details/',
+              data: {"vin_id": vin_id}
+              }).done(function( msg ) {
+
+              })
+		});
+
 	})
 
 </script>

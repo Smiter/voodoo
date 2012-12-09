@@ -198,12 +198,41 @@ def show_vin(request):
     return render_to_response('show_vin.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
-
+@login_required(login_url='/index')
 def get_vin_by_id(request):
-    logging.error("get_vin_by_id")
+    print "get_vin_by_id"
     vin_request = VinRequest.objects.filter(user=request.user,
         id=request.POST["vin_id"])
     vin_details = VinDetails.objects.filter(vin=vin_request)
     data = {'vin_request': vin_request, 'vin_details': vin_details}
     output = dumps(data, cls=DjangoJSONEncoder)
     return HttpResponse(output, mimetype="application/json")
+
+
+@login_required(login_url='/index')
+def save_del_details(request):
+    print "\nsave_details\n"
+    if request.method == 'POST':
+        vin_details = VinDetails.objects.filter(vin=VinRequest(id=request.POST["vin_id"]))
+        for i in range(len(request.POST.getlist("details_name[]"))):
+            name = request.POST.getlist("details_name[]")[i]
+            number = request.POST.getlist("details_number[]")[i]
+            if i < len(vin_details):
+                vin_details[i].name = name
+                vin_details[i].number = number
+                vin_details[i].save()
+            else:
+                vin_detail = VinDetails(vin=VinRequest(id=request.POST["vin_id"]),
+                 name=name,
+                 number=number)
+                vin_detail.save()
+
+        for i in range(len(request.POST.getlist("details_name[]")), len(vin_details)):
+            vin_details[i].delete()
+
+    return HttpResponse('')
+
+
+def order_details(request):
+    print "\norder_details\n"
+    return HttpResponse('')
