@@ -84,8 +84,12 @@ def notice_of_payment(request):
 @login_required(login_url='/index')
 def order_dispatch(request):
     success = False
-    profile = Profile.objects.get(user=request.user)
-    initial = {"city_recipient": profile.city, "name_recipient": request.user.username}
+    profile = None
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        profile = None
+    initial = {"city_recipient": profile.city if profile else "", "name_recipient": request.user.username}
     if request.method == 'POST':
         form = OrderDispatchForm(request.POST)
         if form.is_valid():
