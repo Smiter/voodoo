@@ -1,4 +1,13 @@
 {% extends 'admin_base.html' %}
 {% block content %}
-Orders management Form
+<h1>Управление заказами</h1>
+</br>
+<form name="orders_management_form" action="/admin_center/orders_management" method="POST">
+	{{ form.as_p }}
+	<input type="submit" value="Применить фильтр">
+</form>
+{% if results %}
+	Rendering results in table
+{% endif %}
+
 {% endblock %}

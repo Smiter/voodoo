@@ -1,4 +1,9 @@
 {% extends 'admin_base.html' %}
 {% block content %}
-Order Create Form
+<h1>Создание нового заказа</h1>
+</br>
+<form name="order_create_form" action="/admin_center/order_create" method="POST">
+	{{ form.as_p }}
+	<input type="submit" value="Создать заказ"> <a href=".">Отмена</a>
+</form>
 {% endblock %}

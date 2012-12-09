@@ -27,9 +27,7 @@ urlpatterns = patterns('',
     # operation center
     ('^admin_center/$', admin_center),
     url(r'^admin_center/login/$', auth_views.login, {'template_name': 'admin_login.html'}, name='auth_login'),
-    ('^admin_center/test/$', test),
     ('^admin_center/order_create$', order_create),
-    ('^admin_center/order_details$', order_details),
     ('^admin_center/orders_import$', orders_import),
     ('^admin_center/orders_management$', orders_management),
 
