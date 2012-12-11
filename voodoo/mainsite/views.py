@@ -236,3 +236,6 @@ def save_del_details(request):
 def order_details(request):
     print "\norder_details\n"
     return HttpResponse('')
+
+def basket(request):
+    return render_to_response('basket.html',  context_instance=RequestContext(request))

@@ -1,1 +1,45 @@
 {% extends "base.html" %}
+
+{% block css %}
+
+<style>
+#basket_form table tbody td input{
+	margin-left: 7px;
+}
+</style>
+
+{% endblock %}
+{% block javascript %}
+
+<script type="text/javascript">
+</script>
+
+{% endblock %}
+{% block main %}
+<p>Содержимое корзины:</p>
+<form id="basket_form" method="POST" action="#">
+    <table>
+    	<thead>
+	        <tr>
+	            <th>Номер / бренд</th>
+	            <th>Срок поставки</th>
+	            <th>Колличество</th>
+	            <th>Стоимость</th>
+	            <th></th>
+	        </tr>
+	    </thead>
+        <tbody>
+	        <tr>
+	            <td>1</td>
+	            <td>1</td>
+	            <td><div><input type="button" value="-"><input style="width:40px" type="text" value="1"><input type="button" value="+"></div></td>
+	            <td>1</td>
+	        </tr>
+        </tbody>
+    </table>
+    <div>
+    	<input class="float-left" type="submit" value="Оформить заказ" />
+    	<input class="float-right" type="button" value="Обновить" />
+    </div>
+</form>
+{% endblock %}
