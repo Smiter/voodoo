@@ -13,12 +13,34 @@
 
 <script type="text/javascript">
 $(function(){
-	$("#plus_detail").live('click', function(){
-		console.log($("#num_detail").val())
+	$(".plus_detail").live('click', function(){
+		var n = parseInt($(this).siblings('.num_detail').val()) + 1
+		$(this).siblings('.num_detail').val(n)
 	})
-	$("#minus_detail").live('click', function(){
-		console.log($("#num_detail").val())
+	$(".minus_detail").live('click', function(){
+		if ( parseInt($(this).siblings('.num_detail').val()) == 1)
+			return
+		var n = parseInt($(this).siblings('.num_detail').val()) - 1
+		$(this).siblings('.num_detail').val(n)
 	})
+
+	$('#recount').live('click',function () {
+			var ids = {}
+			var can_request = true
+			$("#basket_form table tbody tr").each(function() {
+				id = $('.item_id', this).val()
+				ids[id] = $('.num_detail', this).val()
+			});
+			console.log(ids)
+			$.ajax({
+              type: "POST",
+              url: '/update_basket/',
+              data: ids
+              }).done(function( msg ) {
+
+              })
+	});
+
 })
 </script>
 
@@ -29,6 +51,7 @@ $(function(){
     <table>
     	<thead>
 	        <tr>
+	        	<th></th>
 	            <th>Номер / бренд</th>
 	            <th>Срок поставки</th>
 	            <th>Колличество</th>
@@ -37,12 +60,15 @@ $(function(){
 	        </tr>
 	    </thead>
         <tbody>
-	        <tr>
-	            <td>1</td>
-	            <td>1</td>
-	            <td><div><input id="minus_detail" type="button" value="-"><input id="num_detail" style="width:40px" type="text" value="1"><input id="plus_detail" type="button" value="+"></div></td>
-	            <td>1</td>
-	        </tr>
+        	{% for item in cart %}
+        	        <tr>
+        	        	<td><input class="item_id" type="hidden" value="{{ item.product.id }}"></td>
+        	            <td>{{ item.product.name }}</td>
+        	            <td>{{ item.product.delivery_time }}</td>
+        	            <td><div><input class="minus_detail" type="button" value="-"><input class="num_detail" style="width:40px" type="text" value="1" name="num_detail"><input class="plus_detail" type="button" value="+"></div></td>
+        	            <td>{{ item.total_price }}</td>
+        	        </tr>
+        	{% endfor %}
 	        <tr>
 	            <td></td>
 	            <td></td>
@@ -53,7 +79,22 @@ $(function(){
     </table>
     <div>
     	<input class="float-left" type="submit" value="Оформить заказ" />
-    	<input class="float-right" type="button" value="Обновить" />
+    	<input id="recount" class="float-right" type="button" value="Обновить" />
     </div>
 </form>
+<br>
+<br>
+<h1>Продукты</h1>
+<ul>
+	{% for p in products %}
+	<li>
+		<p>{{p.name}}</p>
+		<form method="POST" action="/add_to_cart/">
+			<input type="hidden" name="item_id" value="{{p.id}}">
+			<input type="submit" value="Купить">
+		</form>
+	</li>
+	{% endfor %}
+</ul>
+
 {% endblock %}
