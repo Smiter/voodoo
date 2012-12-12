@@ -12,6 +12,14 @@
 {% block javascript %}
 
 <script type="text/javascript">
+$(function(){
+	$("#plus_detail").live('click', function(){
+		console.log($("#num_detail").val())
+	})
+	$("#minus_detail").live('click', function(){
+		console.log($("#num_detail").val())
+	})
+})
 </script>
 
 {% endblock %}
@@ -32,8 +40,14 @@
 	        <tr>
 	            <td>1</td>
 	            <td>1</td>
-	            <td><div><input type="button" value="-"><input style="width:40px" type="text" value="1"><input type="button" value="+"></div></td>
+	            <td><div><input id="minus_detail" type="button" value="-"><input id="num_detail" style="width:40px" type="text" value="1"><input id="plus_detail" type="button" value="+"></div></td>
 	            <td>1</td>
+	        </tr>
+	        <tr>
+	            <td></td>
+	            <td></td>
+	            <td>Итого:</td>
+	            <td>2782 грн.</td>
 	        </tr>
         </tbody>
     </table>
