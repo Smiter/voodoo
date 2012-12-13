@@ -1,0 +1,9 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h3>Xls Import Form</h3>
+</br>
+<form name="import_xls_form" action="/admin_center/xls_import" method="POST" enctype="multipart/form-data">
+	{{ form.as_p }}
+	<input type="submit" value="Начать Импорт">
+</form>
+{% endblock %}

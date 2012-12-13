@@ -35,5 +35,6 @@ urlpatterns = patterns('',
     ('^admin_center/order_create$', order_create),
     ('^admin_center/orders_import$', orders_import),
     ('^admin_center/orders_management$', orders_management),
+    ('^admin_center/xls_import$', xls_import),
 
 )

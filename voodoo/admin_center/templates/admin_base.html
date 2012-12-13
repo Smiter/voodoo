@@ -3,16 +3,37 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Admin Center</title>
+	<link rel=StyleSheet href="{{STATIC_URL}}css/reset.css" type="text/css" media=screen>
 	<link rel=StyleSheet href="{{STATIC_URL}}css/admin_main.css" type="text/css" media=screen>
+	
+	{% load i18n admin_modify adminmedia %}
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
+    <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
+    <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+    <script type="text/javascript" src="/static/admin/js/core.js"></script>
+    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+    <script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+    <script type="text/javascript" src="/static/admin/js/actions.js"></script>
+    <script type="text/javascript" src="/static/admin/js/SelectBox.js"></script>
+    <script type="text/javascript" src="/static/admin/js/SelectFilter2.js"></script>
+    <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+    <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="http://malsup.github.com/jquery.form.js"></script> 
 </head>
 <body>
-    <div>{% include 'admin_header.html' %}</div>
-    <div class="admin-container">
-    	{% include 'admin_menu.html' %}
-    	<div class="admin-content">
-    		{% block content %}{% endblock %}
-    	</div>
-    </div>
-    <div>{% include 'admin_footer.html' %}</div>
+	<div id="wraper" class="content">
+	    <div>{% include 'admin_header.html' %}</div>
+	    <div class="admin-container">
+	    	{% include 'admin_menu.html' %}
+	    	<div class="admin-content">
+	    		{% block content %}{% endblock %}
+	    	</div>
+	    </div>
+	    <div>{% include 'admin_footer.html' %}</div>
+	</div>
 </body>
 </html>
