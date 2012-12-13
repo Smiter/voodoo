@@ -36,8 +36,10 @@ $(function(){
               type: "POST",
               url: '/update_basket/',
               data: ids
-              }).done(function( msg ) {
-
+              }).done(function( items ) {
+              	$("#basket_form table tbody tr").each(function(index,value) {
+					$('.total_price', this).text(items[index])
+				});
               })
 	});
 
@@ -65,8 +67,8 @@ $(function(){
         	        	<td><input class="item_id" type="hidden" value="{{ item.product.id }}"></td>
         	            <td>{{ item.product.name }}</td>
         	            <td>{{ item.product.delivery_time }}</td>
-        	            <td><div><input class="minus_detail" type="button" value="-"><input class="num_detail" style="width:40px" type="text" value="1" name="num_detail"><input class="plus_detail" type="button" value="+"></div></td>
-        	            <td>{{ item.total_price }}</td>
+        	            <td><div><input class="minus_detail" type="button" value="-"><input class="num_detail" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail"><input class="plus_detail" type="button" value="+"></div></td>
+        	            <td class="total_price">{{ item.total_price }}</td>
         	        </tr>
         	{% endfor %}
 	        <tr>

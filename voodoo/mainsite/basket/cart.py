@@ -69,6 +69,11 @@ class Cart:
                 cart=self.cart,
                 product=product,
             )
+            item.cart = self.cart
+            item.product = product
+            item.unit_price = unit_price
+            item.quantity = quantity
+            item.save()
         except models.Item.DoesNotExist:
             raise ItemDoesNotExist
 
