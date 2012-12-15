@@ -70,6 +70,7 @@ def xls_import(request):
         column_brand = int(request.POST['column_brand']) - 1
         column_count = int(request.POST['column_count']) - 1
         column_price = int(request.POST['column_price']) - 1
+        start_row = int(request.POST['start_row']) - 1
         
         # column_description optional 
         if request.POST['column_description'] is not None:
@@ -94,7 +95,9 @@ def xls_import(request):
 #                print '-cel-'
 #                print c_el
 #            print '---new row--- \n'
-                
+            #TODO write message if import sucessfull
+    else:
+        form = XlsImportForm()                
     return direct_to_template(request, 'xls_import.html', {'menu_elements': getMenuElements(), 'form': form})
 
 def getMenuElements():

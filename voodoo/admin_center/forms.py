@@ -55,6 +55,7 @@ class XlsImportForm(forms.Form):
     column_description = IntegerField(label='Описание', min_value = 1, required=False)
     column_count = IntegerField(label='Количество', min_value = 1)
     column_price = IntegerField(label='Цена', min_value = 1)
+    start_row = IntegerField(label='Строка с которой начать импорт', min_value = 1)
     
     def clean_file(self):
         file = self.cleaned_data['file']
