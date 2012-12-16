@@ -1,0 +1,10 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h3>Xls Import Form</h3>
+</br>
+<pre>Укажите номер столбца для соответсвующих значений и номер строки с которого начать импорт данных.</pre>
+<form name="test_form" action="/admin_center/test_view" method="POST" enctype="multipart/form-data">
+	{{ form.as_p }}
+	<input type="submit" value="Test">
+</form>
+{% endblock %}

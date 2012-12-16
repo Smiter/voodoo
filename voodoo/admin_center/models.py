@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # encoding: UTF-8
+
 from django.db import models
 from django.db.models import *
 from django.core.validators import MaxLengthValidator
@@ -69,6 +71,13 @@ class Order(models.Model):
     
     def __unicode__(self):
         return self.client_name
+   
+class Supplier(models.Model):
+    name = CharField(verbose_name='Название', max_length=120)
+    delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
+    
+    def __unicode__(self):
+        return self.name
     
 class Product(models.Model):
     code = CharField(verbose_name='Номер', max_length=120)
@@ -76,4 +85,8 @@ class Product(models.Model):
     description = CharField(verbose_name='Описание', max_length=120, blank=True)
     count = CharField(verbose_name='Количество', max_length=120, blank=True)
     price = CharField(verbose_name='Цена', max_length=120)
-    date_of_import = CharField(verbose_name='Дата импорта', max_length=120)
+    supplier = ManyToManyField(Supplier)
+    date_of_import = DateField(verbose_name='Дата импорта', max_length=120)
+    
+    def __unicode__(self):
+        return self.code

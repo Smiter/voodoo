@@ -1,10 +1,12 @@
 # encoding: UTF-8
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
-from voodoo.admin_center.models import Menu, Order
+from voodoo.admin_center.models import Menu, Order, Product, Supplier
 from voodoo.admin_center.forms import OrderForm, OrdersManagementForm,\
-    XlsImportForm
+    XlsImportForm, TestForm
 import xlrd
+
 #from django.db import models
 
 @login_required(login_url='/admin_center/login/')
@@ -63,41 +65,43 @@ def orders_import(request):
 
 @login_required(login_url='/admin_center/login/')
 def xls_import(request):
-    form = XlsImportForm(request.POST, request.FILES or None)
-    if form.is_valid():
-        #adapting column numbers to xlrd: -1
-        column_number = int(request.POST['column_number']) - 1
-        column_brand = int(request.POST['column_brand']) - 1
-        column_count = int(request.POST['column_count']) - 1
-        column_price = int(request.POST['column_price']) - 1
-        start_row = int(request.POST['start_row']) - 1
+    
+    if request.method == 'POST':
+        form = XlsImportForm(request.POST, request.FILES or None)
         
-        # column_description optional 
-        if request.POST['column_description'] is not None:
-            column_description = int(request.POST['column_description']) - 1
-        
-        # opening file
-        rb = xlrd.open_workbook(file_contents=request.FILES['file'].read())
-        sheet = rb.sheet_by_index(0)
-        
-        for rownum in range(sheet.nrows):
-            row = sheet.row_values(rownum)
+        if form.is_valid():
+            #adapting column numbers to xlrd: -1
+            column_number = int(request.POST['column_number']) - 1
+            column_brand = int(request.POST['column_brand']) - 1
+            column_count = int(request.POST['column_count']) - 1
+            column_price = int(request.POST['column_price']) - 1
+            start_row = int(request.POST['start_row']) - 1
             
-            # if all data types is correct - creating Model
-            # else go next row
-            print row[column_number]
-            print row[column_brand]
-            print row[column_description]
-            print row[column_count]
-            print row[column_price]
+            # column_description optional 
+            if request.POST['column_description'] is not None:
+                column_description = int(request.POST['column_description']) - 1
             
-#            for c_el in row:
-#                print '-cel-'
-#                print c_el
-#            print '---new row--- \n'
-            #TODO write message if import sucessfull
+            supplier = Supplier.objects.get(id = int(request.POST['supplier']))
+            date_of_import = datetime.now()
+            
+            # opening file
+            rb = xlrd.open_workbook(file_contents=request.FILES['file'].read())
+            sheet = rb.sheet_by_index(0)
+            
+            for rownum in range(start_row, sheet.nrows):
+                row = sheet.row_values(rownum)
+                
+                # creating Model
+                product = Product(code = row[column_number], brand = row[column_brand], 
+                                  description = row[column_description], count = row[column_count], 
+                                  price = [column_price], date_of_import = date_of_import)
+                product.save()
+                product.supplier.add(supplier)
+                
+            #TODO Message. ФАЙЛ заимпорчен. ЗАПИСЕЙ добавлено. ВРЕМЕНИ потрачено.
     else:
-        form = XlsImportForm()                
+        form = XlsImportForm()
+            
     return direct_to_template(request, 'xls_import.html', {'menu_elements': getMenuElements(), 'form': form})
 
 def getMenuElements():
@@ -107,3 +111,13 @@ def getMenuElements():
         element.link = element.name
         
     return menu_elements
+
+def test_view(request):
+    form = TestForm(request.POST);
+    
+    print 'initial enter'
+    
+    if form.is_valid():
+        print 'form is valid'
+    
+    return direct_to_template(request, 'test.html', {'menu_elements': getMenuElements(), 'form': form})
