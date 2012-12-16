@@ -178,7 +178,8 @@ INSTALLED_APPS = (
     'pymorphy',
     'django.contrib.admin',
     'voodoo.custom_admin',
-    'xlrd'
+    'xlrd',
+    'bootstrap_toolkit',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

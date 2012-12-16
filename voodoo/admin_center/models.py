@@ -47,13 +47,13 @@ CAR_GEARBOXES = (
 
 class Order(models.Model):
     # Создание заказа
+    required_css_class = 'required'
     
     # Информация о заказчике
     client_name = CharField(verbose_name='Ф.И.О. или название клиента', max_length=120)
     client_phone = CharField(verbose_name='Контактные телефоны', max_length=120)
     client_code = CharField(verbose_name='Код клиента в ATSP', max_length=120, blank=True)
     client_additional_information = CharField(verbose_name='Дополнительная информация', max_length=500, blank=True)
-    required_css_class = 'required'
     # Информация о авто
     car_brand = CharField(verbose_name='Марка автомобиля', max_length=120, blank=True)
     car_vin = CharField(verbose_name='VIN',validators=[MinLengthValidator(17), MaxLengthValidator(17)], max_length=17, blank=True)

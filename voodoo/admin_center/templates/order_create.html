@@ -1,9 +1,47 @@
 {% extends 'admin_base.html' %}
 {% block content %}
+{% load bootstrap_toolkit %}
 <h3>Создание нового заказа</h3>
 </br>
 <form name="order_create_form" action="/admin_center/order_create" method="POST">
-	{{ form.as_p }}
+	<table>
+		{% csrf_token %}
+		{{ form.as_table }}
+	</table>
+	<div class="create-new-order-table-title">Список запчастей заказа</div>
+	<table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+		<tr class="create-new-order-table-header">
+			<td>№</td>
+			<td>?</td>
+			<td>Номер</td>
+			<td>Бренд</td>
+			<td>Комментарии</td>
+			<td>Цена 1</td>
+			<td>Цена 2</td>
+			<td>Вал.</td>
+			<td>Кол.</td>
+			<td>Поставщик</td>
+			<td>Срок поставки</td>
+			<td>Статус</td>
+			<td>?</td>
+		</tr>
+		<tr>
+			<td>1.</td>
+			<td></td>
+			<td><input type="text" style="width:50px"/></td>
+			<td><input type="text" style="width:40px"/></td>
+			<td><input type="text" style="width:70px"/></td>
+			<td><input type="text" style="width:40px" value="0.00"/></td>
+			<td><input type="text" style="width:40px" value="0.00"/></td>
+			<td><select><option>UAH</option><option>USD</option></select></td>
+			<td><input type="text" style="width:40px"/></td>
+			<td><select style="width:70px"><option> </option><option> </option></select></td>
+			<td><input type="text" style="width:40px"/></td>
+			<td><select style="width:70px"><option> </option><option> </option></select></td>
+			<td></td>
+		</tr>
+	</table>
+	<div><input type="button" value="Добавить ещё запчасть"></div>
 	<input type="submit" value="Создать заказ"> <a href=".">Отмена</a>
 </form>
 {% endblock %}
