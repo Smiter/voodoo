@@ -2,9 +2,16 @@
 {% block content %}
 <h3>Xls Import Form</h3>
 </br>
+{% if message %}
+	<div class="info">
+		{{ message }}
+	</div>
+{% endif %}
 <pre>Укажите номер столбца для соответсвующих значений и номер строки с которого начать импорт данных.</pre>
 <form name="import_xls_form" action="/admin_center/xls_import" method="POST" enctype="multipart/form-data">
-	{{ form.as_p }}
+	<table>
+		{{ form.as_table }}
+	</table>
 	<input type="submit" value="Начать Импорт">
 </form>
 {% endblock %}

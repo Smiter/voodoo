@@ -86,7 +86,7 @@ class Product(models.Model):
     count = CharField(verbose_name='Количество', max_length=120, blank=True)
     price = CharField(verbose_name='Цена', max_length=120)
     supplier = ManyToManyField(Supplier)
-    date_of_import = DateField(verbose_name='Дата импорта', max_length=120)
+    date_of_import = DateTimeField(verbose_name='Дата импорта', max_length=120, auto_now_add=True)
     
     def __unicode__(self):
         return self.code

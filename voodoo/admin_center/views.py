@@ -65,12 +65,14 @@ def orders_import(request):
 
 @login_required(login_url='/admin_center/login/')
 def xls_import(request):
+    message = '';
     
     if request.method == 'POST':
         form = XlsImportForm(request.POST, request.FILES or None)
         
         if form.is_valid():
-            #adapting column numbers to xlrd: -1
+            rows_added = 0
+            # adapting column numbers to xlrd: -1
             column_number = int(request.POST['column_number']) - 1
             column_brand = int(request.POST['column_brand']) - 1
             column_count = int(request.POST['column_count']) - 1
@@ -82,27 +84,34 @@ def xls_import(request):
                 column_description = int(request.POST['column_description']) - 1
             
             supplier = Supplier.objects.get(id = int(request.POST['supplier']))
-            date_of_import = datetime.now()
             
             # opening file
-            rb = xlrd.open_workbook(file_contents=request.FILES['file'].read())
+            file_name = request.FILES['file']
+            rb = xlrd.open_workbook(file_contents=file_name.read())
             sheet = rb.sheet_by_index(0)
             
+            # going through rows in range
             for rownum in range(start_row, sheet.nrows):
                 row = sheet.row_values(rownum)
                 
                 # creating Model
                 product = Product(code = row[column_number], brand = row[column_brand], 
                                   description = row[column_description], count = row[column_count], 
-                                  price = [column_price], date_of_import = date_of_import)
+                                  price = [column_price])
                 product.save()
                 product.supplier.add(supplier)
                 
-            #TODO Message. ФАЙЛ заимпорчен. ЗАПИСЕЙ добавлено. ВРЕМЕНИ потрачено.
+                rows_added += 1
+                
+            # message
+            message = "Файл %s успешно импортирован. %s записей добавлено." % (file_name, rows_added)
+            
+            # cleaning form
+            form = XlsImportForm()
     else:
         form = XlsImportForm()
             
-    return direct_to_template(request, 'xls_import.html', {'menu_elements': getMenuElements(), 'form': form})
+    return direct_to_template(request, 'xls_import.html', {'menu_elements': getMenuElements(), 'form': form, 'message': message})
 
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())

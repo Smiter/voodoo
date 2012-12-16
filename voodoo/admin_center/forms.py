@@ -26,6 +26,7 @@ class OrderForm(forms.ModelForm):
     
 class OrdersManagementForm(forms.Form):
     # Фильтр
+    required_css_class = 'required'
     order_filter_number = forms.CharField(label='Номер заказа', required=False)
     order_filter_status = forms.ChoiceField(
                                       label="Статус заказа",
@@ -46,16 +47,17 @@ class OrdersManagementForm(forms.Form):
 IMPORT_FILE_TYPES = ['.xls', ]
 
 class XlsImportForm(forms.Form):
+    required_css_class = 'required'
     # Импорт xls
     #TODO добавить подсказку
     file = forms.FileField(label='Файл для импорта')
-    column_number = forms.IntegerField(label='Код', min_value = 1)
-    column_brand = forms.IntegerField(label='Бдэнд', min_value = 1)
-    column_description = forms.IntegerField(label='Описание', min_value = 1, required=False)
-    column_count = forms.IntegerField(label='Количество', min_value = 1)
-    column_price = forms.IntegerField(label='Цена', min_value = 1)
+    column_number = forms.IntegerField(label='Столбец "Код"', min_value = 1)
+    column_brand = forms.IntegerField(label='Столбец "Бдэнд"', min_value = 1)
+    column_description = forms.IntegerField(label='Столбец "Описание"', min_value = 1, required=False)
+    column_count = forms.IntegerField(label='Столбец "Количество"', min_value = 1)
+    column_price = forms.IntegerField(label='Столбец "Цена"', min_value = 1)
     start_row = forms.IntegerField(label='Строка с которой начать импорт', min_value = 1)
-    supplier = forms.ModelMultipleChoiceField(label="Поставщик", queryset=Supplier.objects.all())
+    supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all())
     
     def clean_file(self):
         file = self.cleaned_data['file']
