@@ -39,8 +39,8 @@ TIME_ZONE = 'Europe/Kiev'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-# LANGUAGE_CODE = 'en-us
-LANGUAGE_CODE = 'ru-RU'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'ru-RU'
 
 SITE_ID = 1
 
@@ -128,6 +128,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'voodoo.mainsite.middleware.BasketMiddlWare',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -169,7 +170,7 @@ INSTALLED_APPS = (
     'voodoo.admin_center',
     'voodoo.mainsite.basket',
     'registration',
-    
+    'bootstrap_toolkit',
     'captcha',
     'admin_tools',
     'admin_tools.theming',
@@ -217,3 +218,7 @@ LOGGING = {
 
 
 PYMORPHY_DICTS = {'ru': { 'dir': at_project_root('files', 'dicts')}}
+BOOTSTRAP_BASE_URL = 'http://twitter.github.com/bootstrap/assets/'
+BOOTSTRAP_CSS_BASE_URL = BOOTSTRAP_BASE_URL + 'css/'
+BOOTSTRAP_CSS_URL = BOOTSTRAP_CSS_BASE_URL + 'bootstrap.css'
+BOOTSTRAP_JS_BASE_URL = BOOTSTRAP_BASE_URL + 'js/'

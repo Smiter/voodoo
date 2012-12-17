@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from registration.models import RegistrationProfile
 from registration.models import RegistrationManager
+from voodoo.mainsite.basket.models import Item, Product
 
 
 class MyRegistrationProfile(RegistrationProfile):
@@ -188,3 +189,22 @@ class VinDetails(models.Model):
         verbose_name = "VinDetails"
         verbose_name_plural = "VinDetails"
 
+
+ORDER_CHOICES = (
+            (u'Сообщен', u'Сообщен'),
+            (u'Оформлен', u'Оформлен'),
+            (u'Заказан', u'Заказан'),
+            (u'Доставлен', u'Доставлен'),
+            (u'Отказ', u'Отказ'),
+)
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User, unique=False)
+    items = models.ManyToManyField(Item)
+    order_time = models.DateTimeField(max_length=120, default=datetime.now, blank=True, verbose_name='Дата заказа')
+    comment = models.CharField(max_length=500, verbose_name='Комментарии к заказу', blank=True, null=True)
+    status = models.CharField(max_length=30, choices=ORDER_CHOICES, verbose_name='Статус заказа')
+
+    def __unicode__(self):
+        return self.user.username

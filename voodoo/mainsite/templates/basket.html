@@ -4,7 +4,9 @@
 
 <style>
 #basket_form table tbody td input{
-	margin-left: 7px;
+	/*margin-left: 7px;*/
+	/*margin-bottom: 0px;*/
+	/*margin-right: 7px;*/
 }
 </style>
 
@@ -37,22 +39,47 @@ $(function(){
               url: '/update_basket/',
               data: ids
               }).done(function( items ) {
+              	var total_basket_price = 0
               	$("#basket_form table tbody tr").each(function(index,value) {
 					$('.total_price', this).text(items[index])
+					if(items[index])
+						total_basket_price = total_basket_price + parseFloat(items[index])
+					
 				});
+				$('#total_price_basket').text(total_basket_price+" грн.")
               })
 	});
+
+	$(".del_item_img").live('click',function(){
+		var id = $(this).closest('tr').find('.item_id').val()
+		$(this).closest('tr').remove()
+		$.ajax({
+          type: "POST",
+          url: '/del_item/',
+          data: {"id":id}
+          }).done(function( items ) {
+          	var total_basket_price = 0
+          	$("#basket_form table tbody tr").each(function(index,value) {
+				$('.total_price', this).text(items[index])
+				if(items[index])
+					total_basket_price = total_basket_price + parseFloat(items[index])
+				
+			});
+			$('#total_price_basket').text(total_basket_price+" грн.")
+          })
+	})
 
 })
 </script>
 
 {% endblock %}
 {% block main %}
-<p>Содержимое корзины:</p>
-<form id="basket_form" method="POST" action="#">
-    <table>
+<h3>Содержимое корзины:</h3>
+<form id="basket_form" method="POST" action="/make_order/">
+    <table class="table">
     	<thead>
 	        <tr>
+	        	<th></th>
 	        	<th></th>
 	            <th>Номер / бренд</th>
 	            <th>Срок поставки</th>
@@ -64,39 +91,78 @@ $(function(){
         <tbody>
         	{% for item in cart %}
         	        <tr>
-        	        	<td><input class="item_id" type="hidden" value="{{ item.product.id }}"></td>
-        	            <td>{{ item.product.name }}</td>
-        	            <td>{{ item.product.delivery_time }}</td>
-        	            <td><div><input class="minus_detail" type="button" value="-"><input class="num_detail" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail"><input class="plus_detail" type="button" value="+"></div></td>
-        	            <td class="total_price">{{ item.total_price }}</td>
+        	        	<td><input name="item_id" class="item_id" type="hidden" value="{{ item.product.id }}"></td>
+        	        	<td><img width="100" height="100" src="/static/images/{{item.product.image}}"></td>
+        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.name }}</p></td>
+        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.delivery_time }}</p></td>
+        	            <td>
+        	            	<!-- <div><button class="minus_detail btn" type="button">-</button><input class="num_detail" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail"><button class="plus_detail btn" type="button">+</button>
+        	            	</div> -->
+
+        	            	<div style="margin-top:38px;" class="input-prepend input-append">
+        	            	<button class="minus_detail btn" type="button">-</button>
+        	            	<input class="num_detail span2" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail">
+        	            	<button class="plus_detail btn" type="button">+</button>
+        	            	</div>
+
+
+        	            </td>
+        	            <td><p style="margin-top:44px;" class="total_price float-left">{{ item.total_price }}</p></td>
+        	            <td><a class="del_item_img" href="#" name="close">
+							<img style="margin-top:44px;"  width="18" height="18" alt="×" src="/static/images/del.jpeg">
+							</a>
+						</td>
         	        </tr>
         	{% endfor %}
 	        <tr>
 	            <td></td>
 	            <td></td>
 	            <td>Итого:</td>
-	            <td>2782 грн.</td>
+	            <td id="total_price_basket">{{total_price}} грн.</td>
+	            <td></td>
+	            <td></td>
+	            <td></td>
 	        </tr>
         </tbody>
     </table>
     <div>
-    	<input class="float-left" type="submit" value="Оформить заказ" />
-    	<input id="recount" class="float-right" type="button" value="Обновить" />
+    	{% if request.user.is_authenticated %}
+    	<button class="float-left btn btn-primary" type="submit">Оформить заказ</button>
+    	{% else %}
+    	<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Оформить заказ</a>
+    	{% endif %}
+    	<button id="recount" class="float-right btn btn-primary" type="button">Обновить</button>
     </div>
 </form>
 <br>
-<br>
-<h1>Продукты</h1>
-<ul>
-	{% for p in products %}
-	<li>
-		<p>{{p.name}}</p>
-		<form method="POST" action="/add_to_cart/">
-			<input type="hidden" name="item_id" value="{{p.id}}">
-			<input type="submit" value="Купить">
-		</form>
-	</li>
-	{% endfor %}
-</ul>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Оформление заказа</h3>
+</div>
+<div class="modal-body">
+<form method="POST" action="/make_order/">
+<table>
+    	<tbody>
+	        <tr>
+	        	<td>Имя</td>
+	            <td><input name="name" type="text"></td>
+	        </tr>
+	        <tr>
+	        	<td>Телефон</td>
+	            <td><input name="phone" type="text"></td>
+	        </tr>
+	    </tbody>
+	</table>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button type="submit" class="btn btn-primary">Make order</button>
+</form>
+</div>
+</div>
+
 
 {% endblock %}

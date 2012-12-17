@@ -2,7 +2,7 @@ from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 # from django.contrib import admin
 from russian_admin import admin
-from voodoo.mainsite.models import MyRegistrationProfile, Profile, Prepays, OrderDispatch, Sendings, VinDetails, VinRequest, CarAdditional
+from voodoo.mainsite.models import MyRegistrationProfile, Profile, Prepays, OrderDispatch, Sendings, VinDetails, VinRequest, CarAdditional, Order
 from django.utils.translation import ugettext_lazy as _
 from voodoo.mainsite.basket.models import Product, Item
 
@@ -52,3 +52,4 @@ admin.site.register(VinRequest)
 admin.site.register(CarAdditional)
 admin.site.register(Product)
 admin.site.register(Item)
+admin.site.register(Order)

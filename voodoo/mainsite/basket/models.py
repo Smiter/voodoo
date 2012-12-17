@@ -30,8 +30,6 @@ class ItemManager(models.Manager):
 class Item(models.Model):
     cart = models.ForeignKey(Cart, verbose_name=_('cart'))
     quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
-    unit_price = models.DecimalField(max_digits=18, decimal_places=2, verbose_name=('unit price'))
-    # product as generic relation
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
 
@@ -46,7 +44,7 @@ class Item(models.Model):
         return 'Item'
 
     def total_price(self):
-        return self.quantity * self.unit_price
+        return self.quantity * self.product.price
     total_price = property(total_price)
 
     # product
@@ -64,3 +62,4 @@ class Product(models.Model):
     name = models.CharField(max_length=120, verbose_name=u'Номер/Бренд')
     delivery_time = models.CharField(max_length=120, verbose_name=u'Срок доставки')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=u'Стоимость')
+    image = models.CharField(max_length=120, verbose_name=u'Картинка')

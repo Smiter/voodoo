@@ -3,13 +3,14 @@
 {% block javascript %}
 <script type="text/javascript"> 
 	$(function(){
+	  	$("#menu ul li:eq(4)").addClass("active")
 		var details_count = 1;
 		$('#add_to_details').live('click',function () {
 			console.log("add new line")
 			$("#vin_details_list").append
 			(
-				  '<li>'
-				+	'<label>'+ ++details_count +'.</label>'
+				  '<li style="margin-top:10px;">'
+				+	'<label style="float:left">'+ ++details_count +'.</label>'
 				+	'<input name="details_name" class="detail_name" type="text"/>'
 				+	'<input name="details_number" class="detail_number" type="text" value="1"/>'
 				+  '</li>'
@@ -58,7 +59,10 @@
 	}
 
 	#submit {
-		margin-left: 250px;
+		/*margin-left: 250px;*/
+	}
+	.controls .checkbox {
+		/*float: left;*/
 	}
 
 </style>
@@ -70,21 +74,22 @@
 	Просьба вводить данные точно и максимально полно - особенно в поле информации по оплате, где желательно указать, за что Вы заплатили. Если выбран тип платежа "Другое", то укажите чем отпралвены деньги. Сумму нужно указывать не ту, которую с Вас взял банк, а ту, которая идет на оплату заказа(ов).	Получив уведомление об оплате, мы быстрее сможем приступить к выполнению Вашего заказа.
 
 </pre>
-
-<form id="vin_form" action="/vin_request/" method="post">
+{% load bootstrap_toolkit %}
+{{ form.media }}
+<form class="form-horizontal" id="vin_form" action="/vin_request/" method="post">
 	<table id="vin_request_table">
-		{{ form.as_table }}
+		{{ form|as_bootstrap:"horizontal" }}
 	</table>
 	<div id="vin_details">
 		<p>Опишите подробно запрашиваемые запчасти и их колличество</p>
 		<ul id="vin_details_list">
 			<li> 
-				<label>1.</label><input name="details_name" class="detail_name" type="text"/><input class="detail_number" name="details_number" type="text" value="1"/>
+				<label style="float:left">1.</label><input name="details_name" class="detail_name" type="text"/><input class="detail_number" name="details_number" type="text" value="1"/>
 			</li>
 		</ul>
-		<div id="div_with_add_and_delete"><input type="button" value="Добавить строку" id="add_to_details"><input type="button" id="delete_from_details" value="Удалить строку"></div>
+		<div id="div_with_add_and_delete"><button type="button" style="margin-right:20px" class="btn" id="add_to_details">Добавить строку</button><button type="button" class="btn" id="delete_from_details">Удалить строку</button></div>
 	</div>
-	<input id="submit" type="submit" value="Отправить запрос" />
+	<button class="btn btn-primary" id="submit" type="submit">Отправить запрос</button>
 </form>
 
 {% if success %}

@@ -1,22 +1,31 @@
 {% extends "base.html" %}
+{% block javascript%}
+<script type="text/javascript">
+	$(function(){
+	  $("#menu ul li:eq(3)").addClass("active")
+	})
+</script>
+{% endblock %}
 {% block main %}
 <h3>Отправки...</h3>
-
-<form style="border: 1px solid black; border-radius: 6px;" action="/sendings/" method="post">
-			<!-- <div style="padding-left:100px;">{{ form.min_date.errors }}</div> -->
-            <pre style="margin: 10px 10px;">Создана/редактирована между {{ form.min_date }}    и     {{form.max_date}}</pre>
-	<input style="margin: 10px 0 10px 240px;" type="submit" value="Применить фильтр" />
+{% load bootstrap_toolkit %}
+{{ form.media }}
+<form class="form-inline frame-pre" action="/sendings/" method="post">
+             {{ form|as_bootstrap:"inline" }}
+    <div class="actions">
+        <button style="margin: 10px 0 10px 240px;" type="submit" class="btn btn-primary">Применить</button>
+    </div>
 </form>
 
 {% if result %}
-<table>
+<table class="table">
 	<thead>
 		<tr>
-			<td>Дата</td>
-			<td>Получатель</td>
-			<td>Город</td>
-			<td>Склад</td>
-			<td>Номер декларации</td>
+			<th>Дата</th>
+			<th>Получатель</th>
+			<th>Город</th>
+			<th>Склад</th>
+			<th>Номер декларации</th>
 		</tr>
 	</thead>
 	<tbody>
