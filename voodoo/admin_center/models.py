@@ -45,6 +45,12 @@ CAR_GEARBOXES = (
             ('Робот', 'Робот'),
 )
 
+ORDER_STATUS = (
+            ('Принят (черный)', 'Принят (черный)'),
+            ('Обработан (зеленый)', 'Обработан (зеленый)'),
+            ('Закрыт (красный)', 'Закрыт (красный)'),
+)
+
 class Order(models.Model):
     # Создание заказа
     required_css_class = 'required'
@@ -61,13 +67,15 @@ class Order(models.Model):
     car_engine = CharField(verbose_name='Двигатель', max_length=120, blank=True)
     car_year = CharField(verbose_name='Год выпуска', max_length=120, blank=True)
     car_engine_size = CharField(verbose_name='Объем двигателя', max_length=120, blank=True)
-    car_body = CharField(verbose_name='Кузов', choices=CAR_BODIES, max_length=120, blank=True)
-    car_gearbox = CharField(verbose_name='КПП', choices=CAR_GEARBOXES, max_length=120, blank=True)
-    car_additional_information = CharField(verbose_name='Дополнительная информация', max_length=500, blank=True)
+    car_body = CharField(verbose_name='Кузов', choices=CAR_BODIES, max_length=120, default=0, blank=True)
+    car_gearbox = CharField(verbose_name='КПП', choices=CAR_GEARBOXES, max_length=120, default=0,  blank=True)
+    car_additional_information = CharField(verbose_name='Дополнительная информация по авто', max_length=500, blank=True)
     # Информация о заказе и запчастям
     order_info = CharField(verbose_name='Полная формулировка заказа', max_length=500, blank=True)
-    
     # Список запчастей заказа (таблица на темплейте)
+    # List<Product>
+    order_additional_information = CharField(verbose_name='Дополнительная информация по заказу', max_length=500, blank=True)
+    order_status = CharField(verbose_name='Статус выполнения заказа', choices=ORDER_STATUS, max_length=120, default=0)
     
     def __unicode__(self):
         return self.client_name
@@ -75,6 +83,16 @@ class Order(models.Model):
 class Supplier(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
+    
+    def getProducts(self):
+        print None
+    
+    def isProductExists(self):
+        print None
+    
+    #TODO Extract this methods into ProductManager class?
+    def getAllSuppliersByProduct(self):
+        print None
     
     def __unicode__(self):
         return self.name

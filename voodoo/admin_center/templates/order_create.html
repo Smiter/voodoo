@@ -1,6 +1,48 @@
 {% extends 'admin_base.html' %}
+{% block javascript %}
+	<script type="text/javascript">
+		var rowId = 2;
+		function onLoad(){
+			// 'show' table
+			// move table
+		}
+		function convertStringsToTableRows() {
+			alert("HelloWorld!");
+		}
+		
+		function addRowIntoTable() {
+			// increment row number. start from '2'
+			// draw row
+			var table = document.getElementById("order_details");
+			// skip footer
+			var newRow = table.insertRow(table.getElementsByTagName("tr").length - 1);
+			
+			newRow.id = 'row_' + rowId;
+			// var cell1 = row.insertCell(0);
+			// var cell2 = row.insertCell(1);
+			// cell1.innerHTML="New";
+			// cell2.innerHTML="New";
+						rowId += 1;
+		  alert("Hello my World again!");
+		}
+		
+		function refresh() {
+			// total_sum_1 and total_sum_2 updated
+			// rowN_price_1 * count
+			// rowN_price_2 * count
+		}
+		
+		function ajax() {
+			// search for 'brand' after filling 3 symbols
+		}
+		
+		function fillDeliveryTime() {
+			// fill delivery_time properly to Supplier 
+			// format: 1-2 дня, 2дня, 10-20 дней
+		}
+	</script>
+{% endblock %}
 {% block content %}
-{% load bootstrap_toolkit %}
 <h3>Создание нового заказа</h3>
 </br>
 <form name="order_create_form" action="/admin_center/order_create" method="POST">
@@ -8,9 +50,10 @@
 		{% csrf_token %}
 		{{ form.as_table }}
 	</table>
+	<div><image src="{{STATIC_URL}}images/file_add.png" alt="Перенести записи в таблицу" style="width: 24px; height: 24px" onclick="convertStringsToTableRows()"></div>
 	<div class="create-new-order-table-title">Список запчастей заказа</div>
-	<table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
-		<tr class="create-new-order-table-header">
+	<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+		<tr id ="header" class="create-new-order-table-header">
 			<td>№</td>
 			<td>?</td>
 			<td>Номер</td>
@@ -25,23 +68,68 @@
 			<td>Статус</td>
 			<td>?</td>
 		</tr>
-		<tr>
-			<td>1.</td>
-			<td></td>
-			<td><input type="text" style="width:50px"/></td>
-			<td><input type="text" style="width:40px"/></td>
-			<td><input type="text" style="width:70px"/></td>
-			<td><input type="text" style="width:40px" value="0.00"/></td>
-			<td><input type="text" style="width:40px" value="0.00"/></td>
-			<td><select><option>UAH</option><option>USD</option></select></td>
-			<td><input type="text" style="width:40px"/></td>
-			<td><select style="width:70px"><option> </option><option> </option></select></td>
-			<td><input type="text" style="width:40px"/></td>
-			<td><select style="width:70px"><option> </option><option> </option></select></td>
-			<td></td>
+		<tr id="row1" class="create-new-order-table-row">
+			<td id="row1_number">1.</td>
+			<td>&nbsp;</td>
+			<td id="row1_code"><input type="text" style="width:50px"/></td>
+			<td id="row1_brand"><input type="text" style="width:40px"/></td>
+			<td id="row1_comment"><input type="text" style="width:70px"/></td>
+			<td id="row1_price_1"><input type="text" style="width:40px" value="0.0"/></td>
+			<td id="row1_price_2"><input type="text" style="width:40px" value="0.0"/></td>
+			<td id="row1_currency">
+				{% if currencyList %}
+				<select onchange="fillDeliveryTime()">
+					{% for currency in currencyList %}
+						<option value="{{ currency }}">{{ currency }}</option>
+					{% endfor %}
+				</select>
+				{% else %}
+					Нет ни одной валюты
+				{% endif %}
+			</td>
+			<td id="row1_count"><input type="text" style="width:40px"/></td>
+			<td>
+				{% if suppliersList %}
+				<select>
+					{% for supplier in suppliersList %}
+						<option value="{{ supplier }}">{{ supplier }}</option>
+					{% endfor %}
+				</select>
+				{% else %}
+					Нет ни одного поставщика
+				{% endif %}
+			</td>
+			<td id="row1_delivery_time"><input type="text" style="width:40px"/></td>
+			<td id="row1_status">
+				{% if statusList %}
+				<select>
+					{% for status in statusList %}
+						<option value="{{ status }}">{{ status }}</option>
+					{% endfor %}
+				</select>
+				{% else %}
+					Нет ни одного поставщика
+				{% endif %}
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr class="create-new-order-table-footer">
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td style="font-weight: bold;">Всего:</td>
+			<td id="total_sum_1">&nbsp;</td>
+			<td id="total_sum_2">&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
 		</tr>
 	</table>
-	<div><input type="button" value="Добавить ещё запчасть"></div>
+	<div><input type="button" value="Добавить ещё запчасть" onclick="addRowIntoTable()"></div>
 	<input type="submit" value="Создать заказ"> <a href=".">Отмена</a>
 </form>
 {% endblock %}

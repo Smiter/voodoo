@@ -12,7 +12,7 @@ div {
  	width: 100%;
  	height: 50px;
  	background: #417690;
-	color: #FFC
+	color: #FFC;
 	border: 1px solid black; 
  }
  
@@ -86,4 +86,9 @@ div {
 	background-color: #E5E5E5;
 	text-align: center;
 	font-weight: bold;
+}
+
+.create-new-order-table-row {
+	text-align: center;
+	vertical-align: middle;
 }

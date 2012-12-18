@@ -18,11 +18,14 @@ class OrderForm(forms.ModelForm):
             'car_additional_information': forms.Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
                   + 'max-width:400px;min-width:400px'}),
-                   
+            'order_additional_information': forms.Textarea(
+            attrs={'style': 'max-height:60px;min-height:60px;'
+                  + 'max-width:400px;min-width:400px'}),
             #'car_vin': TextInput(attrs={'size': '17', 'minlength': '17', 'maxlength': '17'}),
 #            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
 #            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
         }
+#        exclude = ('client_code',)
     
 class OrdersManagementForm(forms.Form):
     # Фильтр

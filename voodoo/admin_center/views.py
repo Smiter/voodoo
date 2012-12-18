@@ -16,32 +16,44 @@ def admin_center(request):
 
 @login_required(login_url='/admin_center/login/')
 def order_create(request):
-    form = OrderForm(request.POST or None)
-    
-    if form.is_valid():
-        # TODO validating
-        # TODO working with data
-        order = Order()
-        order.save()
-        # TODO add message about saving
+    #TODO get rid of this hard-code
+    currencyList = { "UAH", "USD", "EUR" }
+    #TODO Сообщен (черный цвет), Оформлен (оранжевый), Заказан (зеленый), Доставлен (синий), Отказ (красный)
+    # also need to add ORDER and COLOR
+    statusList = { "Сообщен", "Оформлен", "Заказан", "Доставлен", "Отказ" }
+    suppliersList = Supplier.objects.all()
+    if request.method == 'POST':
+        form = OrderForm(request.POST or None)
         
-        return direct_to_template(request, 'admin_center.html', {'menu_elements': getMenuElements(), 'form': form})
+        if form.is_valid():
+            # TODO validating
+            # TODO working with data
+            order = Order()
+            order.save()
+            # TODO add message about saving
+            
+            # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
+            
+            form = OrderForm()
     else:
         form = OrderForm()
         
-    return direct_to_template(request, 'order_create.html', {'menu_elements': getMenuElements(), 'form': form})
+    return direct_to_template(request, 'order_create.html', {'menu_elements': getMenuElements(), 
+                                                             'form': form, 'currencyList': currencyList, 
+                                                             'suppliersList': suppliersList, 'statusList': statusList})
 
 @login_required(login_url='/admin_center/login/')
 def orders_management(request):
     #TODO
-    form = OrdersManagementForm(request.POST or None)
-    if form.is_valid():
-        # TODO validating
-        # TODO filtering from DB
-        # TODO rendering filtered data
-        # message 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)
-        # using results
-        print None
+    if request.method == 'POST':
+        form = OrdersManagementForm(request.POST or None)
+        if form.is_valid():
+            # TODO validating
+            # TODO filtering from DB
+            # TODO rendering filtered data
+            # message 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)
+            # using results
+            print None
     else:
         form = OrdersManagementForm()
         
