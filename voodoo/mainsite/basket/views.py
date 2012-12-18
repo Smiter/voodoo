@@ -13,7 +13,6 @@ from django.utils.simplejson import dumps
 
 def add_to_cart(request):
     print "add to cart\n"
-    print request.POST["item_id"]
     product = Product.objects.get(id=request.POST["item_id"])
     cart = Cart(request)
     cart.add(product)
@@ -22,14 +21,9 @@ def add_to_cart(request):
     return render_to_response('basket.html',  dict(cart=cart, total_price=total_price, products=Product.objects.all()), context_instance=RequestContext(request))
 
 
-def remove_from_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
-    cart = Cart(request)
-    cart.remove(product)
-
-
 def get_basket(request):
     cart = Cart(request)
+    cart.syncPrices()
     total_price = sum([(item.total_price) for item in cart.cart.item_set.all()])
     return render_to_response('basket.html',  dict(cart=cart, products=Product.objects.all(), total_price=total_price), context_instance=RequestContext(request))
 
@@ -54,12 +48,11 @@ def del_item(request):
 def make_order(request):
     cart = Cart(request)
     user = request.user
+    order = None
     if not user.is_authenticated():
-        print "SDsdadas"
-        user = MyRegistrationProfile.objects.create_inactive_user(
-            request.POST["name"], "sda@da.com", "232323", "sda", False)
-
-    order = Order(user=user, status=u'Сообщён')
+        order = Order(name=u'Не зарегистрирован, ' + request.POST["name"], phone=request.POST["phone"], status=u'Сообщён')
+    else:
+        order = Order(user=user, status=u'Сообщён')
     order.save()
     for item in cart.cart.item_set.all():
         order.items.add(item)

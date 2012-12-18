@@ -30,6 +30,11 @@ class Cart:
         for item in self.cart.item_set.all():
             yield item
 
+    def syncPrices(self):
+        for item in self:
+            item.unit_price = item.product.price
+            item.save()
+
     def new(self, request):
         cart = models.Cart(creation_date=datetime.datetime.now())
         cart.save()
@@ -46,6 +51,7 @@ class Cart:
             item = models.Item()
             item.cart = self.cart
             item.product = product
+            item.unit_price = product.price
             item.quantity = quantity
             item.save()
         else:
@@ -68,6 +74,7 @@ class Cart:
                 cart=self.cart,
                 product=product,
             )
+            item.unit_price = product.price
             item.quantity = quantity
             item.save()
         except models.Item.DoesNotExist:

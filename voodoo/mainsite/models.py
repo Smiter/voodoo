@@ -200,11 +200,13 @@ ORDER_CHOICES = (
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, unique=False)
+    user = models.ForeignKey(User, unique=False, blank=True, null=True)
+    name = models.CharField(max_length=50, verbose_name='Имя', blank=True, null=True)
+    phone = models.CharField(max_length=50, verbose_name='Телефон', blank=True, null=True)
     items = models.ManyToManyField(Item)
     order_time = models.DateTimeField(max_length=120, default=datetime.now, blank=True, verbose_name='Дата заказа')
     comment = models.CharField(max_length=500, verbose_name='Комментарии к заказу', blank=True, null=True)
     status = models.CharField(max_length=30, choices=ORDER_CHOICES, verbose_name='Статус заказа')
 
     def __unicode__(self):
-        return self.user.username
+        return self.status

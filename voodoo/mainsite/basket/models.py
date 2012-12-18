@@ -32,7 +32,7 @@ class Item(models.Model):
     quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-
+    unit_price = models.DecimalField(max_digits=18, decimal_places=2, verbose_name=_('unit price'))
     objects = ItemManager()
 
     class Meta:
@@ -44,7 +44,7 @@ class Item(models.Model):
         return 'Item'
 
     def total_price(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.unit_price
     total_price = property(total_price)
 
     # product
