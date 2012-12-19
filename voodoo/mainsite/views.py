@@ -224,6 +224,7 @@ def order_details(request):
     print "\norder_details\n"
     return HttpResponse('')
 
+
 @login_required(login_url='/index')
 def orders(request):
     result = None
