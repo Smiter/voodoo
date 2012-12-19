@@ -197,6 +197,24 @@ CAR_ADDITIONS = (
 )
 
 
+def getVinRequestForm(exclude_list, *args, **kwargs):
+    class VinRequestForm(ModelForm):
+        required_css_class = 'required'
+        car_additionals = MultipleChoiceField(label="Дополнительно",
+        widget=CheckboxSelectMultiple, choices=CAR_ADDITIONS, required=False)
+
+        class Meta:
+            model = VinRequest
+            exclude = exclude_list + ('user', 'status', 'date', 'comment')
+
+        def __init__(self):
+            super(VinRequestForm, self).__init__(*args, **kwargs)
+
+    return VinRequestForm()
+
+# form = PassengerForm( ('field1', 'field2') )
+
+
 class VinRequestForm(ModelForm):
     required_css_class = 'required'
     car_additionals = MultipleChoiceField(label="Дополнительно",

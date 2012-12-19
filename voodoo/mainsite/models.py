@@ -141,17 +141,10 @@ class CarAdditional(models.Model):
 from datetime import datetime
 
 
-
-
-# class VinRequest_CarAdditionals(models.Model):
-#     department = models.ForeignKey(Department)
-#     crossfunctionalproject = models.ForeignKey(Crossfunctonalproject)
-#     membership = models.ManyToManyField(Employee, through="Membership")
-
 class VinRequest(models.Model):
     user = models.ForeignKey(User, unique=False, blank=True, null=True)
-    name = models.CharField(max_length=50, verbose_name='Имя', blank=True, null=True)
-    phone = models.CharField(max_length=50, verbose_name='Телефон', blank=True, null=True)
+    name = models.CharField(max_length=50, verbose_name='Имя')
+    phone = models.CharField(max_length=50, verbose_name='Телефон')
     email = models.CharField(max_length=50, verbose_name='Email', blank=True, null=True)
     delivery_adress = models.CharField(max_length=50, verbose_name='Адресс доставки', blank=True, null=True)
     car_brand = models.CharField(max_length=120, verbose_name='Марка автомобиля')
