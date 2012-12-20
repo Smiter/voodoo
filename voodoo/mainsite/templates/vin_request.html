@@ -5,22 +5,46 @@
 	$(function(){
 	  	$("#menu ul li:eq(4)").addClass("active")
 		var details_count = 1;
+		// $('#add_to_details').live('click',function () {
+		// 	console.log("add new line")
+		// 	$("#vin_details_list").append
+		// 	(
+		// 		  '<li style="margin-top:10px;">'
+		// 		+	'<label style="float:left">'+ ++details_count +'.</label>'
+		// 		+	'<input name="details_name" class="detail_name" type="text"/>'
+		// 		+	'<input name="details_number" class="detail_number" type="text" value="1"/>'
+		// 		+  '</li>'
+		// 	);
+		// });
+
+		// $('#delete_from_details').live('click',function () {
+		// 	$('#vin_details_list li:last').remove();
+		// 	details_count--;
+		// });
+
 		$('#add_to_details').live('click',function () {
-			console.log("add new line")
-			$("#vin_details_list").append
+			$("#vin_details_table tbody").append
 			(
-				  '<li style="margin-top:10px;">'
-				+	'<label style="float:left">'+ ++details_count +'.</label>'
-				+	'<input name="details_name" class="detail_name" type="text"/>'
-				+	'<input name="details_number" class="detail_number" type="text" value="1"/>'
-				+  '</li>'
+				  '<tr>'
+				+ '<td>'+ ++details_count +'</td>'
+				+ '<td><input type="text" class="details_name"></td>'
+				+ '<td><input type="text" class="details_number" value="1"></td><td><label class="error_label"></label></td>'
+				+ '</tr>'
 			);
 		});
 
 		$('#delete_from_details').live('click',function () {
-			$('#vin_details_list li:last').remove();
-			details_count--;
+			if($('#vin_details_table tbody tr').length == 1)
+				return
+			$('#vin_details_table tbody tr:last').remove();
+			if($('#vin_details_table tbody tr:last').length > 0){
+				details_count--;
+			}
+			if($('#vin_details_table tbody tr:last').length == 0){
+				details_count=0
+			}
 		});
+
 	})
 
 </script>
@@ -29,7 +53,7 @@
 {% block css %}
 <style>
 	#vin_details {
-		margin: 10px 0 10px 60px;
+		/*margin: 10px 0 10px 0px;*/
 	}
 
 	#vin_details p {
@@ -65,6 +89,13 @@
 		/*float: left;*/
 	}
 
+	.details_number {
+		width:30px;
+	}
+	.details_name {
+		width:430px;
+	}
+
 </style>
 {% endblock %}
 
@@ -82,11 +113,27 @@
 	</table>
 	<div id="vin_details">
 		<p>Опишите подробно запрашиваемые запчасти и их колличество</p>
-		<ul id="vin_details_list">
+		<!-- <ul id="vin_details_list">
 			<li> 
 				<label style="float:left">1.</label><input name="details_name" class="detail_name" type="text"/><input class="detail_number" name="details_number" type="text" value="1"/>
 			</li>
-		</ul>
+		</ul> -->
+		    <table class="table" id="vin_details_table">
+			    <thead>
+				    <tr>
+					<th>№</th>
+					<th>Описание</th>
+					<th>Кол.</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>1</td>
+					<td><input type="text" name="details_name" class="details_name"></td>
+					<td><input type="text" name="details_number" class="details_number" value="1"></td><td><label class="error_label"></label></td>
+				</tr>
+			</tbody>
+            </table>    
 		<div id="div_with_add_and_delete"><button type="button" style="margin-right:20px" class="btn" id="add_to_details">Добавить строку</button><button type="button" class="btn" id="delete_from_details">Удалить строку</button></div>
 	</div>
 	<button class="btn btn-primary" id="submit" type="submit">Отправить запрос</button>

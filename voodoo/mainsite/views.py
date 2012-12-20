@@ -152,10 +152,13 @@ def vin_request(request):
                 vin_request.user = request.user
             vin_request.save()
             for i in range(len(request.POST.getlist("details_name"))):
-                vin_details = VinDetails(vin=vin_request,
-                 name=request.POST.getlist("details_name")[i],
-                 number=request.POST.getlist("details_number")[i])
-                vin_details.save()
+                details_name = request.POST.getlist("details_name")[i]
+                details_number = request.POST.getlist("details_number")[i]
+                if details_name != "" and details_number != "":
+                    vin_details = VinDetails(vin=vin_request,
+                    name=request.POST.getlist("details_name")[i],
+                    number=request.POST.getlist("details_number")[i])
+                    vin_details.save()
             for i in request.POST.getlist("car_additionals"):
                 car_additional = CarAdditional(name=i)
                 car_additional.save()
