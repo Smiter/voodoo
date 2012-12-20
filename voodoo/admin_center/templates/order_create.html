@@ -1,7 +1,10 @@
 {% extends 'admin_base.html' %}
+{% block onload %}
+	onload="addRowIntoTable()"
+{% endblock %}
 {% block javascript %}
 	<script type="text/javascript">
-		var rowId = 2;
+		var rowId = 1;
 		function onLoad(){
 			// 'show' table
 			// move table
@@ -11,34 +14,84 @@
 		}
 		
 		function addRowIntoTable() {
-			// increment row number. start from '2'
-			// draw row
 			var table = document.getElementById("order_details");
-			// skip footer
-			var newRow = table.insertRow(table.getElementsByTagName("tr").length - 1);
-			
-			newRow.id = 'row_' + rowId;
-			// var cell1 = row.insertCell(0);
-			// var cell2 = row.insertCell(1);
-			// cell1.innerHTML="New";
-			// cell2.innerHTML="New";
-						rowId += 1;
-		  alert("Hello my World again!");
+			var newRow = table.insertRow(table.getElementsByTagName("tr").length - 2);
+			newRow.id = 'row_' + rowId;			newRow.innerHTML = 	'<td id="row' + rowId + '_number">'+ rowId + '.</td>' + 
+								'<td>&nbsp;</td>' +
+								'<td><input id="row' + rowId + '_code" name="row' + rowId + '_code" type="text" style="width:50px"/></td>' +
+								'<td><input id="row' + rowId + '_brand" name="row' + rowId + '_brand" type="text" style="width:40px"/></td>' +
+								'<td><input id="row' + rowId + '_comment" name="row' + rowId + '_comment" type="text" style="width:70px"/></td>' +
+								'<td><input id="row' + rowId + '_price_1" name="row' + rowId + '_price_1" type="text" style="width:40px" value="0.0" onchange="refreshTotal()"/></td>' +
+								'<td><input id="row' + rowId + '_price_2" name="row' + rowId + '_price_2" type="text" style="width:40px" value="0.0" onchange="refreshTotal()"/></td>' +
+								'<td>' +
+									'{% if currencyList %}' +
+										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency" onchange="fillDeliveryTime()">' + 
+											'{% for currency in currencyList %}' +
+												'<option value="{{ currency }}">{{ currency }}</option>' +
+											'{% endfor %}' +
+										'</select>' +									'{% else %}' +										'Нет ни одной валюты' + 									'{% endif %}' +
+								'</td>' +								'<td><input id="row' + rowId + '_count" name="row' + rowId + '_count" type="text" style="width:40px" value="1" onchange="refreshTotal()"/></td>' +								'<td>' +
+									'{% if suppliersList %}' +
+									'<select id="row' + rowId + '_supplier" name="row' + rowId + '_supplier" onchange="fillDeliveryTime(this, ' + rowId + ')">' +
+										'<option value="">---------</option>' +
+										'{% for supplier in suppliersList %}' +
+											'<option value="{{ supplier }}">{{ supplier }}</option>' +
+										'{% endfor %}' +
+									'</select>' +
+									'{% else %}' +
+										'Нет ни одного поставщика' +
+									'{% endif %}' +
+								'</td>' +
+								'<td><input id="row' + rowId + '_delivery_time" name="row' + rowId + '_delivery_time" type="text" style="width:40px"/></td>' +
+								'<td>' +
+								'{% if statusList %}' +
+									'<select id="row' + rowId + '_status" name="row' + rowId + '_status">' +
+										'{% for status in statusList %}' +
+											'<option value="{{ status }}">{{ status }}</option>' +
+										'{% endfor %}' +
+									'</select>' +
+									'{% else %}' +
+										'Нет ни одного статуса' +
+									'{% endif %}' +
+								'</td>' +								'<td>&nbsp;</td>';			rowId += 1;
 		}
 		
-		function refresh() {
-			// total_sum_1 and total_sum_2 updated
-			// rowN_price_1 * count
-			// rowN_price_2 * count
+		function refreshTotal() {
+			var totalSumm1Element = document.getElementById("total_sum_1");
+			var totalSumm2Element = document.getElementById("total_sum_2");
+			
+			var totalSumm1 = 0;
+			var totalSumm2 = 0;
+			
+			for (var i = 1; i < rowId; i++) {
+				sum1 = parseFloat(document.getElementById("row" + i + "_price_1").value);
+				sum2 = parseFloat(document.getElementById("row" + i + "_price_2").value)
+				count = parseFloat(document.getElementById("row" + i + "_count").value);
+				
+				totalSumm1 += sum1 * count;
+				totalSumm2 += sum2 * count;
+				
+			}
+			
+			totalSumm1Element.innerHTML = totalSumm1.toFixed(1);
+			totalSumm2Element.innerHTML = totalSumm2.toFixed(1);
 		}
 		
 		function ajax() {
-			// search for 'brand' after filling 3 symbols
+			//TODO search for 'brand' after filling 3 symbols
 		}
 		
-		function fillDeliveryTime() {
-			// fill delivery_time properly to Supplier 
-			// format: 1-2 дня, 2дня, 10-20 дней
+		function fillDeliveryTime(sel, row) {
+			//TODO format: 1-2 дня, 2дня, 10-20 дней
+			// is it really needs?
+			var value = sel.options[sel.selectedIndex].value
+			
+			{% for supplier in suppliersList %}
+				if ('{{ supplier }}' == value) {
+					var delivery_time_element = document.getElementById("row" + row + "_delivery_time");
+					delivery_time_element.value = "{{ supplier.delivery_time }}";
+				}
+			{% endfor %}
 		}
 	</script>
 {% endblock %}
@@ -53,81 +106,41 @@
 	<div><image src="{{STATIC_URL}}images/file_add.png" alt="Перенести записи в таблицу" style="width: 24px; height: 24px" onclick="convertStringsToTableRows()"></div>
 	<div class="create-new-order-table-title">Список запчастей заказа</div>
 	<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
-		<tr id ="header" class="create-new-order-table-header">
-			<td>№</td>
-			<td>?</td>
-			<td>Номер</td>
-			<td>Бренд</td>
-			<td>Комментарии</td>
-			<td>Цена 1</td>
-			<td>Цена 2</td>
-			<td>Вал.</td>
-			<td>Кол.</td>
-			<td>Поставщик</td>
-			<td>Срок поставки</td>
-			<td>Статус</td>
-			<td>?</td>
-		</tr>
-		<tr id="row1" class="create-new-order-table-row">
-			<td id="row1_number">1.</td>
-			<td>&nbsp;</td>
-			<td id="row1_code"><input type="text" style="width:50px"/></td>
-			<td id="row1_brand"><input type="text" style="width:40px"/></td>
-			<td id="row1_comment"><input type="text" style="width:70px"/></td>
-			<td id="row1_price_1"><input type="text" style="width:40px" value="0.0"/></td>
-			<td id="row1_price_2"><input type="text" style="width:40px" value="0.0"/></td>
-			<td id="row1_currency">
-				{% if currencyList %}
-				<select onchange="fillDeliveryTime()">
-					{% for currency in currencyList %}
-						<option value="{{ currency }}">{{ currency }}</option>
-					{% endfor %}
-				</select>
-				{% else %}
-					Нет ни одной валюты
-				{% endif %}
-			</td>
-			<td id="row1_count"><input type="text" style="width:40px"/></td>
-			<td>
-				{% if suppliersList %}
-				<select>
-					{% for supplier in suppliersList %}
-						<option value="{{ supplier }}">{{ supplier }}</option>
-					{% endfor %}
-				</select>
-				{% else %}
-					Нет ни одного поставщика
-				{% endif %}
-			</td>
-			<td id="row1_delivery_time"><input type="text" style="width:40px"/></td>
-			<td id="row1_status">
-				{% if statusList %}
-				<select>
-					{% for status in statusList %}
-						<option value="{{ status }}">{{ status }}</option>
-					{% endfor %}
-				</select>
-				{% else %}
-					Нет ни одного поставщика
-				{% endif %}
-			</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr class="create-new-order-table-footer">
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td style="font-weight: bold;">Всего:</td>
-			<td id="total_sum_1">&nbsp;</td>
-			<td id="total_sum_2">&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
+		<thead>
+			<tr id ="header" class="create-new-order-table-header">
+				<td>№</td>
+				<td>?</td>
+				<td>Номер</td>
+				<td>Бренд</td>
+				<td>Комментарии</td>
+				<td>Цена 1</td>
+				<td>Цена 2</td>
+				<td>Вал.</td>
+				<td>Кол.</td>
+				<td>Поставщик</td>
+				<td>Срок поставки</td>
+				<td>Статус</td>
+				<td>?</td>
+			</tr>
+		</thead>
+		<tbody><tr></tr></tbody>
+		<tfoot>
+			<tr class="create-new-order-table-footer">
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td style="font-weight: bold;">Всего:</td>
+				<td id="total_sum_1">&nbsp;</td>
+				<td id="total_sum_2">&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+		</tfoot>
 	</table>
 	<div><input type="button" value="Добавить ещё запчасть" onclick="addRowIntoTable()"></div>
 	<input type="submit" value="Создать заказ"> <a href=".">Отмена</a>

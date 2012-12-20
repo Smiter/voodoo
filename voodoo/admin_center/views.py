@@ -31,13 +31,15 @@ def order_create(request):
             order = Order()
             order.save()
             # TODO add message about saving
-            
+            form
+            # TODO foreach row in table
+            # print request.POST['row%s_code' % i]
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             
             form = OrderForm()
     else:
         form = OrderForm()
-        
+    
     return direct_to_template(request, 'order_create.html', {'menu_elements': getMenuElements(), 
                                                              'form': form, 'currencyList': currencyList, 
                                                              'suppliersList': suppliersList, 'statusList': statusList})
