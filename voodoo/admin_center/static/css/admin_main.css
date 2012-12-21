@@ -4,7 +4,7 @@ div {
 
 #wraper {
 	height: 100%;
-	width: 1024px;
+	width: 1040px;
 	margin: 0 auto;
 }
  
@@ -34,7 +34,7 @@ div {
  }
  
  .admin-content {
- 	width: 780px;
+ 	width: 800px;
  	min-height: 600px;
  	margin: 0 0 0 200px;
  	padding: 20px 20px 20px 20px;

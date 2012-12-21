@@ -34,6 +34,7 @@ def order_create(request):
             form
             # TODO foreach row in table
             # print request.POST['row%s_code' % i]
+            # form.cleaned_data['subject']
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             
             form = OrderForm()
