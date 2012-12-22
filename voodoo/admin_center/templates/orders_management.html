@@ -3,7 +3,9 @@
 <h3>Управление заказами</h3>
 </br>
 <form name="orders_management_form" action="/admin_center/orders_management" method="POST">
-	{{ form.as_p }}
+	<table>
+		{{ form.as_table }}
+	</table>
 	<input type="submit" value="Применить фильтр">
 </form>
 {% if results %}
