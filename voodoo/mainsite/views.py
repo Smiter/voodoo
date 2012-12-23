@@ -41,7 +41,6 @@ def login(request):
     if user is not None:
         if user.is_active:
             auth_login(request, user)
-            response_data['msg'] = "login successful"
             response_data['user'] = user.username
         else:
             response_data['msg'] = "disabled account"
@@ -49,15 +48,6 @@ def login(request):
     else:
         if not form.is_valid():
             response_data['msg'] = "invalid login"
-            for field in form:
-                if field.html_name:
-                    if field.errors:
-                        if field.html_name == 'username':
-                            response_data['username_error'] = field.html_name + ' is requered.'
-
-                        if field.html_name == 'password':
-                            response_data['password_error'] = field.html_name + ' is requered.'
-
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
 
@@ -125,7 +115,7 @@ def sendings(request):
     else:
         form = SendingsForm()
 
-    return render_to_response('sendings.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
+    return render_to_response('sendings.html', {'form': form, 'layout':"inline", 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
 @login_required(login_url='/index')
@@ -150,31 +140,46 @@ def prepays(request):
     return render_to_response('prepays.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/index')
+# @login_required(login_url='/index')
 def vin_request(request):
     success = False
     if request.method == 'POST':
-        form = VinRequestForm(request.POST)
+        if not request.user.is_authenticated():
+            form = getVinRequestForm((), request.POST)
+        else:
+            form = getVinRequestForm(('name', 'phone', 'email', 'delivery_adress'), request.POST)
+        # form = VinRequestForm(request.POST)
         if form.is_valid():
             success = True
             vin_request = form.save(commit=False)
-            vin_request.user = request.user
+            if request.user.is_authenticated():
+                vin_request.user = request.user
             vin_request.save()
             for i in range(len(request.POST.getlist("details_name"))):
-                vin_details = VinDetails(vin=vin_request,
-                 name=request.POST.getlist("details_name")[i],
-                 number=request.POST.getlist("details_number")[i])
-                vin_details.save()
+                details_name = request.POST.getlist("details_name")[i]
+                details_number = request.POST.getlist("details_number")[i]
+                if details_name != "" and details_number != "":
+                    vin_details = VinDetails(vin=vin_request,
+                    name=request.POST.getlist("details_name")[i],
+                    number=request.POST.getlist("details_number")[i])
+                    vin_details.save()
             for i in request.POST.getlist("car_additionals"):
                 car_additional = CarAdditional(name=i)
                 car_additional.save()
                 vin_request.car_additionals.add(car_additional)
-            form = VinRequestForm()
+            if not request.user.is_authenticated():
+                form = getVinRequestForm(())
+            else:
+                form = getVinRequestForm(('name', 'phone', 'email', 'delivery_adress'))
     else:
-        form = VinRequestForm()
+        if not request.user.is_authenticated():
+            form = getVinRequestForm(())
+        else:
+            form = getVinRequestForm(('name', 'phone', 'email', 'delivery_adress'))
 
     return render_to_response('vin_request.html',
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
+
 
 @login_required(login_url='/index')
 def show_vin(request):
@@ -186,11 +191,8 @@ def show_vin(request):
         
         if form.is_valid():
             try:
-
                 min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 00:00:01'
                 max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 23:59:00'
-                logging.error(min_date)
-                logging.error(max_date)
                 result = VinRequest.objects.filter(user=request.user, date__range=(min_date, max_date))
             except:
                 result = VinRequest.objects.filter(user=request.user, date__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
@@ -240,3 +242,35 @@ def save_del_details(request):
 def order_details(request):
     print "\norder_details\n"
     return HttpResponse('')
+
+
+@login_required(login_url='/index')
+def orders(request):
+    result = None
+    error = ''
+    form = OrdersForm()
+    if request.method == 'POST':
+        form = OrdersForm(request.POST)
+        if form.is_valid():
+            try:
+                min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 00:00:01'
+                max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 23:59:00'
+                result = Order.objects.filter(user=request.user, order_time__range=(min_date, max_date))
+            except:
+                print request.POST
+                if request.POST["status"] == u'Все':
+                    result = Order.objects.filter(user=request.user, order_time__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
+                else:
+                    result = Order.objects.filter(user=request.user, status=request.POST["status"], order_time__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
+            # print result[0].items.all()[0].product.name
+            if not result:
+                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+    else:
+        form = OrdersForm()
+    
+    return render_to_response('orders.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
+
+
+def catalog(request):
+    return render_to_response('catalog.html',  dict(products=Product.objects.all()), context_instance=RequestContext(request))
+

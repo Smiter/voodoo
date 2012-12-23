@@ -1,15 +1,19 @@
 <!DOCTYPE html>
+{% load bootstrap_toolkit %}
 <html lang="ru">
 <head>
   	<meta charset="utf-8" />
-  	<title>Тут имя сайта</title>
+  	<title>Sergey Mikhaylenko </title>
   	<meta name="application-name" content="Тут имя сайта" />
   	<meta http-equiv="X-UA-Compatible" content="IE=8" />
-  	<LINK href="{{STATIC_URL}}css/reset.css" rel="stylesheet" type="text/css"> 
+    {% bootstrap_stylesheet_tag %}
+    <!-- {% bootstrap_javascript_tag "dropdown" %} -->
+  	<!-- <LINK href="{{STATIC_URL}}css/reset.css" rel="stylesheet" type="text/css">  -->
   	<LINK href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
     {% load i18n admin_modify adminmedia %}
-    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" /> -->
     <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
+    <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/docs.css">
     <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
     <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
     <script type="text/javascript" src="/admin/jsi18n/"></script>
@@ -23,12 +27,19 @@
     <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
     <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="http://malsup.github.com/jquery.form.js"></script> 
-
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .bs-docs-example::after {
+            display: none;
+        }
+        .bs-docs-example {
+            margin: 5px 0;
+        padding: 0px 8px 5px;
+        }
+    </style>
     <script type="text/javascript"> 
         $('#loginForm').ajaxForm(function(e) { 
-        	$("#username_error").text(e.username_error)
-        	$("#password_error").text(e.password_error)
         	if (e.user){
         		location.reload();
         	}
@@ -36,59 +47,79 @@
         		$("#login_msg").text(e.msg)
         	}
     	}); 
+        
+        $(function(){
+            $('#myCarousel').carousel({
+                interval: 5000
+            })
+            $('#myCarousel').carousel('next')
+        })
     </script>
     {% block javascript %} {% endblock %} 
     {% block css %} {% endblock %}  
 </head>
 
-<body>
+<body {% block onload %}{% endblock %} style="padding-top: 10px;">
     <div id="wrap">
-		<div id="header">
-    		<div id="left">
-    			<a href="/index">Тут логотип наш</a>
-    		</div>
-			<div id="right">
-    			<p>Контакты КонтактыКонтактыКонтактыКонтактыКонтакты</p>
-    		</div>
-    		<div id="middle">
-    				<form id="search">
-    					{% csrf_token %}
-	    				<input type="text" id="search_box" />
-	    				<input id="search_submit" value = "OK" type="submit" id="search_box_submit"/><br>
-	    				<a href="#">Пример поиска: 40202-JG01A</a>
-    				</form>
+        <div id="header" class="navbar gradient-control">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="float-left" href="/index"><img width="101" height="57" title="Интернет магазин" alt="Интернет магазин" src="/static/images/photo.jpg"></a>
+                    <div id="right">
+                        <p style="margin-top:10px;">Contacts: Odessa, Ukraine тел: 0937403959</p>
+                        <div style="float:right;margin: 30px 40px 0 0px" >
+                            <a href="/basket">Корзина({{request.basket_number}})</a>
+                    </div>
+                    </div>
+                    <div id="middle">
+                        <form id="search" class="navbar-search pull-left">
+                            <div class="input-append">
+                                <input  id="search_box" type="text" placeholder="Search">
+                                <button type="submit" id="search_submit" class='btn'>
+                                        <i class="icon-search"></i>
+                                    </button><br>
+                            </div>
+                            <a href="#">Пример поиска: 40202-JG01A</a>
+                        </form>
 
-    			<div id="contacts">
-    				<p>Контакты</p>
-    				<p>Каталог подбора</p>
-    			</div>
-
-    		</div>
-
-		</div>
-            <div id="container">
+                        <div id="contacts">
+                            <!-- <p>Контакты</p> -->
+                            <!-- <p>Каталог подбора</p> -->
+                            {% if request.user.is_authenticated %}
+                            <span id="login_message">Добро пожаловать, {{ request.user.username }}</span>
+                            <a href="{% url auth_logout %}?next=/index">Выход</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div style="float:left;
+    width:100%; margin-bottom:10px;margin-top:10px;" id="container" class="gradient-control">
             	
-            	<div id="left_sidebar">
-            		<p>Login</p>
-            		<p id="login_msg"></p>
+            	<div style="margin:5px 5px 0 5px;"class="" id="left_sidebar">
             		{% if request.user.is_authenticated %}
-            		<p id="login_message">Добро пожаловать, {{ request.user.username }}.</p>
-            		<br>
-            		<a href="{% url auth_logout %}?next=/index">Logout</a>
+            		<!-- <p id="login_message">Добро пожаловать, {{ request.user.username }}.</p> -->
+            		<!-- <br> -->
+            		<!-- <a href="{% url auth_logout %}?next=/index">Logout</a> -->
 
             		<div id="menu">
-            			<ul>
-            				<li><a href="/notice_of_payment">Уведомить об оплате</a></li>
-                            <li><a href="/prepays">Проплаты</a></li>
-            				<li><a href="/order_dispatch">Заказ отправки</a></li>
-            				<li><a href="/sendings">Отправки</a></li>
-            				<li><a href="/vin_request">Подать VIN запрос</a></li>
-            				<li><a href="/show_vin">VIN запросы</a></li>
+            			<ul style="width:200px;margin:0;" class="nav nav-list bs-docs-sidenav">
+                            <!-- <li class="nav-header">Меню</li> -->
+            				<li><a href="/notice_of_payment">Уведомить об оплате<i class="icon-chevron-right"></i></a></li>
+                            <li><a href="/prepays">Проплаты<i class="icon-chevron-right"></i></a></li>
+            				<li><a href="/order_dispatch">Заказ отправки<i class="icon-chevron-right"></i></a></li>
+            				<li><a href="/sendings">Отправки<i class="icon-chevron-right"></i></a></li>
+            				<li><a href="/vin_request">Подать VIN запрос<i class="icon-chevron-right"></i></a></li>
+            				<li><a href="/show_vin">VIN запросы<i class="icon-chevron-right"></i></a></li>
+                            <li><a href="/orders">Заказы<i class="icon-chevron-right"></i></a></li>
+                            <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li>
             			</ul>
             		</div>
 
             		{% else %}
-
+                    <p style="margin-left:20px">Вход для клиентов</p>
+                    <p id="login_msg"></p>
             		{% if errors %}
             		       <ul>
             		           {% for error in errors %}
@@ -101,34 +132,31 @@
             			  <table>
             			  		<tr>
             			  			<td>
-            			  				<label for="id_username">username:</label>
-            			  			</td>
-            			  			<td>
-            			  				<input id="id_username" type="text" name="username" value="{{ username }}" maxlength="30" />
-            			  			</td>
-            			  			<td>
-            			  				<label id="username_error"></label>
+                                        <input id="id_username"  name="username" class="input-medium" type="text" placeholder="Логин" value="{{ username }}">
             			  			</td>
             			  		</tr>
             			  		<tr>
             			  			<td>
-            			  				<label for="id_password">password: </label>
-            			  			</td>
-            			  			<td>
-            			  				<input type="password" name="password" id="id_password" />
-            			  			</td>
-            			  			<td>
-            			  				<label id="password_error"></label>
+                                        <input id="id_username"  name="password" class="input-medium" type="password" placeholder="Пароль" value="{{ id_password }}">
             			  			</td>
             			  		</tr>
-            			  </table>            		    
-            		      <input type="submit" value="Log In" />
+            			  </table>            		     
+            		      <button class="btn btn-primary" type="submit">Вход</button>
             		</form>
 
             		<ul>
             		    <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
             		    <li><a href="{% url registration_register %}">Регистрация</a></li>
             		</ul> 
+
+
+                            <div id="menu">
+                                <ul style="width:200px;margin:0;" class="nav nav-list bs-docs-sidenav">
+                                    <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li>
+                                    <li><a href="/vin_request">Мгновенный подбор запчастей<i class="icon-chevron-right"></i></a></li>
+                                </ul>
+                            </div>
+
             		{% endif %}
             	<!-- 	{% block left_sidebar %} 
 
@@ -136,22 +164,58 @@
             		{% endblock %} -->
             	</div>
 
-            	<div id="right_sidebar">
+            	<div style="margin-left:10px;" id="right_sidebar">
             		<div id="right_top">
-            			<p>Флешка</p>
+            			<!-- <p>Флешка</p>
             			<p>реклама</p>
-            			<p>СТО</p>
+            			<p>СТО</p> -->
+                                <div id="myCarousel" class="carousel slide">
+                                <!-- Carousel items -->
+                                <div class="carousel-inner">
+                                <!-- <div class="active item">…</div> -->
+                                <div class="item"><img  title="Интернет магазин" alt="Интернет магазин" src="/static/images/detail1.jpg"></div>
+                                <div class="item"><img title="Интернет магазин" alt="Интернет магазин" src="/static/images/detail2.jpg"></div>
+                                <div class="item"><img  title="Интернет магазин" alt="Интернет магазин" src="/static/images/detail3.jpg"></div>
+                                </div>
+                                <!-- Carousel nav -->
+                                <!-- <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a> -->
+                                <!-- <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a> -->
+                                </div>
+
+
             		</div>
 
-            		<div id="right_bottom">
-            			<p>Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.</p>
+            		<div style="margin-top:10px; margin-right:10px;margin-bottom:10px; border-top: 1px solid #DDDDDD" id="right_bottom">
+
+                        <center>
+                        <object width="290" height="250" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" style="width: 290px; height: 250px;">
+                        <embed width="290" height="250" src="/static/images/flash-banner-7.swf" type="application/x-shockwave-flash" style="width: 290px; height: 250px;">
+                        </object>
+                        </center>
+
+            			<!-- <p>Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.</p> -->
+
             		</div>
             	</div>
 
-            	<div id="main" class="content">
+            	<div id="main" class="content bs-docs-example">
             		{% block main %} {% endblock %}
             	</div>
 
+            </div>
+            <div id="footer">
+                <span class="float-left copyright">Copyright &copy; 2012 <a href="http://www.linkedin.com/pub/serhii-mikhaylenko/40/27/9b7">Mikhaylenko Sergey</a>, Все права защищены</span>
+                <ul class="float-right body-footer-social">
+                        <li style="padding-top:5px;" class="body-footer-social-i">Следите за нами:</li>
+                        <li class="body-footer-social-i"><a href="#" class="vk"></a></li>
+                        <li class="body-footer-social-i"><a href="#" class="fb"></a></li>
+                        <li class="body-footer-social-i"><a href="#" class="twitter"></a></li>
+                        <li class="body-footer-social-i"><a href="#" class="youtube"></a></li>
+                </ul>
+                <p>
+                <a href="/contact/">Контакты</a> 
+                | <a href="/terms.html">Условия работы</a>
+                | <a href="/privacy.html">Каталог</a>
             </div>
     </div><!--end wrap-->
 </body>

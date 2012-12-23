@@ -1,16 +1,24 @@
 {% extends "base.html" %}
+{% block javascript%}
+<script type="text/javascript">
+	$(function(){
+	  $("#menu ul li:eq(0)").addClass("active")
+	})
+</script>
+{% endblock %}
 {% block main %}
 <h3>Уведомить об оплате...</h3>
 <pre>	Если вы провели оплату заказа, нужно уведомить нас об этом с помощью формы, представленной ниже.	
 	Просьба вводить данные точно и максимально полно - особенно в поле информации по оплате, где желательно указать, за что Вы заплатили. Если выбран тип платежа "Другое", то укажите чем отпралвены деньги. Сумму нужно указывать не ту, которую с Вас взял банк, а ту, которая идет на оплату заказа(ов).	Получив уведомление об оплате, мы быстрее сможем приступить к выполнению Вашего заказа.
 
 </pre>
-
-<form action="/notice_of_payment/" method="post">
-	<table>
-		{{ form.as_table }}
-	</table>
-	<input type="submit" value="Отправить уведомление" />
+{{ form.media }}
+{% load bootstrap_toolkit %}
+<form class="form-horizontal" action="/notice_of_payment/" method="post">
+		{{ form|as_bootstrap:"horizontal" }}
+	 <div class="actions">
+        <button type="submit" class="btn btn-primary">Отправить уведомление</button>
+    </div>
 </form>
 
 {% if success %}

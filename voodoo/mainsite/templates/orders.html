@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block javascript%}
+<script type="text/javascript">
+	$(function(){
+	  $("#menu ul li:eq(6)").addClass("active")
+	})
+</script>
+{% endblock %}
+{% block main %}
+<h3>Фильтр отбора заказов...</h3>
+{% load bootstrap_toolkit %}
+{{ form.media }}
+<form class="form-inline frame-pre" action="/orders/" method="post">
+             {{ form|as_bootstrap:"inline" }}
+    <div class="actions">
+        <button style="margin: 10px 0 10px 240px;" type="submit" class="btn btn-primary">Применить</button>
+    </div>
+</form>
+
+{% if result %}
+<table class="table">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Дата заказа</th>
+			<th>Товар</th>
+			<th>Коллич.</th>
+			<th>Сумма</th>
+			<th>Комментарии к заказу</th>
+			<th>Статус заказа</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in result %}
+			{% for r in row.items.all %}
+				
+				<tr>
+				  <td><img width="50" height="50" src="/static/images/{{r.product.image}}"></td>
+				  <td>{{ row.order_time }}</td>
+				  <td>{{r.product.name}}</td>
+				  <td>{{ r.quantity }}</td>
+				  <td>{{ r.total_price }}</td>
+				  <td>{{ row.comment }}</td>
+				  <td>{{ row.status }}</td>
+				</tr>
+			{% endfor %}
+			
+		{% endfor %}
+	</tbody>
+</table>
+
+
+{% else %}
+<h3>{{error}}</h3>
+{% endif %}
+
+{% endblock %}
