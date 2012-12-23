@@ -27,7 +27,7 @@
     <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
     <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="http://malsup.github.com/jquery.form.js"></script> 
+    <script src="http://malsup.github.com/jquery.form.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <style type="text/css">
         .bs-docs-example::after {
@@ -59,7 +59,7 @@
     {% block css %} {% endblock %}  
 </head>
 
-<body style="padding-top: 10px;">
+<body {% block onload %}{% endblock %} style="padding-top: 10px;">
     <div id="wrap">
         <div id="header" class="navbar gradient-control">
             <div class="navbar-inner">

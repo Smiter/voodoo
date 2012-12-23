@@ -39,8 +39,8 @@ TIME_ZONE = 'Europe/Kiev'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-# LANGUAGE_CODE = 'ru-RU'
+#LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 SITE_ID = 1
 
@@ -180,6 +180,7 @@ INSTALLED_APPS = (
     'pymorphy',
     'django.contrib.admin',
     'voodoo.custom_admin',
+    'voodoo.mainsite.dhtmlScheduler'
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
