@@ -9,7 +9,30 @@
 	<input type="submit" value="Применить фильтр">
 </form>
 {% if results %}
-	Rendering results in table
+	<div>Найдены следующие заказы(для полного просмотра выберите нужный в списке)</div>
+	<div style="text-align: center">Краткое содержание заказов</div>
+	<table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+		<thead>
+			<tr>
+				<td>#</td>
+				<td>Дата создания</td>
+				<td>Заказчик</td>
+				<td>Информация о заказе</td>
+				<td>Статус заказа</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for row in results %}
+			<tr>
+				<td>{{ row.id }}</td>
+				<td>{{ row.creation_date }}</td>
+				<td>{{ row.client_name }}</td>
+				<td>{{ row.order_additional_information }}</td>
+				<td>{{ row.order_status }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endif %}
 
 {% endblock %}

@@ -22,6 +22,7 @@ def order_create(request):
     # also need to add ORDER and COLOR
     statusList = { u"Сообщен", u"Оформлен", u"Заказан", u"Доставлен", u"Отказ" }
     suppliersList = Supplier.objects.all()
+    message = ''
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
         # TODO validating
@@ -30,7 +31,6 @@ def order_create(request):
         # TODO use OrderStatus, ItemStatus, Currency models
         
         if form.is_valid():
-            print 'form is valid'
             client_name = form.cleaned_data['client_name']
             client_phone = form.cleaned_data['client_phone']
             client_code = form.cleaned_data['client_code']
@@ -58,9 +58,7 @@ def order_create(request):
                           order_info = order_info, order_additional_information = order_additional_information, order_status = order_status)
             order.save()
             
-            print 'order saved'
             rowCount = int(request.POST['row_count'])
-            print rowCount
             
             for i in range(1, rowCount + 1):
                 code = request.POST['row%s_code' % i]
@@ -78,7 +76,9 @@ def order_create(request):
                                  currency = currency, count = count, supplier = supplier, delivery_time = delivery_time, status = status)
                 item.save()
                 
-            # TODO add message about saving
+            # message about saving
+            message = 'Заказ создан. ID: %s' % order.id
+            
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             
             form = OrderForm()
@@ -87,24 +87,47 @@ def order_create(request):
     
     return direct_to_template(request, 'order_create.html', {'menu_elements': getMenuElements(), 
                                                              'form': form, 'currencyList': currencyList, 
-                                                             'suppliersList': suppliersList, 'statusList': statusList})
+                                                             'suppliersList': suppliersList, 'statusList': statusList, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
 def orders_management(request):
     #TODO
+    message = ''
+    results = None
+    
     if request.method == 'POST':
         form = OrdersManagementForm(request.POST or None)
         if form.is_valid():
             # TODO validating
-            # TODO filtering from DB
-            # TODO rendering filtered data
-            # message 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)
-            # using results
-            print None
+            results = Order.objects.all()
+            # TODO rendering order
+            # message 
+            order = 'id will be here'
+            message = 'Заказ сохранен. ID: %s' % order
     else:
         form = OrdersManagementForm()
         
-    return direct_to_template(request, 'orders_management.html', {'menu_elements': getMenuElements(), 'form': form})
+    return direct_to_template(request, 'orders_management.html', {'menu_elements': getMenuElements(), 'form': form, 'results': results, 'message': message})
+
+@login_required(login_url='/admin_center/login/')
+def order_edit(request):
+    
+    if request.method == 'POST':
+        #TODO
+        # edit order
+        form = OrderForm(request.POST or None)
+        if form.is_valid():
+            # TODO validating
+            # editing order
+            
+            print None
+    else:
+        #TODO
+        # drawing order
+        
+        form = OrderForm()
+        
+    return direct_to_template(request, 'order_edit.html', {'menu_elements': getMenuElements(), 'form': form})
 
 @login_required(login_url='/admin_center/login/')
 def orders_import(request):

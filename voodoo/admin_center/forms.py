@@ -42,10 +42,10 @@ class OrdersManagementForm(forms.Form):
                                       initial='Принят',
                                       required=False)                        
     
-    order_filter_creation_date_1 = forms.DateField(label='Создан между')
-    order_filter_creation_date_2 = forms.CharField(label='и')
-    order_filter_text = forms.CharField(label='Искать текст')
-    order_filter_order_part = forms.CharField(label='в инфе о')
+    order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False)
+    order_filter_creation_date_2 = forms.CharField(label='и', required=False)
+    order_filter_text = forms.CharField(label='Искать текст', required=False)
+    order_filter_order_part = forms.CharField(label='в инфе о', required=False)
 
 IMPORT_FILE_TYPES = ['.xls', ]
 
