@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+   	<script src="/static/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
+{#    <script src="/static/ext/dhtmlxscheduler_dhx_terrace.js" type="text/javascript" charset="utf-8"></script>#}
+    <script src="/static/ext/dhtmlxscheduler_active_links.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/ext/dhtmlxscheduler_units.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/ext/dhtmlxscheduler_multiselect.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+    	function init() {
+            var sections=[
+                {key:'1', label:"Подъемник 1"},
+                {key:'2', label:"Подъемник 2"}
+            ];
+            scheduler.locale.labels.unit_tab = "Подъемники";
+            scheduler.locale.labels.section_custom="Section";
+            scheduler.locale.labels.section_lift = "Выбор подъемника";
+            scheduler.locale.labels.section_client_name = "Ф.И.О клиента";
+            scheduler.locale.labels.section_client_number = "Гос. номер клиента";
+            scheduler.locale.labels.section_car_description = "Данные машины";
+            scheduler.locale.labels.section_work_description = "Проводимые работы";
+            scheduler.locale.labels.section_worker = "Механик, проводящий работу";
+            scheduler.locale.labels.section_price = "Стоимость";
+            scheduler.config.lightbox.sections=[
+                {name:"client_name", height:30, type:"textarea" , map_to:"client_name", focus:true},
+                {name:"client_number", height:30, type:"textarea", map_to:"client_number" },
+                {name:"car_description", height:30, type:"textarea", map_to:"car_description" },
+                {name:"work_description", height:30, type:"textarea", map_to:"work_description" },
+                {name:"worker", height:30, type:"textarea", map_to:"worker" },
+                {name:"price", height:30, type:"textarea", map_to:"price" },
+                {name:"lift", height:23, type:"select", options:sections, map_to:"lift" },
+                {name:"time", height:72, type:"time", map_to:"auto"}
+            ]
+            scheduler.createUnitsView({
+                name:"unit",
+                property:"lift",
+                list:sections
+            });
+            scheduler.config.xml_date="%Y-%m-%d %H:%i";
+            scheduler.config.wide_form = true;
+            scheduler.config.details_on_create=true;
+            scheduler.config.first_hour = 9;
+            scheduler.config.last_hour = 18;
+            scheduler.config.event_duration = 30;
+            scheduler.config.limit_time_select=true;
+            scheduler.config.separate_short_events=true;
+            scheduler.config.time_step=30;
+            scheduler.init('scheduler_here',new Date(),"day");
+
+    		//define how text inside event bar looks
+    		scheduler.templates.event_text=function(start,end,event){
+    			return "Описание:<b> "+event.work_description+"</b>";
+    		}
+{##}
+    		scheduler.templates.event_class=function(start,end,event){
+    		   if (start < (new Date())) //if date in past
+            	  return "past_event"; //then set special css class for it
+    		}
+{#            scheduler.config.lightbox.sections=[#}
+{#                { name:"description", height:50, map_to:"text", type:"textarea", focus:true },#}
+{#                { name:"location", height:43, map_to:"event_location", type:"textarea"  },#}
+{#                { name:"time", height:72, type:"time", map_to:"auto"}#}
+{#            ]#}
+
+    		scheduler.load("/eventsXML");
+
+    		var dp = new dataProcessor("/dataprocessor");
+    		dp.setTransactionMode("POST",false)
+    		dp.init(scheduler);
+
+
+
+    	}
+    </script>
+
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
+{#    <link rel="stylesheet" href="/static/dhtmlxscheduler_dhx_terrace.css" type="text/css" media="screen" title="no title" charset="utf-8">#}
+
+    <style type="text/css" media="screen">
+    	html, body{
+    		margin:0px;
+    		padding:0px;
+    		height:100%;
+{#    		overflow:hidden;#}
+    	}
+        select {
+            width: 120px;
+        }
+        /*event in day or week view*/
+    	.dhx_cal_event.past_event div{
+    		background-color:purple !important;
+    		color:white !important;
+    	}
+        /*multi-day event in month view*/
+    	.dhx_cal_event_line.past_event{
+    		background-color:purple !important;
+    		color:white !important;
+    	}
+        /*event with fixed time, in month view*/
+    	.dhx_cal_event_clear.past_event{
+    		color:purple !important;
+    	}
+    </style>
+
+{% endblock %}
+{% block onload %}
+    onload="init()"
+{% endblock %}
+{% block main %}
+{#    <body onload="init();">#}
+    	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+    		<div class="dhx_cal_navline">
+    			<div class="dhx_cal_prev_button">&nbsp;</div>
+    			<div class="dhx_cal_next_button">&nbsp;</div>
+    			<div class="dhx_cal_today_button"></div>
+    			<div class="dhx_cal_date"></div>
+    			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+    			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+    			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+                <div class="dhx_cal_tab" name="unit_tab" style="right:280px;"></div>
+    		</div>
+    		<div class="dhx_cal_header">
+    		</div>
+    		<div class="dhx_cal_data">
+    		</div>
+    	</div>
+{#    </body>#}
+
+{% endblock %}

@@ -5,6 +5,7 @@ from django.conf.urls import patterns, include, url
 from mainsite.views import *
 from russian_admin import admin
 from voodoo.admin_center.views import *
+from mainsite.basket.views import *
 admin.autodiscover()
 # from registration.models import RegistrationProfile
 # admin.site.unregister(RegistrationProfile)
@@ -25,10 +26,18 @@ urlpatterns = patterns('',
     ('^get_vin_by_id/$', get_vin_by_id),
     ('^save_del_details/$', save_del_details),
     ('^order_details/$', order_details),
+    ('^basket/$', get_basket),
+    ('^add_to_cart/$', add_to_cart),
+    ('^update_basket/$', update_basket),
+    ('^del_item/$', del_item),
+    ('^orders/$', orders),
+    ('^make_order/$', make_order),
+    ('^catalog/$', catalog),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin-tools/', include('admin_tools.urls')),
     (r'^accounts/', include('voodoo.mainsite.RegistrationBackend.urls')),
+    (r'^', include('voodoo.mainsite.dhtmlScheduler.urls')),
     # operation center
     ('^admin_center/$', admin_center),
     url(r'^admin_center/login/$', auth_views.login, {'template_name': 'admin_login.html'}, name='auth_login'),

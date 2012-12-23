@@ -2,11 +2,15 @@
 
 {% block css %}
 <style>
+#vin_info button{
+margin-right: 10px;
+}
 </style>
 {% endblock %}
 {% block javascript %}
 <script type="text/javascript"> 
 	$(function(){
+		$("#menu ul li:eq(5)").addClass("active")
 		var details_count = 0;
 		var offered_details_count = 0;
 		var vin_id = -1
@@ -21,7 +25,7 @@
                   	details_count = 0
                   	offered_details_count = 0
                   	$("#vin_info").html('<p>Содержимое VIN-запроса №__ (импортирован в ОЦ, заказ №__)</p>'
-                  		+ '<table>'
+                  		+ '<table class="table">'
 	                  		+ '<tr>'
 		                  		+ '<td>Марка автомобиля</td>'
 		                  		+ '<td>'+ msg["vin_request"][0].fields.car_brand +'</td>'
@@ -63,13 +67,13 @@
 		                  		+ '<td>'+ msg["vin_request"][0].fields.additional_info +'</td>'
 	                  		+ '<tr>'
                   		+ '</table>'
-                  		+ '<p>Заказываемые Вами запчасти</p>'
-						+ '<table id="vin_details">'
+                  		+ '<p style="margin-left:200px">Заказываемые Вами запчасти</p>'
+						+ '<table class="table" id="vin_details">'
 							+ '<thead>'
 								+ '<tr>'
-									+ '<td>№</td>'
-									+ '<td>Описание</td>'
-									+ '<td>Кол.</td>'
+									+ '<th>№</th>'
+									+ '<th>Описание</th>'
+									+ '<th>Кол.</th>'
 								+ '</tr>'
 							+ '</thead>'
                   		+ '</table>'                  		
@@ -84,22 +88,22 @@
 							+ '</tr>')
 					})
 					$("#vin_info").append(
-					'<input type="button" value="Добавить строку" id="add_to_details"></input>'
-					+'<input type="button" id="delete_details" value="Удалить строку"></input>'
-					+'<input type="button" id="save_details" value="Сохранить"></input>'
+					'<button style="margin-left:100px" class="btn" id="add_to_details">Добавить строку</button>'
+					+'<button class="btn"  id="delete_details">Удалить строку</button>'
+					+'<button class="btn"  id="save_details">Сохранить</button>'
 					)
 					$("#vin_info").append(
-						'<p>Предлагаемые вам запчасти</p>'
-						+ '<table id="offered_details">'
+						'<p style="margin-left:200px; margin-top:20px;">Предлагаемые вам запчасти</p>'
+						+ '<table class="table" id="offered_details">'
 							+ '<thead>'
 								+ '<tr>'
-									+ '<td>№</td>'
-									+ '<td>Бренд</td>'
-									+ '<td>Описание</td>'
-									+ '<td>Цена</td>'
-									+ '<td>Кол.</td>'
-									+ '<td>Срок поставки</td>'
-									+ '<td>Статус</td>'
+									+ '<th>№</th>'
+									+ '<th>Бренд</th>'
+									+ '<th>Описание</th>'
+									+ '<th>Цена</th>'
+									+ '<th>Кол.</th>'
+									+ '<th>Срок поставки</th>'
+									+ '<th>Статус</th>'
 								+ '</tr>'
 							+ '</thead>'
                   		+ '</table>'     
@@ -112,14 +116,14 @@
 								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
 								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
 								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
-								+ '<td><input class="num_offered_detail" type="text" value="'+ msg["vin_details"][index].fields.name + '"></td>'
+								+ '<td><input class="num_offered_detail input-mini" type="text" value="'+ msg["vin_details"][index].fields.name + '"></td>'
 								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
 								+ '<td><input type="checkbox" checked></td>'
 							+ '</tr>')
 					})
 
 					$("#vin_info").append(
-					'<input type="button" value="Оформить заказ" id="order_details"></input>'
+					'<button type="button" class="btn btn-primary" id="order_details">Оформить заказ</button>'
 					)
 
                   })
@@ -213,15 +217,16 @@
 
 {% block main %}
 <h3>Фильтр по VIN запросам...</h3>
-
-<form style="border: 1px solid black; border-radius: 6px;" action="/show_vin/" method="post">
-			<!-- <div style="padding-left:100px;">{{ form.min_date.errors }}</div> -->
-            <pre style="margin: 10px 10px;">Создана/редактирована между  {{ form.min_date }}    и     {{form.max_date}}</pre>
-	<input style="margin: 10px 0 10px 240px;" type="submit" value="Применить фильтр" />
+{% load bootstrap_toolkit %}
+{{ form.media }}
+<form class="form-inline frame-pre" action="/show_vin/" method="post">
+             {{ form|as_bootstrap:"inline" }}
+    <div class="actions">
+        <button style="margin: 10px 0 10px 240px;" type="submit" class="btn btn-primary">Применить</button>
+    </div>
 </form>
-
 {% if result %}
-<table>
+<table class="table">
 	<thead>
 		<tr>
 			<td>Номер №</td>

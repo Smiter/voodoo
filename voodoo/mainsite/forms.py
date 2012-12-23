@@ -6,6 +6,7 @@ from django.forms import *
 import re
 from captcha.fields import CaptchaField
 from models import *
+from bootstrap_toolkit.widgets import BootstrapDateInput, BootstrapTextInput, BootstrapUneditableInput
 
 
 def check_pass_on_numbers(text):
@@ -141,10 +142,10 @@ class PrepaysForm(ModelForm):
         model = Prepays
         fields = ('date', 'summa', 'valuta', 'type_of_payment', 'additional_info')
         widgets = {
-            'date': AdminDateWidget(attrs={'readonly': True}),
+            'date': BootstrapDateInput,
             'additional_info': Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}
+                  + 'max-width:300px;min-width:300px'}
         ),
         }
 
@@ -166,17 +167,52 @@ class OrderDispatchForm(ModelForm):
 
 
 class SendingsForm(forms.Form):
-    min_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
-    max_date = DateField(widget=AdminDateWidget(attrs={'readonly': True}))
+    min_date = DateField(label="Создана/редактирована между ", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    max_date = DateField(label=" и", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
 
 
+ORDER_CHOICES = (
+            (u'Все', u'Все'),
+            (u'Сообщен', u'Сообщен'),
+            (u'Оформлен', u'Оформлен'),
+            (u'Заказан', u'Заказан'),
+            (u'Доставлен', u'Доставлен'),
+            (u'Отказ', u'Отказ'),
+)
 
+
+class OrdersForm(forms.Form):
+    status = ChoiceField(
+        label="Статус",
+        widget=Select(attrs={'style': 'width:100px'}),
+        choices=ORDER_CHOICES,
+        initial='1')
+    min_date = DateField(label="Дата от ", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    max_date = DateField(label=" по", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
 
 CAR_ADDITIONS = (
             ('ABS', 'ABS'),
             (u'Гидроусилитель', u'Гидроусилитель'),
             (u'Кондиционер', u'Кондиционер'),
 )
+
+
+def getVinRequestForm(exclude_list, *args, **kwargs):
+    class VinRequestForm(ModelForm):
+        required_css_class = 'required'
+        car_additionals = MultipleChoiceField(label="Дополнительно",
+        widget=CheckboxSelectMultiple, choices=CAR_ADDITIONS, required=False)
+
+        class Meta:
+            model = VinRequest
+            exclude = exclude_list + ('user', 'status', 'date', 'comment')
+
+        def __init__(self):
+            super(VinRequestForm, self).__init__(*args, **kwargs)
+
+    return VinRequestForm()
+
+# form = PassengerForm( ('field1', 'field2') )
 
 
 class VinRequestForm(ModelForm):

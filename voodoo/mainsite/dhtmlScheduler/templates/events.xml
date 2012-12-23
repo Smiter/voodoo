@@ -1,0 +1,18 @@
+<data>
+{% for event in eventList %}
+   	<event id="{{event.id}}">
+		<start_date>{{event.start_date|date:"Y-m-d H:i"|escape}}</start_date>
+		<end_date>{{event.end_date|date:"Y-m-d H:i"|escape}}</end_date>
+		<client_name><![CDATA[{{event.client_name|escape}}]]></client_name>
+        <client_number><![CDATA[{{event.client_number|escape}}]]></client_number>
+        <car_description><![CDATA[{{event.car_description|escape}}]]></car_description>
+        <work_description><![CDATA[{{event.work_description|escape}}]]></work_description>
+        <worker><![CDATA[{{event.worker|escape}}]]></worker>
+        <price><![CDATA[{{event.price|escape}}]]></price>
+        <lift><![CDATA[{{event.lift|escape}}]]></lift>
+	</event>
+{% empty %}
+
+{% endfor %}
+</data>
+

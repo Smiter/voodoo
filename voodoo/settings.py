@@ -128,6 +128,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'voodoo.mainsite.middleware.BasketMiddlWare',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -167,8 +168,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'voodoo.mainsite',
     'voodoo.admin_center',
+    'voodoo.mainsite.basket',
     'registration',
-    
+    'bootstrap_toolkit',
     'captcha',
     'admin_tools',
     'admin_tools.theming',
@@ -178,8 +180,8 @@ INSTALLED_APPS = (
     'pymorphy',
     'django.contrib.admin',
     'voodoo.custom_admin',
+    'voodoo.mainsite.dhtmlScheduler'
     'xlrd',
-    'bootstrap_toolkit',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

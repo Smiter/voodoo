@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block css %}
+
+<style>
+#basket_form table tbody td input{
+	/*margin-left: 7px;*/
+	/*margin-bottom: 0px;*/
+	/*margin-right: 7px;*/
+}
+</style>
+
+{% endblock %}
+{% block javascript %}
+
+<script type="text/javascript">
+$(function(){
+	$(".plus_detail").live('click', function(){
+		var n = parseInt($(this).siblings('.num_detail').val()) + 1
+		$(this).siblings('.num_detail').val(n)
+	})
+	$(".minus_detail").live('click', function(){
+		if ( parseInt($(this).siblings('.num_detail').val()) == 1)
+			return
+		var n = parseInt($(this).siblings('.num_detail').val()) - 1
+		$(this).siblings('.num_detail').val(n)
+	})
+
+	$('#recount').live('click',function () {
+			var ids = {}
+			var can_request = true
+			$("#basket_form table tbody tr").each(function() {
+				id = $('.item_id', this).val()
+				ids[id] = $('.num_detail', this).val()
+			});
+			console.log(ids)
+			$.ajax({
+              type: "POST",
+              url: '/update_basket/',
+              data: ids
+              }).done(function( items ) {
+              	var total_basket_price = 0
+              	$("#basket_form table tbody tr").each(function(index,value) {
+					$('.total_price', this).text(items[index])
+					if(items[index])
+						total_basket_price = total_basket_price + parseFloat(items[index])
+					
+				});
+				$('#total_price_basket').text(total_basket_price+" грн.")
+              })
+	});
+
+	$(".del_item_img").live('click',function(){
+		var id = $(this).closest('tr').find('.item_id').val()
+		$(this).closest('tr').remove()
+		$.ajax({
+          type: "POST",
+          url: '/del_item/',
+          data: {"id":id}
+          }).done(function( items ) {
+          	var total_basket_price = 0
+          	$("#basket_form table tbody tr").each(function(index,value) {
+				$('.total_price', this).text(items[index])
+				if(items[index])
+					total_basket_price = total_basket_price + parseFloat(items[index])
+				
+			});
+			$('#total_price_basket').text(total_basket_price+" грн.")
+          })
+	})
+
+})
+</script>
+
+{% endblock %}
+{% block main %}
+<h3>Содержимое корзины:</h3>
+<form id="basket_form" method="POST" action="/make_order/">
+    <table class="table">
+    	<thead>
+	        <tr>
+	        	<th></th>
+	        	<th></th>
+	            <th>Номер / бренд</th>
+	            <th>Срок поставки</th>
+	            <th>Колличество</th>
+	            <th>Стоимость</th>
+	            <th></th>
+	        </tr>
+	    </thead>
+        <tbody>
+        	{% for item in cart %}
+        	        <tr>
+        	        	<td><input name="item_id" class="item_id" type="hidden" value="{{ item.product.id }}"></td>
+        	        	<td><img width="100" height="100" src="/static/images/{{item.product.image}}"></td>
+        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.name }}</p></td>
+        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.delivery_time }}</p></td>
+        	            <td>
+        	            	<!-- <div><button class="minus_detail btn" type="button">-</button><input class="num_detail" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail"><button class="plus_detail btn" type="button">+</button>
+        	            	</div> -->
+
+        	            	<div style="margin-top:38px;" class="input-prepend input-append">
+        	            	<button class="minus_detail btn" type="button">-</button>
+        	            	<input class="num_detail span2" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail">
+        	            	<button class="plus_detail btn" type="button">+</button>
+        	            	</div>
+
+
+        	            </td>
+        	            <td><p style="margin-top:44px;" class="total_price float-left">{{ item.total_price }}</p></td>
+        	            <td><a class="del_item_img" href="#" name="close">
+							<img style="margin-top:44px;"  width="18" height="18" alt="×" src="/static/images/del.jpeg">
+							</a>
+						</td>
+        	        </tr>
+        	{% endfor %}
+	        <tr>
+	            <td></td>
+	            <td></td>
+	            <td>Итого:</td>
+	            <td id="total_price_basket">{{total_price}} грн.</td>
+	            <td></td>
+	            <td></td>
+	            <td></td>
+	        </tr>
+        </tbody>
+    </table>
+    <div>
+    	{% if request.user.is_authenticated %}
+    	<button class="float-left btn btn-primary" type="submit">Оформить заказ</button>
+    	{% else %}
+    	<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Оформить заказ</a>
+    	{% endif %}
+    	<button id="recount" class="float-right btn btn-primary" type="button">Обновить</button>
+    </div>
+</form>
+<br>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Оформление заказа</h3>
+</div>
+<div class="modal-body">
+<form method="POST" action="/make_order/">
+<table>
+    	<tbody>
+	        <tr>
+	        	<td>Имя</td>
+	            <td><input name="name" type="text"></td>
+	        </tr>
+	        <tr>
+	        	<td>Телефон</td>
+	            <td><input name="phone" type="text"></td>
+	        </tr>
+	    </tbody>
+	</table>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button type="submit" class="btn btn-primary">Make order</button>
+</form>
+</div>
+</div>
+
+
+{% endblock %}

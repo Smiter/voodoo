@@ -1,5 +1,15 @@
 /* global styles*/
 
+ html {
+    height: 100%;
+  }
+  body{
+    height: 100%;
+    /*background: #D3E3E3;*/
+    background: url("/static/images/bg3.jpeg") repeat scroll 0 0 transparent;
+    color: #333333;
+  }
+/*
   html {
     height: 100%;
   }
@@ -17,7 +27,7 @@
 
   p{
     font-size: 12px;
-  }
+  }*/
 
   .float-left /* Or whatever name you like */ {
       float: left;
@@ -27,7 +37,7 @@
       float: right;
   }
 
-  .hide {
+/*  .hide {
       display: none;
   }
    
@@ -41,14 +51,14 @@
    
   .title {
       font: 1.7em/1.2 Baskerville, "Baskerville old face", "Hoefler Text", Garamond, "Times New Roman", serif;
-  }
-
+  }*/
+/*
   *, *:before, *:after {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
   }
-
+*/
   pre {
       white-space: pre-wrap;       /* Chrome & Safari */
       white-space: -moz-pre-wrap;  /* Mozilla since 1999 */
@@ -65,6 +75,7 @@
 
   #header {
     height: 100px;
+    /*width: 1040px;*/
     /*overflow: hidden;*/
   }
 
@@ -111,13 +122,18 @@
     width: 100%;
     height: 100%;
   }*/
+
+  #container {
+    /*background: url("/static/images/bg2.png") repeat-x scroll 0 0 white;*/
+    /*background: url("/static/images/bg.png") repeat-x scroll 0 0 #E3E3E3;*/
+  }
   #container #left_sidebar {
     float: left;
-    overflow: hidden;
+    /*overflow: hidden;*/
     /*min-width: 200px;*/
   }
   #container #left_sidebar #menu {
-    padding: 10px 10px 10px 10px;
+    /*padding: 10px 10px 10px 10px;*/
   }
   #container #left_sidebar #register #submit {
     width: 30px;
@@ -151,12 +167,12 @@
 
   #login_msg {
     color: red;
-    margin-left: 100px;
+    margin-left: 50px;
     margin-bottom: 10px;
   }
   #container #right_sidebar {
     float: right;
-    overflow: hidden;
+    /*overflow: hidden;*/
     width: 200px;
   }
   #container #main {
@@ -174,6 +190,10 @@
     height: 200px;
     overflow: hidden;
     padding: 5px 5px 5px 5px;
+  }
+
+  #right_bottom {
+    /*background: url("/static/images/flash-banner-7.swf");*/
   }
 
 
@@ -239,3 +259,72 @@
     list-style-type: none;
     margin-right: 5px;
   }
+
+.info-panel, .gradient-control {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 2px 2px 2px 2px;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+#footer, #tags {
+    color: #999999;
+    font-size: 0.9em;
+    margin: 1em auto;
+    text-align: center;
+    width: 900px;
+}
+
+#footer a, #footer a:link, #footer a:visited, #footer a:active {
+    color: #666666;
+}
+
+#footer ul {
+    list-style: none outside none;
+    word-wrap: break-word;
+}
+.body-footer-social-i {
+    float: left;
+    margin-right: 6px;
+}
+
+.body-footer-social-i a {
+    background-image: url("/static/images/social.png");
+    background-repeat: no-repeat;
+    display: block;
+    height: 30px;
+    width: 30px;
+}
+.body-footer-social-i a.vk {
+    background-position: 0 0;
+}
+.body-footer-social-i a.fb {
+    background-position: -30px 0;
+}
+.body-footer-social-i a.twitter {
+    background-position: -60px 0;
+}
+.body-footer-social-i a.youtube {
+    background-position: -90px 0;
+}
+
+/* bootstrap ovveridings*/
+
+
+.frame-pre{
+  background-color: #F5F5F5;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px 4px 4px 4px;
+  display: block;
+  font-size: 13px;
+  line-height: 20px;
+  margin: 0 0 10px;
+  padding: 9.5px;
+}
+
+.frame-pre label{
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}

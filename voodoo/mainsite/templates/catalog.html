@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block css %}
+
+<style>
+
+</style>
+
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+	$(function(){
+	  $("#menu ul li:eq(7)").addClass("active")
+	})
+</script>
+{% endblock %}
+{% block main %}
+<h3>Продукты</h3>
+	<table class="table">
+	<thead>
+		<tr>
+			<th>
+			</th>
+			<th>
+				Наименование
+			</th>
+			<th>
+				Цена
+			</th>
+			<th>
+			</th>
+		</tr>
+		<tbody>
+	{% for p in products %}
+		<tr>
+			<td><img width="100" height="100" src="/static/images/{{p.image}}"></td>
+			<td><p style="margin-top:44px;margin-right: 20px;" class="float-left">{{p.name}}</p></td>
+			<td><p style="margin-top:44px;margin-right: 20px;" class="float-left">{{p.price}}</p></td>
+			<td><form style="margin-top:44px;" method="POST" action="/add_to_cart/">
+				<input type="hidden" name="item_id" value="{{p.id}}">
+				<button class="btn btn-primary" type="submit">Купить</button>
+			</form></td>
+		</tr>
+	{% endfor %}
+</tbody>
+	</table>
+{% endblock %}
