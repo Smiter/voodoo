@@ -30,6 +30,7 @@ def order_create(request):
         # TODO use OrderStatus, ItemStatus, Currency models
         
         if form.is_valid():
+            print 'form is valid'
             client_name = form.cleaned_data['client_name']
             client_phone = form.cleaned_data['client_phone']
             client_code = form.cleaned_data['client_code']
@@ -46,18 +47,18 @@ def order_create(request):
             order_info = form.cleaned_data['order_info']
             order_additional_information = form.cleaned_data['order_additional_information']
             order_status = form.cleaned_data['order_status']
-            order_total_price1 = form.cleaned_data['total_sum_1']
-            order_total_price2 = form.cleaned_data['total_sum_2']
-            
-            print order_total_price1
-            print order_total_price2
+            # TODO is it necessary ?
+            # order_total_price1 = request.POST['total_sum_1']
+            # order_total_price2 = request.POST['total_sum_2']
+            # if yes - use form.cleaned_data
             
             order = Order(client_name = client_name, client_phone = client_phone, client_code = client_code, client_additional_information = client_additional_information, 
                           car_brand = car_brand, car_vin = car_vin, car_model = car_model, car_engine = car_engine, car_year = car_year, car_engine_size = car_engine_size, 
                           car_body = car_body, car_gearbox = car_gearbox, car_additional_information = car_additional_information, 
-                          order_info = order_info, order_additional_information = order_additional_information, order_status = order_status, order_total_price1 = order_total_price1, order_total_price2 = order_total_price2)
+                          order_info = order_info, order_additional_information = order_additional_information, order_status = order_status)
             order.save()
             
+            print 'order saved'
             rowCount = int(request.POST['row_count'])
             print rowCount
             

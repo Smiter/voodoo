@@ -74,8 +74,8 @@ class Order(models.Model):
     # TODO use OrderStatus and ItemStatus
     order_status = CharField(verbose_name='Статус выполнения заказа', choices=ORDER_STATUS, max_length=120, default=0)
     creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
-    order_total_price1 = DecimalField(verbose_name='Всего Цена 1', max_length=120, max_digits=20, decimal_places=1)
-    order_total_price2 = DecimalField(verbose_name='Всего Цена 2', max_length=120, max_digits=20, decimal_places=1)
+    order_total_price1 = DecimalField(verbose_name='Всего Цена 1', max_length=120, max_digits=20, decimal_places=1, blank=True)
+    order_total_price2 = DecimalField(verbose_name='Всего Цена 2', max_length=120, max_digits=20, decimal_places=1, blank=True)
 
     def __unicode__(self):
         return self.client_name
