@@ -48,9 +48,9 @@ def order_create(request):
             order_additional_information = form.cleaned_data['order_additional_information']
             order_status = form.cleaned_data['order_status']
             # TODO is it necessary ?
+            # if yes - use form.cleaned_data
             # order_total_price1 = request.POST['total_sum_1']
             # order_total_price2 = request.POST['total_sum_2']
-            # if yes - use form.cleaned_data
             
             order = Order(client_name = client_name, client_phone = client_phone, client_code = client_code, client_additional_information = client_additional_information, 
                           car_brand = car_brand, car_vin = car_vin, car_model = car_model, car_engine = car_engine, car_year = car_year, car_engine_size = car_engine_size, 
