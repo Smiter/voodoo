@@ -6,7 +6,7 @@ from django.forms import *
 import re
 from captcha.fields import CaptchaField
 from models import *
-from bootstrap_toolkit.widgets import BootstrapDateInput, BootstrapTextInput, BootstrapUneditableInput
+from bootstrap_toolkit.widgets import BootstrapDateInput
 
 
 def check_pass_on_numbers(text):
