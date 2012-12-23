@@ -6,8 +6,6 @@ from django.db.models import *
 from django.core.validators import MaxLengthValidator
 from django.core.validators import MinLengthValidator
 
-# Create your models here.
-
 class Menu(models.Model):
     name = CharField(max_length=120)
     title = CharField(max_length=120)
@@ -28,27 +26,27 @@ class Menu(models.Model):
         return self.name
 
 CAR_BODIES = (
-            ('Седан', 'Седан'),
-            ('Хетчбек', 'Хетчбек'),
-            ('Универсал', 'Универсал'),
-            ('Джип', 'Джип'),
-            ('Минивен', 'Минивен'),
-            ('Купе', 'Купе'),
-            ('Автобус', 'Автобус'),
-            ('Грузовик', 'Грузовик'),
+            (u'Седан', u'Седан'),
+            (u'Хетчбек', u'Хетчбек'),
+            (u'Универсал', u'Универсал'),
+            (u'Джип', u'Джип'),
+            (u'Минивен', u'Минивен'),
+            (u'Купе', u'Купе'),
+            (u'Автобус', u'Автобус'),
+            (u'Грузовик', u'Грузовик'),
 )
 
 CAR_GEARBOXES = (
-            ('Ручная', 'Ручная'),
-            ('Автомат', 'Автомат'),
-            ('Вариатор', 'Вариатор'),
-            ('Робот', 'Робот'),
+            (u'Ручная', u'Ручная'),
+            (u'Автомат', u'Автомат'),
+            (u'Вариатор', u'Вариатор'),
+            (u'Робот', u'Робот'),
 )
 
 ORDER_STATUS = (
-            ('Принят (черный)', 'Принят (черный)'),
-            ('Обработан (зеленый)', 'Обработан (зеленый)'),
-            ('Закрыт (красный)', 'Закрыт (красный)'),
+            (u'Принят (черный)', u'Принят (черный)'),
+            (u'Обработан (зеленый)', u'Обработан (зеленый)'),
+            (u'Закрыт (красный)', u'Закрыт (красный)'),
 )
 
 class Order(models.Model):
@@ -72,11 +70,13 @@ class Order(models.Model):
     car_additional_information = CharField(verbose_name='Дополнительная информация по авто', max_length=500, blank=True)
     # Информация о заказе и запчастям
     order_info = CharField(verbose_name='Полная формулировка заказа', max_length=500, blank=True)
-    # Список запчастей заказа (таблица на темплейте)
-    # List<Product>
     order_additional_information = CharField(verbose_name='Дополнительная информация по заказу', max_length=500, blank=True)
+    # TODO use OrderStatus and ItemStatus
     order_status = CharField(verbose_name='Статус выполнения заказа', choices=ORDER_STATUS, max_length=120, default=0)
-    
+    creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
+    order_total_price1 = DecimalField(verbose_name='Всего Цена 1', max_length=120, max_digits=20, decimal_places=1)
+    order_total_price2 = DecimalField(verbose_name='Всего Цена 2', max_length=120, max_digits=20, decimal_places=1)
+
     def __unicode__(self):
         return self.client_name
    
@@ -108,3 +108,29 @@ class Product(models.Model):
     
     def __unicode__(self):
         return self.code
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order)
+    code = CharField(verbose_name='Номер', max_length=120)
+    brand = CharField(verbose_name='Бдэнд', max_length=120)
+    comment = CharField(verbose_name='Комментарий', max_length=120, blank=True)
+    price_1 = DecimalField(verbose_name='Цена1', max_length=120, max_digits=20, decimal_places=1)
+    price_2 = DecimalField(verbose_name='Цена2', max_length=120, max_digits=20, decimal_places=1)
+    currency = CharField(verbose_name='Тип валюты', max_length=120)
+    count = CharField(verbose_name='Количество', max_length=120)
+    supplier = CharField(verbose_name='Поставщик', max_length=120)
+    delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
+    status = CharField(verbose_name='Статус', max_length=120)
+ 
+class OrderStatus(models.Model):
+    status = CharField(verbose_name='Статус выполнения заказа', max_length=120)
+    color = CharField(verbose_name='Цвет', max_length=120)
+
+class ItemStatus(models.Model):
+    status = CharField(verbose_name='Статус', max_length=120)
+    color = CharField(verbose_name='Цвет', max_length=120)
+    
+class Currency(models.Model):
+    name = CharField(verbose_name='Название', max_length=120)
+    code = CharField(verbose_name='Код', max_length=120)
+    ratio = DecimalField(verbose_name='Коэффициент', max_length=120, max_digits=20, decimal_places=1)

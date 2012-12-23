@@ -25,7 +25,7 @@ class OrderForm(forms.ModelForm):
 #            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
 #            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
         }
-#        exclude = ('client_code',)
+        exclude = ('creation_date', 'order_total_price', )
     
 class OrdersManagementForm(forms.Form):
     # Фильтр

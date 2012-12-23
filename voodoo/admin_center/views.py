@@ -2,7 +2,7 @@
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
-from voodoo.admin_center.models import Menu, Order, Product, Supplier
+from voodoo.admin_center.models import Menu, Order, Product, Supplier, OrderItem
 from voodoo.admin_center.forms import OrderForm, OrdersManagementForm,\
     XlsImportForm, TestForm
 import xlrd
@@ -17,24 +17,67 @@ def admin_center(request):
 @login_required(login_url='/admin_center/login/')
 def order_create(request):
     #TODO get rid of this hard-code
-    currencyList = { "UAH", "USD", "EUR" }
+    currencyList = { u"UAH", u"USD", u"EUR" }
     #TODO Сообщен (черный цвет), Оформлен (оранжевый), Заказан (зеленый), Доставлен (синий), Отказ (красный)
     # also need to add ORDER and COLOR
-    statusList = { "Сообщен", "Оформлен", "Заказан", "Доставлен", "Отказ" }
+    statusList = { u"Сообщен", u"Оформлен", u"Заказан", u"Доставлен", u"Отказ" }
     suppliersList = Supplier.objects.all()
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
+        # TODO validating
+        # JS validation
+        # rowCount = int(request.POST['row_count'])
+        # TODO use OrderStatus, ItemStatus, Currency models
         
         if form.is_valid():
-            # TODO validating
-            # TODO working with data
-            order = Order()
+            client_name = form.cleaned_data['client_name']
+            client_phone = form.cleaned_data['client_phone']
+            client_code = form.cleaned_data['client_code']
+            client_additional_information = form.cleaned_data['client_additional_information']
+            car_brand = form.cleaned_data['car_brand']
+            car_vin = form.cleaned_data['car_vin']
+            car_model = form.cleaned_data['car_model']
+            car_engine = form.cleaned_data['car_engine']
+            car_year = form.cleaned_data['car_year']
+            car_engine_size = form.cleaned_data['car_engine_size']
+            car_body = form.cleaned_data['car_body']
+            car_gearbox = form.cleaned_data['car_gearbox']
+            car_additional_information = form.cleaned_data['car_additional_information']
+            order_info = form.cleaned_data['order_info']
+            order_additional_information = form.cleaned_data['order_additional_information']
+            order_status = form.cleaned_data['order_status']
+            order_total_price1 = form.cleaned_data['total_sum_1']
+            order_total_price2 = form.cleaned_data['total_sum_2']
+            
+            print order_total_price1
+            print order_total_price2
+            
+            order = Order(client_name = client_name, client_phone = client_phone, client_code = client_code, client_additional_information = client_additional_information, 
+                          car_brand = car_brand, car_vin = car_vin, car_model = car_model, car_engine = car_engine, car_year = car_year, car_engine_size = car_engine_size, 
+                          car_body = car_body, car_gearbox = car_gearbox, car_additional_information = car_additional_information, 
+                          order_info = order_info, order_additional_information = order_additional_information, order_status = order_status, order_total_price1 = order_total_price1, order_total_price2 = order_total_price2)
             order.save()
+            
+            rowCount = int(request.POST['row_count'])
+            print rowCount
+            
+            for i in range(1, rowCount + 1):
+                code = request.POST['row%s_code' % i]
+                brand = request.POST['row%s_brand' % i]
+                comment = request.POST['row%s_comment' % i]
+                price_1 = request.POST['row%s_price_1' % i]
+                price_2 = request.POST['row%s_price_2' % i]
+                currency = request.POST['row%s_currency' % i]
+                count = request.POST['row%s_count' % i]
+                supplier = request.POST['row%s_supplier' % i]
+                delivery_time = request.POST['row%s_delivery_time' % i]
+                status = request.POST['row%s_status' % i]
+                
+                item = OrderItem(order = order, code = code, brand = brand, comment = comment, price_1 = price_1, price_2 = price_2, 
+                                 currency = currency, count = count, supplier = supplier, delivery_time = delivery_time, status = status)
+                item.save()
+                
             # TODO add message about saving
-            form
-            # TODO foreach row in table
-            # print request.POST['row%s_code' % i]
-            # form.cleaned_data['subject']
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             
             form = OrderForm()

@@ -1,6 +1,6 @@
 {% extends 'admin_base.html' %}
 {% block onload %}
-	onload="addRowIntoTable()"
+	onload="addRowIntoTable(), refreshTotal()"
 {% endblock %}
 {% block javascript %}
 	<script type="text/javascript">
@@ -50,7 +50,9 @@
 									'{% else %}' +
 										'Нет ни одного статуса' +
 									'{% endif %}' +
-								'</td>' +								'<td>&nbsp;</td>';			rowId += 1;
+								'</td>' +								'<td>&nbsp;</td>';
+											document.getElementById("row_count").value = rowId;
+			rowId += 1;
 		}
 		
 		function refreshTotal() {
@@ -211,6 +213,15 @@
 	    </tr>
 		<tr>
 			<th>
+		        <label for="id_car_additional_information">{{ form.car_additional_information.label }}</label>
+			</th>
+			<td>
+		        {{ form.car_additional_information.errors }}
+		        {{ form.car_additional_information }}
+			</td>
+	    </tr>
+		<tr>
+			<th>
 		        <label for="id_order_info">{{ form.order_info.label }}</label>
 		        <div style="text-align: right" ><image src="{{STATIC_URL}}images/file_add.png" alt="Перенести записи в таблицу" style="width: 24px; height: 24px" onclick="convertStringsToTableRows()"></div>
 			</th>
@@ -281,6 +292,7 @@
 			</td>
 	    </tr>
 	</table>
+	<input type="hidden" id ="row_count" name="row_count" value="0">
 	<input type="submit" value="Создать заказ"> <a href=".">Отмена</a>
 </form>
 {% endblock %}
