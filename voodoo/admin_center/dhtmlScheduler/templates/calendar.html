@@ -6,7 +6,7 @@
     <script src="/static/ext/dhtmlxscheduler_active_links.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/ext/dhtmlxscheduler_units.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/ext/dhtmlxscheduler_multiselect.js" type="text/javascript" charset="utf-8"></script>
-
+    <script src="/static/locale/locale_ru.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
     	function init() {
             var sections=[
@@ -20,7 +20,7 @@
             scheduler.locale.labels.section_client_number = "Гос. номер клиента";
             scheduler.locale.labels.section_car_description = "Данные машины";
             scheduler.locale.labels.section_work_description = "Проводимые работы";
-            scheduler.locale.labels.section_worker = "Механик, проводящий работу";
+            scheduler.locale.labels.section_worker = "Механик";
             scheduler.locale.labels.section_price = "Стоимость";
             scheduler.config.lightbox.sections=[
                 {name:"client_name", height:30, type:"textarea" , map_to:"client_name", focus:true},
@@ -28,10 +28,10 @@
                 {name:"car_description", height:30, type:"textarea", map_to:"car_description" },
                 {name:"work_description", height:30, type:"textarea", map_to:"work_description" },
                 {name:"worker", height:30, map_to:"worker", type: "select",
-                    options: scheduler.serverList("worker") },
+                    options: scheduler.serverList("worker")},
                 {name:"price", height:30, type:"textarea", map_to:"price" },
                 {name:"lift", height:23, type:"select", options:sections, map_to:"lift" },
-                {name:"time", height:72, type:"time", map_to:"auto"}
+                {name:"time", height:212, type:"time", map_to:"auto"}
             ]
             scheduler.createUnitsView({
                 name:"unit",
@@ -39,10 +39,10 @@
                 list:sections
             });
             scheduler.config.xml_date="%Y-%m-%d %H:%i";
-            scheduler.config.wide_form = true;
+            // scheduler.config.wide_form = true;
             scheduler.config.details_on_create=true;
             scheduler.config.first_hour = 9;
-            scheduler.config.last_hour = 18;
+            scheduler.config.last_hour = 20;
             scheduler.config.event_duration = 30;
             scheduler.config.limit_time_select=true;
             scheduler.config.separate_short_events=true;
@@ -80,7 +80,6 @@
 
 {% block css %}
     <link rel="stylesheet" href="/static/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
-{#    <link rel="stylesheet" href="/static/dhtmlxscheduler_dhx_terrace.css" type="text/css" media="screen" title="no title" charset="utf-8">#}
 
     <style type="text/css" media="screen">
     	html, body{
@@ -90,7 +89,7 @@
 {#    		overflow:hidden;#}
     	}
         select {
-            width: 120px;
+            width: 78px;
         }
         /*event in day or week view*/
     	.dhx_cal_event.past_event div{
@@ -116,7 +115,7 @@
 {% endblock %}
 {% block content %}
 {#    <body onload="init();">#}
-    	<div id="scheduler_here" class="dhx_cal_container" style='width:860px; height:460px;'>
+    	<div id="scheduler_here" class="dhx_cal_container" style='width:860px; height:550px;'>
     		<div class="dhx_cal_navline">
     			<div class="dhx_cal_prev_button">&nbsp;</div>
     			<div class="dhx_cal_next_button">&nbsp;</div>

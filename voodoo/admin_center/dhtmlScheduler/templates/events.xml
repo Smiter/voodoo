@@ -1,4 +1,5 @@
 <data>
+{% if eventList|length > 0 %}
 {% for event in eventList %}
    	<event id="{{event.id}}">
 		<start_date>{{event.start_date|date:"Y-m-d H:i"|escape}}</start_date>
@@ -7,16 +8,23 @@
         <client_number><![CDATA[{{event.client_number|escape}}]]></client_number>
         <car_description><![CDATA[{{event.car_description|escape}}]]></car_description>
         <work_description><![CDATA[{{event.work_description|escape}}]]></work_description>
+        <price><![CDATA[{{event.price|escape}}]]></price>
+        <lift><![CDATA[{{event.lift|escape}}]]></lift>
         <coll_options for="worker">
             {% for user in userList %}
                 <item value="{{ user.username }}" label="{{ user.username }}" />
             {% endfor %}
         </coll_options>
-        <price><![CDATA[{{event.price|escape}}]]></price>
-        <lift><![CDATA[{{event.lift|escape}}]]></lift>
+        <worker><![CDATA[{{event.worker.username|escape}}]]></worker> 
 	</event>
-{% empty %}
-
 {% endfor %}
+
+{% else %}
+<coll_options for="worker">
+            {% for user in userList %}
+                <item value="{{ user.username }}" label="{{ user.username }}" />
+            {% endfor %}
+</coll_options>
+{% endif %}
 </data>
 

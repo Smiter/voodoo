@@ -10,7 +10,6 @@ def eventsXML(request):
     """
     eventList = Event.objects.all()
     users = User.objects.all()
-    print users
     return render_to_response('events.xml',
                               {'eventList' : eventList, 'userList' : users},
                                 mimetype="application/xhtml+xml")
@@ -65,7 +64,10 @@ def dataprocessor(request):
                 e.work_description = request.POST[id + '_work_description']
                 e.car_description = request.POST[id + '_car_description']
                 try:
-                    user = User.objects.get(username = request.POST[id + '_worker'])
+                    if request.POST.get(id + '_worker'):
+                        user = User.objects.get(username = request.POST[id + '_worker'])
+                    else:
+                        user = request.user
                 except User.DoesNotExist:
                     print "USER DOES NOT EXIST"
                     user = request.user
@@ -88,7 +90,10 @@ def dataprocessor(request):
                 e.work_description = request.POST[id + '_work_description']
                 e.car_description = request.POST[id + '_car_description']
                 try:
-                    user = User.objects.get(username = request.POST[id + '_worker'])
+                    if request.POST.get(id + '_worker'):
+                        user = User.objects.get(username = request.POST[id + '_worker'])
+                    else:
+                        user = request.user
                 except User.DoesNotExist:
                     print "USER DOES NOT EXIST"
                     user = request.user
