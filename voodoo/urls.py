@@ -37,7 +37,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin-tools/', include('admin_tools.urls')),
     (r'^accounts/', include('voodoo.mainsite.RegistrationBackend.urls')),
-    (r'^', include('voodoo.mainsite.dhtmlScheduler.urls')),
+    (r'^admin_center/service/', include('voodoo.admin_center.dhtmlScheduler.urls')),
     # operation center
     ('^admin_center/$', admin_center),
     url(r'^admin_center/login/$', auth_views.login, {'template_name': 'admin_login.html'}, name='auth_login'),
@@ -47,5 +47,6 @@ urlpatterns = patterns('',
     ('^admin_center/orders_management$', orders_management),
     ('^admin_center/xls_import$', xls_import),
     ('^admin_center/test_view$', test_view),
+#    ('^admin_center/service$', include('voodoo.admin_center.dhtmlScheduler.urls')),
 
 )

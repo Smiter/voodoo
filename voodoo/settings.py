@@ -180,7 +180,7 @@ INSTALLED_APPS = (
     'pymorphy',
     'django.contrib.admin',
     'voodoo.custom_admin',
-    'voodoo.mainsite.dhtmlScheduler',
+    'voodoo.admin_center.dhtmlScheduler',
     'xlrd',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

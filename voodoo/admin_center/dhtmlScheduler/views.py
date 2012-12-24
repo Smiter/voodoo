@@ -1,17 +1,17 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 
-from voodoo.mainsite.dhtmlScheduler.models import Event
+from voodoo.admin_center.dhtmlScheduler.models import Event
 from django.views.generic.simple import direct_to_template
-from django.http import *
 
 def eventsXML(request):
     """
     For now, return the whole event DB.
     """
     eventList = Event.objects.all()
+    users = User.objects.all()
     return render_to_response('events.xml',
-                              {'eventList' : eventList,},
+                              {'eventList' : eventList, 'userList' : users},
                                 mimetype="application/xhtml+xml")
 
 def dataprocessor(request):
@@ -55,13 +55,19 @@ def dataprocessor(request):
             command = request.POST[id + '_!nativeeditor_status']
             if command == 'inserted':
                 e = Event()
+                print "HUI"
+                print request.POST
                 e.start_date = request.POST[id + '_start_date']
                 e.end_date = request.POST[id + '_end_date']
                 e.client_name = request.POST[id + '_client_name']
                 e.client_number = request.POST[id + '_client_number']
                 e.work_description = request.POST[id + '_work_description']
                 e.car_description = request.POST[id + '_car_description']
-                e.worker = request.POST[id + '_worker']
+                try:
+                    user = User.objects.get(username = request.POST[id + '_worker'])
+                except User.DoesNotExist:
+                    print "USER DOES NOT EXIST"
+                e.worker = user
                 e.price = request.POST[id + '_price']
                 e.lift = request.POST[id + '_lift']
                 e.save()
@@ -70,6 +76,8 @@ def dataprocessor(request):
                             'tid' : e.id}
 
             elif command == 'updated':
+                print "HUI"
+                print request.POST
                 e = Event(pk=request.POST[id + '_id'])
                 e.start_date = request.POST[id + '_start_date']
                 e.end_date = request.POST[id + '_end_date']
@@ -77,7 +85,11 @@ def dataprocessor(request):
                 e.client_number = request.POST[id + '_client_number']
                 e.work_description = request.POST[id + '_work_description']
                 e.car_description = request.POST[id + '_car_description']
-                e.worker = request.POST[id + '_worker']
+                try:
+                    user = User.objects.get(username = request.POST[id + '_worker'])
+                except User.DoesNotExist:
+                    print "USER DOES NOT EXIST"
+                e.worker = user
                 e.price = request.POST[id + '_price']
                 e.lift = request.POST[id + '_lift']
                 print e.lift

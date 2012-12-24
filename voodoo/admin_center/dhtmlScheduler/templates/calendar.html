@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'admin_base.html' %}
 
 {% block javascript %}
    	<script src="/static/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
@@ -27,7 +27,8 @@
                 {name:"client_number", height:30, type:"textarea", map_to:"client_number" },
                 {name:"car_description", height:30, type:"textarea", map_to:"car_description" },
                 {name:"work_description", height:30, type:"textarea", map_to:"work_description" },
-                {name:"worker", height:30, type:"textarea", map_to:"worker" },
+                {name:"worker", height:30, map_to:"worker", type: "select",
+                    options: scheduler.serverList("worker") },
                 {name:"price", height:30, type:"textarea", map_to:"price" },
                 {name:"lift", height:23, type:"select", options:sections, map_to:"lift" },
                 {name:"time", height:72, type:"time", map_to:"auto"}
@@ -46,6 +47,7 @@
             scheduler.config.limit_time_select=true;
             scheduler.config.separate_short_events=true;
             scheduler.config.time_step=30;
+            scheduler.config.hour_size_px = 46;
             scheduler.init('scheduler_here',new Date(),"day");
 
     		//define how text inside event bar looks
@@ -63,9 +65,9 @@
 {#                { name:"time", height:72, type:"time", map_to:"auto"}#}
 {#            ]#}
 
-    		scheduler.load("/eventsXML");
+    		scheduler.load("/admin_center/service/eventsXML");
 
-    		var dp = new dataProcessor("/dataprocessor");
+    		var dp = new dataProcessor("/admin_center/service/dataprocessor");
     		dp.setTransactionMode("POST",false)
     		dp.init(scheduler);
 
@@ -110,9 +112,9 @@
 {% block onload %}
     onload="init()"
 {% endblock %}
-{% block main %}
+{% block content %}
 {#    <body onload="init();">#}
-    	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+    	<div id="scheduler_here" class="dhx_cal_container" style='width:860px; height:460px;'>
     		<div class="dhx_cal_navline">
     			<div class="dhx_cal_prev_button">&nbsp;</div>
     			<div class="dhx_cal_next_button">&nbsp;</div>
