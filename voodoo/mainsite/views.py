@@ -143,39 +143,41 @@ def prepays(request):
 # @login_required(login_url='/index')
 def vin_request(request):
     success = False
+
     if request.method == 'POST':
         if not request.user.is_authenticated():
             form = getVinRequestForm((), request.POST)
         else:
-            form = getVinRequestForm(('name', 'phone', 'email', 'delivery_adress'), request.POST)
+            form = getVinRequestForm(('client_name', 'client_phone', 'client_code', 'client_additional_information', 'email', 'delivery_adress'), request.POST)
         # form = VinRequestForm(request.POST)
         if form.is_valid():
+            print request.POST
             success = True
             vin_request = form.save(commit=False)
             if request.user.is_authenticated():
                 vin_request.user = request.user
-            vin_request.save()
+            vin_request.car_additional_information = ",".join(request.POST.getlist("car_additional_information"))
+            details = ""
             for i in range(len(request.POST.getlist("details_name"))):
                 details_name = request.POST.getlist("details_name")[i]
                 details_number = request.POST.getlist("details_number")[i]
+                print "------------"
+                print details_name
+                print details_number
                 if details_name != "" and details_number != "":
-                    vin_details = VinDetails(vin=vin_request,
-                    name=request.POST.getlist("details_name")[i],
-                    number=request.POST.getlist("details_number")[i])
-                    vin_details.save()
-            for i in request.POST.getlist("car_additionals"):
-                car_additional = CarAdditional(name=i)
-                car_additional.save()
-                vin_request.car_additionals.add(car_additional)
+                    details = details + details_name + ', ' + details_number + ' sh.;'
+                    print details
+            vin_request.order_info = details
+            vin_request.save()
             if not request.user.is_authenticated():
                 form = getVinRequestForm(())
             else:
-                form = getVinRequestForm(('name', 'phone', 'email', 'delivery_adress'))
+                form = getVinRequestForm(('client_name', 'client_phone', 'client_code', 'client_additional_information', 'email', 'delivery_adress'))
     else:
         if not request.user.is_authenticated():
             form = getVinRequestForm(())
         else:
-            form = getVinRequestForm(('name', 'phone', 'email', 'delivery_adress'))
+            form = getVinRequestForm(('client_name', 'client_phone', 'client_code', 'client_additional_information', 'email', 'delivery_adress'))
 
     return render_to_response('vin_request.html',
                                {'form': form, 'success': success}, context_instance=RequestContext(request))

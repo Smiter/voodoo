@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 
 from voodoo.admin_center.dhtmlScheduler.models import Event
 from django.views.generic.simple import direct_to_template
+from voodoo.admin_center.views import getMenuElements
 
 def eventsXML(request):
     """
@@ -125,7 +126,7 @@ def dataprocessor(request):
                                     mimetype="application/xhtml+xml")
 
 def calendar(request):
-    return direct_to_template(request, 'calendar.html')
+    return direct_to_template(request, 'calendar.html', {'menu_elements': getMenuElements()})
 #    return render_to_response('calendar.html')
 
 

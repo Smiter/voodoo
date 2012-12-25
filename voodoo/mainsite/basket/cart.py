@@ -81,8 +81,17 @@ class Cart:
             raise ItemDoesNotExist
 
     def clear(self):
-        for item in self.cart.item_set.all():
+        for item in self:
             item.delete()
 
     def change_id(self, request):
         request.session[CART_ID] = -1
+
+    def getItemCount(self):
+        return len(self.cart.item_set.all())
+
+    def getTotalPrice(self):
+        return sum([(item.total_price) for item in self])
+
+    def getTotalPricesAsStrList(self):
+        return [str(item.total_price) for item in self]

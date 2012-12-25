@@ -74,7 +74,7 @@
                     <div id="middle">
                         <form id="search" class="navbar-search pull-left">
                             <div class="input-append">
-                                <input  id="search_box" type="text" placeholder="Search">
+                                <input  id="search_box" type="text" placeholder="Поиск запчасти по коду">
                                 <button type="submit" id="search_submit" class='btn'>
                                         <i class="icon-search"></i>
                                     </button><br>
@@ -85,10 +85,6 @@
                         <div id="contacts">
                             <!-- <p>Контакты</p> -->
                             <!-- <p>Каталог подбора</p> -->
-                            {% if request.user.is_authenticated %}
-                            <span id="login_message">Добро пожаловать, {{ request.user.username }}</span>
-                            <a href="{% url auth_logout %}?next=/index">Выход</a>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -102,8 +98,11 @@
             		<!-- <p id="login_message">Добро пожаловать, {{ request.user.username }}.</p> -->
             		<!-- <br> -->
             		<!-- <a href="{% url auth_logout %}?next=/index">Logout</a> -->
-
-            		<div id="menu">
+                    <div style="margin-top:5px;">
+                        <span id="login_message">Добро пожаловать, {{ request.user.username }}</span>
+                        <a href="{% url auth_logout %}?next=/index">Выход</a>
+                    </div>
+            		<div style="margin-top:10px;" id="menu">
             			<ul style="width:200px;margin:0;" class="nav nav-list bs-docs-sidenav">
                             <!-- <li class="nav-header">Меню</li> -->
             				<li><a href="/notice_of_payment">Уведомить об оплате<i class="icon-chevron-right"></i></a></li>
@@ -113,8 +112,9 @@
             				<li><a href="/vin_request">Подать VIN запрос<i class="icon-chevron-right"></i></a></li>
             				<li><a href="/show_vin">VIN запросы<i class="icon-chevron-right"></i></a></li>
                             <li><a href="/orders">Заказы<i class="icon-chevron-right"></i></a></li>
-                            <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li>
+                            {# <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li> #}
             			</ul>
+
             		</div>
 
             		{% else %}
@@ -145,14 +145,14 @@
             		</form>
 
             		<ul>
-            		    <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
             		    <li><a href="{% url registration_register %}">Регистрация</a></li>
+                        <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
             		</ul> 
 
 
                             <div id="menu">
                                 <ul style="width:200px;margin:0;" class="nav nav-list bs-docs-sidenav">
-                                    <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li>
+                                    {# <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li> #}
                                     <li><a href="/vin_request">Мгновенный подбор запчастей<i class="icon-chevron-right"></i></a></li>
                                 </ul>
                             </div>

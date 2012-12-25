@@ -1,7 +1,6 @@
 {% extends 'admin_base.html' %}
 {% block content %}
 <h3>Управление заказами</h3>
-</br>
 <form name="orders_management_form" action="/admin_center/orders_management" method="POST">
 	<table>
 		{{ form.as_table }}
@@ -14,11 +13,11 @@
 	<table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 		<thead>
 			<tr>
-				<td>#</td>
-				<td>Дата создания</td>
-				<td>Заказчик</td>
-				<td>Информация о заказе</td>
-				<td>Статус заказа</td>
+				<th>#</th>
+				<th>Дата создания</th>
+				<th>Заказчик</th>
+				<th>Информация о заказе</th>
+				<th>Статус заказа</th>
 			</tr>
 		</thead>
 		<tbody>

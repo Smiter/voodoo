@@ -2,9 +2,10 @@ from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 # from django.contrib import admin
 from russian_admin import admin
-from voodoo.mainsite.models import MyRegistrationProfile, Profile, Prepays, OrderDispatch, Sendings, VinDetails, VinRequest, CarAdditional, Order
+from voodoo.mainsite.models import MyRegistrationProfile, Profile, Prepays, OrderDispatch, Sendings, VinDetails, VinRequest, CarAdditional
 from django.utils.translation import ugettext_lazy as _
 from voodoo.mainsite.basket.models import Product, Item
+import voodoo
 
 
 class MyRegistrationAdmin(admin.ModelAdmin):
@@ -30,7 +31,7 @@ class MyRegistrationAdmin(admin.ModelAdmin):
         who are eligible to activate; emails will not be sent to users
         whose activation keys have expired or who have already
         activated.
-        
+
         """
         if Site._meta.installed:
             site = Site.objects.get_current()
@@ -52,4 +53,15 @@ admin.site.register(VinRequest)
 admin.site.register(CarAdditional)
 admin.site.register(Product)
 admin.site.register(Item)
-admin.site.register(Order)
+
+
+#admin_center models
+
+admin.site.register(voodoo.admin_center.models.Currency)
+admin.site.register(voodoo.admin_center.models.ItemStatus)
+admin.site.register(voodoo.admin_center.models.OrderStatus)
+admin.site.register(voodoo.admin_center.models.OrderItem)
+admin.site.register(voodoo.admin_center.models.Product)
+admin.site.register(voodoo.admin_center.models.Supplier)
+admin.site.register(voodoo.admin_center.models.Order)
+admin.site.register(voodoo.admin_center.models.Menu)

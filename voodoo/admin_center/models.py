@@ -5,23 +5,25 @@ from django.db import models
 from django.db.models import *
 from django.core.validators import MaxLengthValidator
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import User
+
 
 class Menu(models.Model):
     name = CharField(max_length=120)
     title = CharField(max_length=120)
     enabled = BooleanField()
-    
+
     def getAllElements(self):
         return Menu.objects.all()
 
     def getActiveElements(self):
         return Menu.objects.filter(enabled=True)
-    
+
     def fillTable(self):
         # TODO initial data
         # Menu(name='name', title='title', enabled=True)
         return None
-    
+
     def __unicode__(self):
         return self.name
 
@@ -49,18 +51,21 @@ ORDER_STATUS = (
             (u'Закрыт (красный)', u'Закрыт (красный)'),
 )
 
+
 class Order(models.Model):
     # Создание заказа
     required_css_class = 'required'
-    
     # Информация о заказчике
+    user = models.ForeignKey(User, unique=False, blank=True, null=True)
     client_name = CharField(verbose_name='Ф.И.О. или название клиента', max_length=120)
     client_phone = CharField(verbose_name='Контактные телефоны', max_length=120)
     client_code = CharField(verbose_name='Код клиента в ATSP', max_length=120, blank=True)
     client_additional_information = CharField(verbose_name='Дополнительная информация', max_length=500, blank=True)
+    email = CharField(max_length=50, verbose_name='Email', blank=True, null=True)
+    delivery_adress = models.CharField(max_length=50, verbose_name='Адресс доставки', blank=True, null=True)
     # Информация о авто
     car_brand = CharField(verbose_name='Марка автомобиля', max_length=120, blank=True)
-    car_vin = CharField(verbose_name='VIN',validators=[MinLengthValidator(17), MaxLengthValidator(17)], max_length=17, blank=True)
+    car_vin = CharField(verbose_name='VIN', validators=[MinLengthValidator(17), MaxLengthValidator(17)], max_length=17, blank=True)
     car_model = CharField(verbose_name='Модель/Серия', max_length=120, blank=True)
     car_engine = CharField(verbose_name='Двигатель', max_length=120, blank=True)
     car_year = CharField(verbose_name='Год выпуска', max_length=120, blank=True)
@@ -79,24 +84,26 @@ class Order(models.Model):
 
     def __unicode__(self):
         return self.client_name
-   
+
+
 class Supplier(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
-    
+
     def getProducts(self):
         print None
-    
+
     def isProductExists(self):
         print None
-    
+
     #TODO Extract this methods into ProductManager class?
     def getAllSuppliersByProduct(self):
         print None
-    
+
     def __unicode__(self):
         return self.name
-    
+
+
 class Product(models.Model):
     code = CharField(verbose_name='Номер', max_length=120)
     brand = CharField(verbose_name='Бдэнд', max_length=120)
@@ -105,10 +112,11 @@ class Product(models.Model):
     price = CharField(verbose_name='Цена', max_length=120)
     supplier = ManyToManyField(Supplier)
     date_of_import = DateTimeField(verbose_name='Дата импорта', max_length=120, auto_now_add=True)
-    
+
     def __unicode__(self):
         return self.code
-    
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     code = CharField(verbose_name='Номер', max_length=120)
@@ -121,15 +129,18 @@ class OrderItem(models.Model):
     supplier = CharField(verbose_name='Поставщик', max_length=120)
     delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
     status = CharField(verbose_name='Статус', max_length=120)
- 
+
+
 class OrderStatus(models.Model):
     status = CharField(verbose_name='Статус выполнения заказа', max_length=120)
     color = CharField(verbose_name='Цвет', max_length=120)
 
+
 class ItemStatus(models.Model):
     status = CharField(verbose_name='Статус', max_length=120)
     color = CharField(verbose_name='Цвет', max_length=120)
-    
+
+
 class Currency(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     code = CharField(verbose_name='Код', max_length=120)

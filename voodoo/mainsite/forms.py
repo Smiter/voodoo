@@ -7,6 +7,7 @@ import re
 from captcha.fields import CaptchaField
 from models import *
 from bootstrap_toolkit.widgets import BootstrapDateInput
+from voodoo.admin_center.models import Order
 
 
 def check_pass_on_numbers(text):
@@ -200,37 +201,18 @@ CAR_ADDITIONS = (
 def getVinRequestForm(exclude_list, *args, **kwargs):
     class VinRequestForm(ModelForm):
         required_css_class = 'required'
-        car_additionals = MultipleChoiceField(label="Дополнительно",
+        car_additional_information = MultipleChoiceField(label="Дополнительно",
         widget=CheckboxSelectMultiple, choices=CAR_ADDITIONS, required=False)
 
         class Meta:
-            model = VinRequest
-            exclude = exclude_list + ('user', 'status', 'date', 'comment')
+            model = Order
+            exclude = exclude_list + ('user', 'order_status', 'creation_date', 'order_info')
 
         def __init__(self):
             super(VinRequestForm, self).__init__(*args, **kwargs)
+            self.fields['car_brand'].required = True
+            self.fields['car_vin'].required = True
+            self.fields['car_model'].required = True
+            self.fields['car_year'].required = True
 
     return VinRequestForm()
-
-# form = PassengerForm( ('field1', 'field2') )
-
-
-class VinRequestForm(ModelForm):
-    required_css_class = 'required'
-    car_additionals = MultipleChoiceField(label="Дополнительно",
-     widget=CheckboxSelectMultiple, choices=CAR_ADDITIONS, required=False)
-
-    class Meta:
-        model = VinRequest
-        fields = ('car_brand', 'car_vin', 'car_model', 'car_engine', 'car_year', 'engine_capacity',
-            'car_body', 'car_kpp', 'car_additionals', 'additional_info')
-        # widgets = {
-        #     'car_additionals': CheckboxSelectMultiple()}
-    
-    # def __init__(self, *args, **kwargs):
-    #     super(VinRequestForm, self).__init__(*args, **kwargs)
-    #     tmp_choices = self.fields['car_additionals'].choices
-    #     del tmp_choices[0]
-    #     self.fields['car_additionals'].choices = tmp_choices
-
-# my_field = MultipleChoiceField(choices=CARRIER_CHOICES, widget=CheckboxSelectMultiple())

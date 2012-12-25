@@ -29,10 +29,10 @@ class MyRegistrationProfile(RegistrationProfile):
         subject = render_to_string('registration/activation_email_subject.txt',
                                    ctx_dict)
         subject = ''.join(subject.splitlines())
-        
+
         message = render_to_string('registration/activation_email.txt',
                                    ctx_dict)
-        
+
         self.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
 
 
@@ -196,14 +196,14 @@ ORDER_CHOICES = (
 )
 
 
-class Order(models.Model):
-    user = models.ForeignKey(User, unique=False, blank=True, null=True)
-    name = models.CharField(max_length=50, verbose_name='Имя', blank=True, null=True)
-    phone = models.CharField(max_length=50, verbose_name='Телефон', blank=True, null=True)
-    items = models.ManyToManyField(Item)
-    order_time = models.DateTimeField(max_length=120, default=datetime.now, blank=True, verbose_name='Дата заказа')
-    comment = models.CharField(max_length=500, verbose_name='Комментарии к заказу', blank=True, null=True)
-    status = models.CharField(max_length=30, choices=ORDER_CHOICES, verbose_name='Статус заказа')
+# class Order(models.Model):
+#     user = models.ForeignKey(User, unique=False, blank=True, null=True)
+#     name = models.CharField(max_length=50, verbose_name='Имя', blank=True, null=True)
+#     phone = models.CharField(max_length=50, verbose_name='Телефон', blank=True, null=True)
+#     items = models.ManyToManyField(Item)
+#     order_time = models.DateTimeField(max_length=120, default=datetime.now, blank=True, verbose_name='Дата заказа')
+#     comment = models.CharField(max_length=500, verbose_name='Комментарии к заказу', blank=True, null=True)
+#     status = models.CharField(max_length=30, choices=ORDER_CHOICES, verbose_name='Статус заказа')
 
-    def __unicode__(self):
-        return self.status
+#     def __unicode__(self):
+#         return self.status
