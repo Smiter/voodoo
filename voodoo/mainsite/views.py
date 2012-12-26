@@ -17,7 +17,7 @@ from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.db.models.query import QuerySet
 from django.contrib.auth.decorators import login_required
-
+from voodoo.admin_center.models import Product
 
 class DjangoJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -277,3 +277,8 @@ def orders(request):
 def catalog(request):
     return render_to_response('catalog.html',  dict(products=Product.objects.all()), context_instance=RequestContext(request))
 
+
+def search_product(request):
+    print "SEARCH"
+    print request.GET['detail_id']
+    return render_to_response('search.html',  dict(result=Product.objects.filter(code__contains=request.GET['detail_id']), detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))

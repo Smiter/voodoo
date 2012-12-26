@@ -72,14 +72,14 @@
                     </div>
                     </div>
                     <div id="middle">
-                        <form id="search" class="navbar-search pull-left">
+                        <form id="search" class="navbar-search pull-left" method="GET" action="/search_product/">
                             <div class="input-append">
-                                <input  id="search_box" type="text" placeholder="Поиск запчасти по коду">
+                                <input  id="search_box" type="text" name ="detail_id" value="{{detail_id}}" placeholder="Поиск запчасти по коду">
                                 <button type="submit" id="search_submit" class='btn'>
                                         <i class="icon-search"></i>
                                     </button><br>
                             </div>
-                            <a href="#">Пример поиска: 40202-JG01A</a>
+                            <a href="/search_product/?detail_id=40202-JG01A">Пример поиска: 40202-JG01A</a>
                         </form>
 
                         <div id="contacts">

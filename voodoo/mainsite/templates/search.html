@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block javascript%}
+<script type="text/javascript">
+</script>
+{% endblock %}
+{% block main %}
+<h3>Поиск запчасти по коду</h3>
+{% load bootstrap_toolkit %}
+
+{% if result %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Бренд</th>
+            <th>Код детали</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Поставщик</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in result %}
+        
+            <tr>
+              <td>{{ row.brand }}</td>
+              <td>{{ row.code }}</td>
+              <td>{{ row.description }}</td>
+              <td>{{ row.price }}</td>
+              <td>{{ row.supplier.all.0.name }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% else %}
+<h5>{{error}}</h5>
+{% endif %}
+
+{% endblock %}
