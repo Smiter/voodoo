@@ -25,8 +25,12 @@
 			<tr>
 				<td>{{ row.id }}</td>
 				<td>{{ row.creation_date }}</td>
-				<td>{{ row.client_name }}</td>
-				<td>{{ row.order_additional_information }}</td>
+				{% if row.user %}
+					<td>{{ row.user.username }}</td>
+				{% else %}
+					<td>{{ row.client_name }}</td>
+				{% endif %}
+				<td>{{ row.order_info }}</td>
 				<td>{{ row.order_status }}</td>
 			</tr>
 			{% endfor %}

@@ -6,7 +6,8 @@ from voodoo.admin_center.models import Menu, Order, Product, Supplier, OrderItem
 from voodoo.admin_center.forms import OrderForm, OrdersManagementForm,\
     XlsImportForm, TestForm
 import xlrd
-
+from django.contrib.auth.models import User
+from voodoo.mainsite.models import Profile
 #from django.db import models
 
 

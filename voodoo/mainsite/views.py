@@ -165,9 +165,10 @@ def vin_request(request):
                 print details_name
                 print details_number
                 if details_name != "" and details_number != "":
-                    details = details + details_name + ', ' + details_number + ' sh.;'
+                    details = details + details_name + ', ' + details_number + u' шт.;'
                     print details
             vin_request.order_info = details
+            vin_request.order_status = u'Принят (черный)'
             vin_request.save()
             if not request.user.is_authenticated():
                 form = getVinRequestForm(())
@@ -195,9 +196,9 @@ def show_vin(request):
             try:
                 min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 00:00:01'
                 max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 23:59:00'
-                result = VinRequest.objects.filter(user=request.user, date__range=(min_date, max_date))
+                result = Order.objects.filter(user=request.user, creation_date__range=(min_date, max_date))
             except:
-                result = VinRequest.objects.filter(user=request.user, date__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
+                result = Order.objects.filter(user=request.user, creation_date__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
             if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:
@@ -209,11 +210,11 @@ def show_vin(request):
 @login_required(login_url='/index')
 def get_vin_by_id(request):
     print "get_vin_by_id"
-    vin_request = VinRequest.objects.filter(user=request.user,
+    vin_request = Order.objects.filter(user=request.user,
         id=request.POST["vin_id"])
-    vin_details = VinDetails.objects.filter(vin=vin_request)
-    data = {'vin_request': vin_request, 'vin_details': vin_details}
+    data = {'vin_request': vin_request}
     output = dumps(data, cls=DjangoJSONEncoder)
+    print output
     return HttpResponse(output, mimetype="application/json")
 
 

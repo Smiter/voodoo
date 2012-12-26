@@ -24,7 +24,7 @@ margin-right: 10px;
                   }).done(function( msg ) {
                   	details_count = 0
                   	offered_details_count = 0
-                  	$("#vin_info").html('<p>Содержимое VIN-запроса №__ (импортирован в ОЦ, заказ №__)</p>'
+                  	$("#vin_info").html('<p>Содержимое VIN-запроса № '+ msg["vin_request"][0].pk +' (импортирован в ОЦ, заказ № ' + msg["vin_request"][0].pk + ')</p>'
                   		+ '<table class="table">'
 	                  		+ '<tr>'
 		                  		+ '<td>Марка автомобиля</td>'
@@ -60,11 +60,11 @@ margin-right: 10px;
 	                  		+ '</tr>'
 	                  		+ '<tr>'
 		                  		+ '<td>Дополнительно</td>'
-		                  		+ '<td>'+ msg["vin_request"][0].fields.car_additionals +'</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.car_additional_information +'</td>'
 	                  		+ '</tr>'
 	                  		+ '<tr>'
 		                  		+ '<td>Дополнительная информация</td>'
-		                  		+ '<td>'+ msg["vin_request"][0].fields.additional_info +'</td>'
+		                  		+ '<td>'+ msg["vin_request"][0].fields.order_additional_information +'</td>'
 	                  		+ '<tr>'
                   		+ '</table>'
                   		+ '<p style="margin-left:200px">Заказываемые Вами запчасти</p>'
@@ -78,13 +78,17 @@ margin-right: 10px;
 							+ '</thead>'
                   		+ '</table>'                  		
                   		);
-
-					$.each(msg["vin_details"],function(index, value) {
+					var details = msg["vin_request"][0].fields.order_info
+					console.log(details)
+					var n=details.split(";"); 
+					console.log(n.length)
+					n.pop()
+					$.each(n,function(index, value) {
 						$("#vin_details").append(
 							  '<tr>'
 								+ '<td>'+ ++details_count +'</td>'
-								+ '<td><input type="text" class="detail_name" value="'+ msg["vin_details"][index].fields.name +'"></td>'
-								+ '<td><input type="text" class="detail_number" value="'+ msg["vin_details"][index].fields.number +'"></td><td><label class="error_label"></label></td>'
+								+ '<td><input type="text" class="detail_name" value="'+ n[index].split(",")[0] +'"></td>'
+								+ '<td><input type="text" class="detail_number" value="'+ n[index].split(",")[1].split(" ")[1] +'"></td><td><label class="error_label"></label></td>'
 							+ '</tr>')
 					})
 					$("#vin_info").append(
@@ -241,11 +245,11 @@ margin-right: 10px;
 		
 			<tr>
 			  <td>{{ row.id }}</td>
-			  <td>{{ row.date }}</td>
+			  <td>{{ row.creation_date }}</td>
 			  <td><a class="vin_link" href="{{row.id}}">{{ row.car_vin }}</a></td>
-			  <td>{{ row.comments }}</td>
+			  <td>Не понятно что сюда писать</td>
 			  <td>
-			  	{% if row.status == 'Принят' %}
+			  	{% if row.order_status == 'Принят (черный)' %}
 			  		Обрабатывается
 			  	{% else %}
 			  		Обработан
