@@ -18,48 +18,49 @@ class Cart(models.Model):
         return unicode(self.creation_date)
 
 
-class ItemManager(models.Manager):
-    def get(self, *args, **kwargs):
-        if 'product' in kwargs:
-            kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']))
-            kwargs['object_id'] = kwargs['product'].pk
-            del(kwargs['product'])
-        return super(ItemManager, self).get(*args, **kwargs)
+# class ItemManager(models.Manager):
+#     def get(self, *args, **kwargs):
+#         if 'product' in kwargs:
+#             kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']))
+#             kwargs['object_id'] = kwargs['product'].pk
+#             del(kwargs['product'])
+#         return super(ItemManager, self).get(*args, **kwargs)
 
 
-class Item(models.Model):
-    cart = models.ForeignKey(Cart, verbose_name=_('cart'))
-    quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    unit_price = models.DecimalField(max_digits=18, decimal_places=2, verbose_name=_('unit price'))
-    objects = ItemManager()
+# class Item(models.Model):
+#     cart = models.ForeignKey(Cart, verbose_name=_('cart'))
+#     order = models.ForeignKey(Cart, verbose_name=_('Заказ'))
+#     quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
+#     content_type = models.ForeignKey(ContentType)
+#     object_id = models.PositiveIntegerField()
+#     unit_price = models.DecimalField(max_digits=18, decimal_places=2, verbose_name=_('unit price'))
+#     objects = ItemManager()
 
-    class Meta:
-        verbose_name = _('item')
-        verbose_name_plural = _('items')
-        ordering = ('cart',)
+#     class Meta:
+#         verbose_name = _('item')
+#         verbose_name_plural = _('items')
+#         ordering = ('cart',)
 
-    def __unicode__(self):
-        return 'Item'
+#     def __unicode__(self):
+#         return 'Item'
 
-    def total_price(self):
-        return self.quantity * self.unit_price
-    total_price = property(total_price)
+#     def total_price(self):
+#         return self.quantity * self.unit_price
+#     total_price = property(total_price)
 
-    # product
-    def get_product(self):
-        return self.content_type.get_object_for_this_type(id=self.object_id)
+#     # product
+#     def get_product(self):
+#         return self.content_type.get_object_for_this_type(id=self.object_id)
 
-    def set_product(self, product):
-        self.content_type = ContentType.objects.get_for_model(type(product))
-        self.object_id = product.pk
+#     def set_product(self, product):
+#         self.content_type = ContentType.objects.get_for_model(type(product))
+#         self.object_id = product.pk
 
-    product = property(get_product, set_product)
+#     product = property(get_product, set_product)
 
 
-class Product(models.Model):
-    name = models.CharField(max_length=120, verbose_name=u'Номер/Бренд')
-    delivery_time = models.CharField(max_length=120, verbose_name=u'Срок доставки')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=u'Стоимость')
-    image = models.CharField(max_length=120, verbose_name=u'Картинка')
+# class Product(models.Model):
+#     name = models.CharField(max_length=120, verbose_name=u'Номер/Бренд')
+#     delivery_time = models.CharField(max_length=120, verbose_name=u'Срок доставки')
+#     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=u'Стоимость')
+#     image = models.CharField(max_length=120, verbose_name=u'Картинка')

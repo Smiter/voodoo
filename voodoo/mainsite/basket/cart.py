@@ -27,7 +27,7 @@ class Cart:
         self.cart = cart
 
     def __iter__(self):
-        for item in self.cart.item_set.all():
+        for item in self.cart.orderitem_set.all():
             yield item
 
     def syncPrices(self):
@@ -88,7 +88,7 @@ class Cart:
         request.session[CART_ID] = -1
 
     def getItemCount(self):
-        return len(self.cart.item_set.all())
+        return len(self.cart.orderitem_set.all())
 
     def getTotalPrice(self):
         return sum([(item.total_price) for item in self])

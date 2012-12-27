@@ -8,7 +8,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from registration.models import RegistrationProfile
 from registration.models import RegistrationManager
-from voodoo.mainsite.basket.models import Item, Product
+# from voodoo.admin_center import OrderItem
 
 
 class MyRegistrationProfile(RegistrationProfile):

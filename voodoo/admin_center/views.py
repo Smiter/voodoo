@@ -34,31 +34,9 @@ def order_create(request):
         # TODO use OrderStatus, ItemStatus, Currency models
 
         if form.is_valid():
-            client_name = form.cleaned_data['client_name']
-            client_phone = form.cleaned_data['client_phone']
-            client_code = form.cleaned_data['client_code']
-            client_additional_information = form.cleaned_data['client_additional_information']
-            car_brand = form.cleaned_data['car_brand']
-            car_vin = form.cleaned_data['car_vin']
-            car_model = form.cleaned_data['car_model']
-            car_engine = form.cleaned_data['car_engine']
-            car_year = form.cleaned_data['car_year']
-            car_engine_size = form.cleaned_data['car_engine_size']
-            car_body = form.cleaned_data['car_body']
-            car_gearbox = form.cleaned_data['car_gearbox']
-            car_additional_information = form.cleaned_data['car_additional_information']
-            order_info = form.cleaned_data['order_info']
-            order_additional_information = form.cleaned_data['order_additional_information']
-            order_status = form.cleaned_data['order_status']
-            # TODO is it necessary ?
-            # if yes - use form.cleaned_data
             # order_total_price1 = request.POST['total_sum_1']
             # order_total_price2 = request.POST['total_sum_2']
-            order = Order(client_name=client_name, client_phone=client_phone, client_code=client_code, client_additional_information=client_additional_information,
-                          car_brand=car_brand, car_vin=car_vin, car_model=car_model, car_engine=car_engine, car_year=car_year, car_engine_size=car_engine_size,
-                          car_body=car_body, car_gearbox=car_gearbox, car_additional_information=car_additional_information,
-                          order_info=order_info, order_additional_information=order_additional_information, order_status=order_status)
-            order.save()
+            order = form.save()
             rowCount = int(request.POST['row_count'])
             for i in range(1, rowCount + 1):
                 code = request.POST['row%s_code' % i]
@@ -71,8 +49,14 @@ def order_create(request):
                 supplier = request.POST['row%s_supplier' % i]
                 delivery_time = request.POST['row%s_delivery_time' % i]
                 status = request.POST['row%s_status' % i]
+                try:
+                    product = Product.objects.get(code=code)
+                except Product.DoesNotExist:
+                    raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
+                    # should return validation error
+
                 item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
-                                 currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status)
+                                 currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
                 item.save()
             # message about saving
             message = 'Заказ создан. ID: %s' % order.id

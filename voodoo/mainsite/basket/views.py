@@ -4,7 +4,7 @@ from cart import Cart
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import *
-from models import Product
+from voodoo.admin_center.models import Product
 from voodoo.admin_center.models import Order
 from django.utils.simplejson import dumps
 
