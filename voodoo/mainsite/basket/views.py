@@ -11,7 +11,7 @@ from django.utils.simplejson import dumps
 
 def add_to_cart(request):
     print "add to cart\n"
-    product = Product.objects.get(id=request.POST["item_id"])
+    product = Product.objects.get(id=request.POST["product_id"])
     cart = Cart(request)
     cart.add(product)
     request.basket_number = cart.getItemCount()
@@ -44,9 +44,10 @@ def make_order(request):
     user = request.user
     order = None
     if not user.is_authenticated():
-        order = Order(name=u'Не зарегистрирован, ' + request.POST["name"], phone=request.POST["phone"], status=u'Сообщён')
+        order = Order(client_name=u'Не зарегистрирован, ' + request.POST["name"], client_phone=request.POST["phone"], order_status=u'Принят (черный)')
     else:
-        order = Order(user=user, status=u'Сообщён')
+        order = Order(user=user, order_status=u'Принят (черный)')
+        
     order.save()
     #TODO change item model to add order
     for item in cart:

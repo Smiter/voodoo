@@ -93,15 +93,15 @@ $(function(){
         	        <tr>
         	        	<td><input name="item_id" class="item_id" type="hidden" value="{{ item.product.id }}"></td>
         	        	<td><img width="100" height="100" src="/static/images/{{item.product.image}}"></td>
-        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.name }}</p></td>
-        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.delivery_time }}</p></td>
+        	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.brand }}</p></td>
+        	            <td><p style="margin-top:44px;" class="float-left">{{ item.delivery_time }}</p></td>
         	            <td>
         	            	<!-- <div><button class="minus_detail btn" type="button">-</button><input class="num_detail" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail"><button class="plus_detail btn" type="button">+</button>
         	            	</div> -->
 
         	            	<div style="margin-top:38px;" class="input-prepend input-append">
         	            	<button class="minus_detail btn" type="button">-</button>
-        	            	<input class="num_detail span2" style="width:40px" type="text" value="{{ item.quantity }}" name="num_detail">
+        	            	<input class="num_detail span2" style="width:40px" type="text" value="{{ item.count }}" name="num_detail">
         	            	<button class="plus_detail btn" type="button">+</button>
         	            	</div>
 

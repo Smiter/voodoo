@@ -111,8 +111,8 @@ class Product(models.Model):
     brand = CharField(verbose_name='Бдэнд', max_length=120)
     description = CharField(verbose_name='Описание', max_length=120, blank=True)
     count = CharField(verbose_name='Количество', max_length=120, blank=True)
-    price = CharField(verbose_name='Цена', max_length=120)
-    supplier = ManyToManyField(Supplier)
+    price = DecimalField(verbose_name='Цена', max_length=120, max_digits=20, decimal_places=1)
+    supplier = models.ForeignKey(Supplier)
     date_of_import = DateTimeField(verbose_name='Дата импорта', max_length=120, auto_now_add=True)
 
     def __unicode__(self):
@@ -129,14 +129,14 @@ class ItemManager(models.Manager):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order)
+    order = models.ForeignKey(Order, blank=True, null=True)
     code = CharField(verbose_name='Номер', max_length=120)
     brand = CharField(verbose_name='Бдэнд', max_length=120)
     comment = CharField(verbose_name='Комментарий', max_length=120, blank=True)
     price_1 = DecimalField(verbose_name='Цена1', max_length=120, max_digits=20, decimal_places=1)
     price_2 = DecimalField(verbose_name='Цена2', max_length=120, max_digits=20, decimal_places=1)
     currency = CharField(verbose_name='Тип валюты', max_length=120)
-    count = CharField(verbose_name='Количество', max_length=120)
+    count = PositiveIntegerField(verbose_name='Количество', max_length=120)
     supplier = CharField(verbose_name='Поставщик', max_length=120)
     delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
     status = CharField(verbose_name='Статус', max_length=120)
@@ -150,6 +150,9 @@ class OrderItem(models.Model):
         return self.code
 
     def total_price(self):
+        print "HUI"
+        print self.count
+        print self.price_2
         return self.count * self.price_2
     total_price = property(total_price)
 

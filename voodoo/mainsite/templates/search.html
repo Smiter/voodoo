@@ -16,6 +16,7 @@
             <th>Описание</th>
             <th>Цена</th>
             <th>Поставщик</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +27,12 @@
               <td>{{ row.code }}</td>
               <td>{{ row.description }}</td>
               <td>{{ row.price }}</td>
-              <td>{{ row.supplier.all.0.name }}</td>
+              <td>{{ row.supplier.name }}</td>
+              <td><form  method="POST" action="/add_to_cart/">
+                      <input type="hidden" name="product_id" value="{{row.id}}">
+                      <button class="btn btn-primary" type="submit">Купить</button>
+                  </form>
+              </td>
             </tr>
         {% endfor %}
     </tbody>

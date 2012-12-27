@@ -1,6 +1,7 @@
 #coding=utf-8
 
 import datetime
+from voodoo.admin_center.models import OrderItem
 import models
 
 CART_ID = 'CART-ID'
@@ -43,41 +44,45 @@ class Cart:
 
     def add(self, product, quantity=1):
         try:
-            item = models.Item.objects.get(
+            item = OrderItem.objects.get(
                 cart=self.cart,
                 product=product,
             )
-        except models.Item.DoesNotExist:
-            item = models.Item()
+        except OrderItem.DoesNotExist:
+            item = OrderItem()
             item.cart = self.cart
             item.product = product
-            item.unit_price = product.price
-            item.quantity = quantity
+            item.price_1 = product.price
+            item.price_2 = product.price
+            item.supplier = product.supplier.name
+            item.delivery_time = product.supplier.delivery_time
+            item.count = quantity
             item.save()
         else:
-            raise ItemAlreadyExists
+            print "Продукт уже добавлен в корзину"
+            # raise ItemAlreadyExists
 
     def remove(self, product):
         try:
-            item = models.Item.objects.get(
+            item = OrderItem.objects.get(
                 cart=self.cart,
                 product=product,
             )
-        except models.Item.DoesNotExist:
+        except OrderItem.DoesNotExist:
             raise ItemDoesNotExist
         else:
             item.delete()
 
     def update(self, product, quantity):
         try:
-            item = models.Item.objects.get(
+            item = OrderItem.objects.get(
                 cart=self.cart,
                 product=product,
             )
-            item.unit_price = product.price
-            item.quantity = quantity
+            item.price_2 = product.price
+            item.count = quantity
             item.save()
-        except models.Item.DoesNotExist:
+        except OrderItem.DoesNotExist:
             raise ItemDoesNotExist
 
     def clear(self):
