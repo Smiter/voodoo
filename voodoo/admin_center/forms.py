@@ -70,10 +70,10 @@ class XlsImportForm(forms.Form):
             raise forms.ValidationError( u'%s не валидный xls файл.' % extension )
         else:
             return file
-
-class TestForm(forms.Form):
-    supplier = forms.ModelMultipleChoiceField(label="Поставщик", queryset=Supplier.objects.all())
-    
-#    def clean_supplier(self):
-#        supplier = self.cleaned_data['supplier']
-#        return supplier
+class UserManagementForm(forms.Form):
+    required_css_class = 'required'
+    id = forms.CharField(label = 'id', required=False)
+    login = forms.CharField(label = 'login', required=False)
+    name = forms.CharField(label = 'name', required=False)
+    phone = forms.CharField(label = 'phone', required=False)
+    role = forms.CharField(label = 'role', required=False)

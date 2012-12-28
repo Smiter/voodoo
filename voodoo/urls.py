@@ -47,7 +47,7 @@ urlpatterns = patterns('',
     ('^admin_center/order_edit$', order_edit),
     ('^admin_center/orders_management$', orders_management),
     ('^admin_center/xls_import$', xls_import),
-    ('^admin_center/test_view$', test_view),
+    ('^admin_center/user_management$', user_management),
 #    ('^admin_center/service$', include('voodoo.admin_center.dhtmlScheduler.urls')),
 
 )

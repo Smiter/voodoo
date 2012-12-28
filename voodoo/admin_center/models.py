@@ -28,6 +28,15 @@ class Menu(models.Model):
 
     def __unicode__(self):
         return self.name
+    
+# TODO list of permissions
+#    class Meta:
+#        permissions = (
+#            ("view_task", "Can see available tasks"),
+#            ("change_task_status", "Can change the status of tasks"),
+#            ("close_task", "Can remove a task by setting its status as closed"),
+#        )
+#user.has_perm('app.view_task')
 
 CAR_BODIES = (
             (u'Седан', u'Седан'),

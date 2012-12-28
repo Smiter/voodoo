@@ -1,19 +1,30 @@
-<h3>Авторизация</h3>
-
-{% if form.non_field_errors %}
- {{ form.non_field_errors }}
-{% endif %}
-
-<form method="post" action="./?next=/admin_center">
-{% csrf_token %}
-<dl class="register">  
-{% for field in form %}
-    <dt>{{ field.label_tag }}</dt>
-    <dd class="clearfix">{{ field }}
-    {% if field.help_text %}<div class="clearfix">{{ field.help_text }}</div>{% endif %}
-    {% if field.errors %}<div class="myerrors clearfix">{{ field.errors }}</div>{% endif %}
-    </dd>
-{% endfor %}
-</dl>
-<input type="submit" value="Вход" / class="clearfix">
-</form>
+<div style="border: 1px solid black; ">
+	<div style=" width: 500px; border: 1px solid black; margin: 0 auto;">
+		<div style="width: 100px; height: 100px; border: 1px solid black; margin: 0 auto; text-align: center;">LOGO</div>
+		<div style="width: 300px; height: 200px; margin: 0 auto;">
+			<div>Операционный центр название сайта</div>
+			<div><h2>Авторизация</h2></div>
+			
+			{% if form.non_field_errors %}
+			 {{ form.non_field_errors }}
+			{% endif %}
+			<div>
+				<form method="post" action="./?next=/admin_center">
+				{% csrf_token %}
+				{% csrf_token %}
+				<table>
+				<tr>
+				    <td>{{ form.username.label_tag }}</td>
+				    <td>{{ form.username }}</td>
+				</tr>
+				<tr>
+				    <td>{{ form.password.label_tag }}</td>
+				    <td>{{ form.password }}</td>
+				</tr>
+				</table>
+				<input type="submit" value="Вход" / class="clearfix">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

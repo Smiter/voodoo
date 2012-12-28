@@ -1,0 +1,45 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<h3>User Management Form</h3>
+</br>
+<div>
+	<form name="user_management_form" action="/admin_center/user_management" method="POST">
+		<table>
+			{{ form.as_table }}
+		</table>
+		<input type="submit" value="Найти">
+	</form>
+</div>
+{% if results %}
+	<div>Найдены следующие пользователи</div>
+	<table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Login</th>
+				<th>Name</th>
+				<th>e-mail</th>
+				<th>Phone</th>
+				<th>Groups</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for profile in results %}
+			<tr>
+				<td>{{ profile.user.id }}</td>
+				<td>{{ profile.user.username }}</td>
+				<td>{{ profile.fio }}</td>
+				<td>{{ profile.user.email }}</td>
+				<td>{{ profile.phone }}</td>
+				<td>{{ profile.user.groups }}</td>
+				<td>actionList</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	<td colspan="7">There no users(profiles) registered</td>
+{% endif %}
+
+{% endblock %}

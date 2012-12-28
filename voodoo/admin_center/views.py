@@ -3,8 +3,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
 from voodoo.admin_center.models import Menu, Order, Product, Supplier, OrderItem
-from voodoo.admin_center.forms import OrderForm, OrdersManagementForm,\
-    XlsImportForm, TestForm
+from voodoo.admin_center.forms import *
 import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
@@ -160,6 +159,21 @@ def xls_import(request):
         form = XlsImportForm()
     return direct_to_template(request, 'xls_import.html', {'menu_elements': getMenuElements(), 'form': form, 'message': message})
 
+# TODO use permission system
+#@permission_required('polls.can_vote', login_url='/admin_center/login/')
+@login_required(login_url='/admin_center/login/')
+def user_management(request):
+    message = ''
+    
+    if request.method == 'POST':
+        form = OrderForm(request.POST or None)
+        
+        # find filtered results 
+    else:
+        form = UserManagementForm()
+        results = Profile.objects.all()
+    
+    return direct_to_template(request, 'user_management.html', {'menu_elements': getMenuElements(), 'form': form, 'message': message, 'results': results})
 
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())
@@ -167,11 +181,3 @@ def getMenuElements():
         # Was decided to use element.name instead of external configuration file or hard-code link inside DB
         element.link = element.name
     return menu_elements
-
-
-def test_view(request):
-    form = TestForm(request.POST)
-    print 'initial enter'
-    if form.is_valid():
-        print 'form is valid'
-    return direct_to_template(request, 'test.html', {'menu_elements': getMenuElements(), 'form': form})
