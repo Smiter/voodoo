@@ -190,3 +190,10 @@ class Currency(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     code = CharField(verbose_name='Код', max_length=120)
     ratio = DecimalField(verbose_name='Коэффициент', max_length=120, max_digits=20, decimal_places=1)
+
+class DiscountGroup(models.Model):
+    name = CharField(verbose_name='Название', max_length=120)
+    discount = DecimalField(verbose_name='Скидка в %', max_length=120, max_digits=20, decimal_places=1)
+    
+    def __unicode__(self):
+        return self.name

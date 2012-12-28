@@ -57,6 +57,7 @@ admin.site.register(CarAdditional)
 
 #admin_center models
 
+admin.site.register(voodoo.admin_center.models.DiscountGroup)
 admin.site.register(voodoo.admin_center.models.Currency)
 admin.site.register(voodoo.admin_center.models.ItemStatus)
 admin.site.register(voodoo.admin_center.models.OrderStatus)
