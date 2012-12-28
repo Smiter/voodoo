@@ -7,6 +7,7 @@ encoding//voodoo/custom_admin/admin.py=utf-8
 encoding//voodoo/custom_admin/dashboard.py=utf-8
 encoding//voodoo/custom_admin/models.py=utf-8
 encoding//voodoo/files/sql/23-12-12.sql=utf-8
+encoding//voodoo/files/sql/28-12-12_mainsite_profile.sql=UTF-8
 encoding//voodoo/mainsite/forms.py=utf-8
 encoding//voodoo/mainsite/models.py=utf-8
 encoding//voodoo/mainsite/views.py=utf-8

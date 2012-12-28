@@ -8,7 +8,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from registration.models import RegistrationProfile
 from registration.models import RegistrationManager
-# from voodoo.admin_center import OrderItem
+from voodoo.admin_center.models import DiscountGroup
 
 
 class MyRegistrationProfile(RegistrationProfile):
@@ -48,6 +48,8 @@ class Profile(models.Model):
     additional_info = models.CharField(max_length=120)
     carrier_default = models.CharField(max_length=120)
     carrier_select = models.CharField(max_length=120)
+    font_color = models.CharField(max_length=120, blank=True, null=True)
+    discount_group = models.ForeignKey(DiscountGroup, blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % self.user
