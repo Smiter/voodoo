@@ -13,17 +13,11 @@ from voodoo.mainsite.models import Profile
 @login_required(login_url='/admin_center/login/')
 def admin_center(request):
     #TODO add checking for super user
-    return direct_to_template(request, 'admin_center.html', {'menu_elements': getMenuElements()})
+    return direct_to_template(request, 'admin_center.html', {})
 
 
 @login_required(login_url='/admin_center/login/')
 def order_create(request):
-    #TODO get rid of this hard-code
-    currencyList = [u"UAH", u"USD", u"EUR"]
-    #TODO Сообщен (черный цвет), Оформлен (оранжевый), Заказан (зеленый), Доставлен (синий), Отказ (красный)
-    # also need to add ORDER and COLOR
-    statusList = [u"Сообщен", u"Оформлен", u"Заказан", u"Доставлен", u"Отказ"]
-    suppliersList = Supplier.objects.all()
     message = ''
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
@@ -63,9 +57,7 @@ def order_create(request):
             form = OrderForm()
     else:
         form = OrderForm()
-    return direct_to_template(request, 'order_create.html', {'menu_elements': getMenuElements(),
-                                                             'form': form, 'currencyList': currencyList,
-                                                             'suppliersList': suppliersList, 'statusList': statusList, 'message': message})
+    return direct_to_template(request, 'order_create.html', {'form': form, 'message': message})
 
 
 @login_required(login_url='/admin_center/login/')
@@ -84,7 +76,7 @@ def orders_management(request):
             message = 'Заказ сохранен. ID: %s' % order
     else:
         form = OrdersManagementForm()
-    return direct_to_template(request, 'orders_management.html', {'menu_elements': getMenuElements(), 'form': form, 'results': results, 'message': message})
+    return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
 
 
 @login_required(login_url='/admin_center/login/')
@@ -101,7 +93,7 @@ def order_edit(request):
         #TODO
         # drawing order
         form = OrderForm()
-    return direct_to_template(request, 'order_edit.html', {'menu_elements': getMenuElements(), 'form': form})
+    return direct_to_template(request, 'order_edit.html', {'form': form})
 
 
 @login_required(login_url='/admin_center/login/')
@@ -117,7 +109,7 @@ def orders_import(request):
     else:
         # remove copy/paste
         form = OrdersManagementForm()
-    return direct_to_template(request, 'orders_import.html', {'menu_elements': getMenuElements(), 'form': form})
+    return direct_to_template(request, 'orders_import.html', {'form': form})
 
 
 @login_required(login_url='/admin_center/login/')
@@ -157,7 +149,7 @@ def xls_import(request):
             form = XlsImportForm()
     else:
         form = XlsImportForm()
-    return direct_to_template(request, 'xls_import.html', {'menu_elements': getMenuElements(), 'form': form, 'message': message})
+    return direct_to_template(request, 'xls_import.html', {'form': form, 'message': message})
 
 # TODO use permission system
 #@permission_required('polls.can_vote', login_url='/admin_center/login/')
@@ -173,7 +165,7 @@ def user_management(request):
         form = UserManagementForm()
         results = Profile.objects.all()
     
-    return direct_to_template(request, 'user_management.html', {'menu_elements': getMenuElements(), 'form': form, 'message': message, 'results': results})
+    return direct_to_template(request, 'user_management.html', {'form': form, 'message': message, 'results': results})
 
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())

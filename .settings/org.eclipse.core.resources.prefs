@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//voodoo/admin_center/forms.py=UTF-8
 encoding//voodoo/admin_center/models.py=UTF-8
+encoding//voodoo/admin_center/utils/context_processors.py=utf-8
 encoding//voodoo/admin_center/views.py=UTF-8
 encoding//voodoo/custom_admin/__init__.py=utf-8
 encoding//voodoo/custom_admin/admin.py=utf-8

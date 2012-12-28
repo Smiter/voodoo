@@ -184,12 +184,18 @@ class OrderStatus(models.Model):
 class ItemStatus(models.Model):
     status = CharField(verbose_name='Статус', max_length=120)
     color = CharField(verbose_name='Цвет', max_length=120)
+    
+    def __unicode__(self):
+        return self.status
 
 
 class Currency(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     code = CharField(verbose_name='Код', max_length=120)
     ratio = DecimalField(verbose_name='Коэффициент', max_length=120, max_digits=20, decimal_places=1)
+    
+    def __unicode__(self):
+        return self.code
 
 class DiscountGroup(models.Model):
     name = CharField(verbose_name='Название', max_length=120)

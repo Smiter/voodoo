@@ -101,6 +101,10 @@
 				}
 			{% endfor %}
 		}
+		
+		function validateTable() {
+			alert('hello');
+		}
 	</script>
 {% endblock %}
 {% block content %}
@@ -112,200 +116,212 @@
 	</div>
 {% endif %}
 <form name="order_create_form" action="/admin_center/order_create" method="POST">
-	<table>
 		{% csrf_token %}
 		{{ form.non_field_errors }}
-	
-		<tr class="required">
-			<th>
-		        <label for="id_client_name">{{ form.client_name.label }}</label>
-			</th>
-			<td>
-		        {{ form.client_name.errors }}
-		        {{ form.client_name }}
-			</td>
-	    </tr>
-		
-	    <tr class="required">
-			<th>
-		        <label for="id_client_name">{{ form.client_phone.label }}</label>
-			</th>
-			<td>
-		        {{ form.client_phone.errors }}
-		        {{ form.client_phone }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_client_code">{{ form.client_code.label }}</label>
-			</th>
-			<td>
-		        {{ form.client_code.errors }}
-		        {{ form.client_code }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_client_additional_information">{{ form.client_additional_information.label }}</label>
-			</th>
-			<td>
-		        {{ form.client_additional_information.errors }}
-		        {{ form.client_additional_information }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_brand">{{ form.car_brand.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_brand.errors }}
-		        {{ form.car_brand }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_vin">{{ form.car_vin.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_vin.errors }}
-		        {{ form.car_vin }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_model">{{ form.car_model.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_model.errors }}
-		        {{ form.car_model }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_engine">{{ form.car_engine.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_engine.errors }}
-		        {{ form.car_engine }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_year">{{ form.car_year.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_year.errors }}
-		        {{ form.car_year }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_engine_size">{{ form.car_engine_size.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_engine_size.errors }}
-		        {{ form.car_engine_size }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_body">{{ form.car_body.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_body.errors }}
-		        {{ form.car_body }}
-			</td>
-	    </tr>
-	    <tr>
-			<th>
-		        <label for="id_car_gearbox">{{ form.car_gearbox.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_gearbox.errors }}
-		        {{ form.car_gearbox }}
-			</td>
-	    </tr>
-		<tr>
-			<th>
-		        <label for="id_car_additional_information">{{ form.car_additional_information.label }}</label>
-			</th>
-			<td>
-		        {{ form.car_additional_information.errors }}
-		        {{ form.car_additional_information }}
-			</td>
-	    </tr>
-		<tr>
-			<th>
-		        <label for="id_order_info">{{ form.order_info.label }}</label>
-		        <div style="text-align: right" ><image src="{{STATIC_URL}}images/file_add.png" alt="Перенести записи в таблицу" style="width: 24px; height: 24px" onclick="convertStringsToTableRows()"></div>
-			</th>
-			<td>
-		        {{ form.order_info.errors }}
-		        {{ form.order_info }}
-			</td>
-	    </tr>
-	    <tr>
-	    	<td colspan="2">
-	    			<div class="create-new-order-table-title">Список запчастей заказа</div>
-					<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
-						<thead>
-							<tr id ="header" class="create-new-order-table-header">
-								<td>№</td>
-								<td>?</td>
-								<td>Номер</td>
-								<td>Бренд</td>
-								<td>Комментарии</td>
-								<td>Цена 1</td>
-								<td>Цена 2</td>
-								<td>Вал.</td>
-								<td>Кол.</td>
-								<td>Поставщик</td>
-								<td>Срок поставки</td>
-								<td>Статус</td>
-								<td>?</td>
-							</tr>
-						</thead>
-						<tbody><tr></tr></tbody>
-						<tfoot>
-							<tr class="create-new-order-table-footer">
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td style="font-weight: bold;">Всего:</td>
-								<td id="total_sum_1">&nbsp;</td>
-								<td id="total_sum_2">&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-						</tfoot>
-					</table>
-					<div style="text-align: center"><input type="button" value="Добавить ещё запчасть" onclick="addRowIntoTable()"></div>
-	    	</td>
-	    </tr>
-		<tr>
-			<th>
-		        <label for="id_order_additional_information">{{ form.order_additional_information.label }}</label>
-			</th>
-			<td>
-		        {{ form.order_additional_information.errors }}
-		        {{ form.order_additional_information }}
-			</td>
-	    </tr>
-		<tr class="required">
-			<th>
-		        <label for="id_order_status">{{ form.order_status.label }}</label>
-			</th>
-			<td>
-		        {{ form.order_status.errors }}
-		        {{ form.order_status }}
-			</td>
-	    </tr>
-	</table>
+		<div>
+			<div class="block_title">Информация о заказчике</div>
+			<table class="block_content">
+				<tr class="required">
+					<th>
+				        <label for="id_client_name">{{ form.client_name.label }}</label>
+					</th>
+					<td>
+				        {{ form.client_name.errors }}
+				        {{ form.client_name }}
+					</td>
+			    </tr>
+				
+			    <tr class="required">
+					<th>
+				        <label for="id_client_name">{{ form.client_phone.label }}</label>
+					</th>
+					<td>
+				        {{ form.client_phone.errors }}
+				        {{ form.client_phone }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_client_code">{{ form.client_code.label }}</label>
+					</th>
+					<td>
+				        {{ form.client_code.errors }}
+				        {{ form.client_code }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_client_additional_information">{{ form.client_additional_information.label }}</label>
+					</th>
+					<td>
+				        {{ form.client_additional_information.errors }}
+				        {{ form.client_additional_information }}
+					</td>
+			    </tr>
+		    </table>
+		</div>
+		<div>
+			<div class="block_title">Информация о авто</div>
+		    <table class="block_content">
+			    <tr>
+					<th>
+				        <label for="id_car_brand">{{ form.car_brand.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_brand.errors }}
+				        {{ form.car_brand }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_vin">{{ form.car_vin.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_vin.errors }}
+				        {{ form.car_vin }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_model">{{ form.car_model.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_model.errors }}
+				        {{ form.car_model }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_engine">{{ form.car_engine.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_engine.errors }}
+				        {{ form.car_engine }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_year">{{ form.car_year.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_year.errors }}
+				        {{ form.car_year }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_engine_size">{{ form.car_engine_size.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_engine_size.errors }}
+				        {{ form.car_engine_size }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_body">{{ form.car_body.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_body.errors }}
+				        {{ form.car_body }}
+					</td>
+			    </tr>
+			    <tr>
+					<th>
+				        <label for="id_car_gearbox">{{ form.car_gearbox.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_gearbox.errors }}
+				        {{ form.car_gearbox }}
+					</td>
+			    </tr>
+				<tr>
+					<th>
+				        <label for="id_car_additional_information">{{ form.car_additional_information.label }}</label>
+					</th>
+					<td>
+				        {{ form.car_additional_information.errors }}
+				        {{ form.car_additional_information }}
+					</td>
+			    </tr>
+		    </table>
+		</div>
+		<div>
+			<div class="block_title">Информация о заказе и запчастям</div>
+		    <table class="block_content">
+				<tr>
+					<th>
+				        <label for="id_order_info">{{ form.order_info.label }}</label>
+				        <div style="text-align: right" ><image src="{{STATIC_URL}}images/file_add.png" alt="Перенести записи в таблицу" style="width: 24px; height: 24px" onclick="convertStringsToTableRows()"></div>
+					</th>
+					<td>
+				        {{ form.order_info.errors }}
+				        {{ form.order_info }}
+					</td>
+			    </tr>
+			    <tr>
+			    	<td colspan="2">
+			    			<div class="create-new-order-table-title">Список запчастей заказа</div>
+							<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+								<thead>
+									<tr id ="header" class="create-new-order-table-header">
+										<td>№</td>
+										<td>?</td>
+										<td>Номер</td>
+										<td>Бренд</td>
+										<td>Комментарии</td>
+										<td>Цена 1</td>
+										<td>Цена 2</td>
+										<td>Вал.</td>
+										<td>Кол.</td>
+										<td>Поставщик</td>
+										<td>Срок поставки</td>
+										<td>Статус</td>
+										<td>?</td>
+									</tr>
+								</thead>
+								<tbody><tr></tr></tbody>
+								<tfoot>
+									<tr class="create-new-order-table-footer">
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style="font-weight: bold;">Всего:</td>
+										<td id="total_sum_1">&nbsp;</td>
+										<td id="total_sum_2">&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								</tfoot>
+							</table>
+							<div style="text-align: center"><input type="button" value="Добавить ещё запчасть" onclick="addRowIntoTable()"></div>
+			    	</td>
+			    </tr>
+				<tr>
+					<th>
+				        <label for="id_order_additional_information">{{ form.order_additional_information.label }}</label>
+					</th>
+					<td>
+				        {{ form.order_additional_information.errors }}
+				        {{ form.order_additional_information }}
+					</td>
+			    </tr>
+				<tr class="required">
+					<th>
+				        <label for="id_order_status">{{ form.order_status.label }}</label>
+					</th>
+					<td>
+				        {{ form.order_status.errors }}
+				        {{ form.order_status }}
+					</td>
+			    </tr>
+			</table>
+		</div>
 	<input type="hidden" id ="row_count" name="row_count" value="0">
 	{% block buttons %}{% endblock %}
 </form>
