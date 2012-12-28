@@ -32,7 +32,15 @@
 				<td>{{ profile.fio }}</td>
 				<td>{{ profile.user.email }}</td>
 				<td>{{ profile.phone }}</td>
-				<td>{{ profile.user.groups }}</td>
+				{% if profile.user.groups %}
+					<td>
+						{% for group in profile.user.groups.all %}
+							{{ group }}</br>
+						{% endfor %}
+					</td>
+				{% else %}
+					<td>&nbsp;</td>
+				{% endif %}
 				<td>actionList</td>
 			</tr>
 			{% endfor %}
