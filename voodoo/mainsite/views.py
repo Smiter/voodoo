@@ -17,7 +17,7 @@ from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.db.models.query import QuerySet
 from django.contrib.auth.decorators import login_required
-from voodoo.admin_center.models import Product
+from voodoo.admin_center.models import Product, OrderItem
 
 class DjangoJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -212,7 +212,8 @@ def get_vin_by_id(request):
     print "get_vin_by_id"
     vin_request = Order.objects.filter(user=request.user,
         id=request.POST["vin_id"])
-    data = {'vin_request': vin_request}
+    vin_details = OrderItem.objects.filter(order=vin_request)
+    data = {'vin_request': vin_request, 'vin_details': vin_details}
     output = dumps(data, cls=DjangoJSONEncoder)
     print output
     return HttpResponse(output, mimetype="application/json")

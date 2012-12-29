@@ -32,14 +32,14 @@ class UserRegistrationForm(forms.Form):
             ('Автоэксперт страховщик', 'Автоэксперт страховщик'),
             ('Частный клиент', 'Частный клиент')
         ]),
-        initial='выберите из списка',
-        required=False)
+        initial='выберите из списка'
+       )
     email = EmailField(label="E-mail")
     country = CharField(label="Страна", initial='Украина')
     city = CharField(label="Город")
-    phiz_adress = CharField(label="Физический адресс")
+    phiz_adress = CharField(label="Физический адресс", required=False)
     phone = CharField(label="Контактные телефоны")
-    contacts = CharField(label="Контактные лица")
+    contacts = CharField(label="Контактные лица", required=False)
     additional_info = CharField(
         max_length=200,
         label="Дополнительная информация",

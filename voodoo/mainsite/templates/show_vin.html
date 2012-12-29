@@ -91,44 +91,47 @@ margin-right: 10px;
 								+ '<td><input type="text" class="detail_number" value="'+ n[index].split(",")[1].split(" ")[1] +'"></td><td><label class="error_label"></label></td>'
 							+ '</tr>')
 					})
-					$("#vin_info").append(
-					'<button style="margin-left:100px" class="btn" id="add_to_details">Добавить строку</button>'
-					+'<button class="btn"  id="delete_details">Удалить строку</button>'
-					+'<button class="btn"  id="save_details">Сохранить</button>'
-					)
-					$("#vin_info").append(
-						'<p style="margin-left:200px; margin-top:20px;">Предлагаемые вам запчасти</p>'
-						+ '<table class="table" id="offered_details">'
-							+ '<thead>'
-								+ '<tr>'
-									+ '<th>№</th>'
-									+ '<th>Бренд</th>'
-									+ '<th>Описание</th>'
-									+ '<th>Цена</th>'
-									+ '<th>Кол.</th>'
-									+ '<th>Срок поставки</th>'
-									+ '<th>Статус</th>'
-								+ '</tr>'
-							+ '</thead>'
-                  		+ '</table>'     
-					)
 
-					$.each(msg["vin_details"],function(index, value) {
-						$("#offered_details").append(
-							  '<tr>'
-								+ '<td>'+ ++offered_details_count +'</td>'
-								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
-								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
-								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
-								+ '<td><input class="num_offered_detail input-mini" type="text" value="'+ msg["vin_details"][index].fields.name + '"></td>'
-								+ '<td>'+ msg["vin_details"][index].fields.name + '</td>'
-								+ '<td><input type="checkbox" checked></td>'
-							+ '</tr>')
-					})
+					console.log(msg["vin_request"][0].fields.order_status)
+					if (msg["vin_request"][0].fields.order_status == 'Обработан (зеленый)'){
+						$("#vin_info").append(
+						'<button style="margin-left:100px" class="btn" id="add_to_details">Добавить строку</button>'
+						+'<button class="btn"  id="delete_details">Удалить строку</button>'
+						+'<button class="btn"  id="save_details">Сохранить</button>'
+						)
+						$("#vin_info").append(
+							'<p style="margin-left:200px; margin-top:20px;">Предлагаемые вам запчасти</p>'
+							+ '<table class="table" id="offered_details">'
+								+ '<thead>'
+									+ '<tr>'
+										+ '<th>№</th>'
+										+ '<th>Бренд</th>'
+										+ '<th>Описание</th>'
+										+ '<th>Цена</th>'
+										+ '<th>Кол.</th>'
+										+ '<th>Срок поставки</th>'
+										+ '<th>Статус</th>'
+									+ '</tr>'
+								+ '</thead>'
+	                  		+ '</table>'     
+						)
+						$.each(msg["vin_details"],function(index, value) {
+							$("#offered_details").append(
+								  '<tr>'
+									+ '<td>'+ ++offered_details_count +'</td>'
+									+ '<td>'+ msg["vin_details"][index].fields.code + '</td>'
+									+ '<td>'+ msg["vin_details"][index].fields.brand + '</td>'
+									+ '<td>'+ msg["vin_details"][index].fields.comment + '</td>'
+									+ '<td><input class="num_offered_detail input-mini" type="text" value="'+ msg["vin_details"][index].fields.count + '"></td>'
+									+ '<td>'+ msg["vin_details"][index].fields.delivery_time + '</td>'
+									+ '<td><input type="checkbox" checked></td>'
+								+ '</tr>')
+						})
 
-					$("#vin_info").append(
-					'<button type="button" class="btn btn-primary" id="order_details">Оформить заказ</button>'
-					)
+						$("#vin_info").append(
+						'<button type="button" class="btn btn-primary" id="order_details">Оформить заказ</button>'
+						)
+					}
 
                   })
 			event.preventDefault();
