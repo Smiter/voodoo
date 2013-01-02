@@ -3,7 +3,12 @@
 {% block javascript %}
 <script type="text/javascript"> 
 	$(function(){
-	  	$("#menu ul li:eq(4)").addClass("active")
+		{% if request.user.is_authenticated %}
+	  		$("#menu ul li:eq(6)").addClass("active")
+	  	{% else %}
+	  		$("#menu ul li:eq(1)").addClass("active")
+	  	{% endif %}
+
 		var details_count = 1;
 		// $('#add_to_details').live('click',function () {
 		// 	console.log("add new line")
@@ -100,10 +105,7 @@
 {% endblock %}
 
 {% block main %}
-<h3>Уведомить об оплате...</h3>
-<pre>	Если вы провели оплату заказа, нужно уведомить нас об этом с помощью формы, представленной ниже.	
-	Просьба вводить данные точно и максимально полно - особенно в поле информации по оплате, где желательно указать, за что Вы заплатили. Если выбран тип платежа "Другое", то укажите чем отпралвены деньги. Сумму нужно указывать не ту, которую с Вас взял банк, а ту, которая идет на оплату заказа(ов).	Получив уведомление об оплате, мы быстрее сможем приступить к выполнению Вашего заказа.
-
+<pre>У Вас возникли сомнения в правильности подбора запчастей к Вашему авто или Вы вовсе не знаете какие запчасти подходят к Вашему автомобилю. Воспользуйтесь услугами наших квалифицированных менеджеров, заполнив простую форму ниже. В Кратчайшие сроки Вам сообщат.
 </pre>
 {% load bootstrap_toolkit %}
 {{ form.media }}
@@ -112,7 +114,7 @@
 		{{ form|as_bootstrap:"horizontal" }}
 	</table>
 	<div id="vin_details">
-		<p>Опишите подробно запрашиваемые запчасти и их колличество</p>
+		<p>Укажите необходимые Вам запчасти</p>
 		<!-- <ul id="vin_details_list">
 			<li> 
 				<label style="float:left">1.</label><input name="details_name" class="detail_name" type="text"/><input class="detail_number" name="details_number" type="text" value="1"/>

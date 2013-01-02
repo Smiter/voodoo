@@ -15,6 +15,8 @@
 
 <script type="text/javascript">
 $(function(){
+    $("#menu ul li:eq(0)").addClass("active")
+
 	$(".plus_detail").live('click', function(){
 		var n = parseInt($(this).siblings('.num_detail').val()) + 1
 		$(this).siblings('.num_detail').val(n)
@@ -74,12 +76,12 @@ $(function(){
 
 {% endblock %}
 {% block main %}
-<h3>Содержимое корзины:</h3>
+<pre>Здесь Вы можете увидеть все выбранные Вами товары, их количество, стоимость, сроки поставки, а также общую стоимость заказа.</pre>
 <form id="basket_form" method="POST" action="/make_order/">
     <table class="table">
     	<thead>
 	        <tr>
-	        	<th></th>
+	        	{# <th></th> #}
 	        	<th></th>
 	            <th>Номер / бренд</th>
 	            <th>Срок поставки</th>
@@ -92,7 +94,7 @@ $(function(){
         	{% for item in cart %}
         	        <tr>
         	        	<td><input name="item_id" class="item_id" type="hidden" value="{{ item.product.id }}"></td>
-        	        	<td><img width="100" height="100" src="/static/images/{{item.product.image}}"></td>
+        	        	{# <td><img width="100" height="100" src="/static/images/{{item.product.image}}"></td> #}
         	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.brand }}</p></td>
         	            <td><p style="margin-top:44px;" class="float-left">{{ item.delivery_time }}</p></td>
         	            <td>
@@ -115,7 +117,7 @@ $(function(){
         	        </tr>
         	{% endfor %}
 	        <tr>
-	            <td></td>
+	            {# <td></td> #}
 	            <td></td>
 	            <td>Итого:</td>
 	            <td id="total_price_basket">{{total_price}} грн.</td>
@@ -126,12 +128,24 @@ $(function(){
         </tbody>
     </table>
     <div>
-    	{% if request.user.is_authenticated %}
-    	<button class="float-left btn btn-primary" type="submit">Оформить заказ</button>
-    	{% else %}
-    	<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Оформить заказ</a>
-    	{% endif %}
-    	<button id="recount" class="float-right btn btn-primary" type="button">Обновить</button>
+    	
+
+        {% if request.basket_number > 0 %}
+            {% if request.user.is_authenticated %}
+                <button class="float-left btn btn-primary" type="submit">Оформить заказ</button>
+            {% else %}
+                <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Оформить заказ</a>
+            {% endif %}
+            <button id="recount" class="float-right btn btn-primary" type="button">Обновить</button>
+        {% else%}
+            {% if request.user.is_authenticated %}
+                <button class="float-left btn btn-primary" type="submit" disabled>Оформить заказ</button>
+            {% else %}
+                <a href="#myModal" role="button" class="btn btn-primary" disabled>Оформить заказ</a>
+            {% endif %}
+            <button id="recount" class="float-right btn btn-primary" type="button" disabled>Обновить</button>
+        {% endif %}
+
     </div>
 </form>
 <br>

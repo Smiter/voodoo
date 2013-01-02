@@ -48,14 +48,13 @@ def make_order(request):
     else:
         order = Order(user=user, order_status=u'Принят (черный)')
         
+    order.order_info = ";".join([item.product.brand + ", " + str(item.count) + u" шт." for item in cart])
     order.save()
-    #TODO change item model to add order
     for item in cart:
         item.order = order
         item.save()
-        # order.items.add(item)
-
     cart.change_id(request)
     cart = Cart(request)
     request.basket_number = cart.getItemCount()
-    return render_to_response('basket.html',  dict(cart=cart, products=Product.objects.all(), total_price=0), context_instance=RequestContext(request))
+    return HttpResponseRedirect("/basket")
+    # return render_to_response('basket.html',  dict(cart=cart, products=Product.objects.all(), total_price=0), context_instance=RequestContext(request))

@@ -3,12 +3,47 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib import admin
 from django.conf import settings
 from django.template.loader import render_to_string
 from registration.models import RegistrationProfile
 from registration.models import RegistrationManager
-from voodoo.admin_center.models import DiscountGroup
+from voodoo.admin_center.models import DiscountGroup, Order
+
+
+CLIENT_TYPE = (
+            (u'Автосервис/СТО', u'Автосервис/СТО'),
+            (u'Автопарк', u'Автопарк'),
+            (u'Автомагазин', u'Автомагазин'),
+            (u'Автосалон', u'Автосалон'),
+            (u'Автоэксперт страховщик', u'Автоэксперт страховщик'),
+            (u'Частный клиент', u'Частный клиент')
+)
+
+CARRIER_CHOICES = (
+            (u'Ваш перевозчик', u'Ваш перевозчик'),
+            (u'Гюнсел', u'Гюнсел'),
+            (u'САТ', u'САТ'),
+            (u'Новая почта', u'Новая почта'),
+)
+
+VALUTA_CHOICES = (
+            ('UAH', 'UAH'),
+            ('USD', 'USD'),
+)
+
+TYPE_OF_PAYMENT_CHOICES = (
+            (u'ПриватБанк', u'ПриватБанк'),
+            (u'Правэкс', u'Правэкс'),
+            (u'Другое', u'Другое')
+)
+
+ORDER_CHOICES = (
+            (u'Сообщен', u'Сообщен'),
+            (u'Оформлен', u'Оформлен'),
+            (u'Заказан', u'Заказан'),
+            (u'Доставлен', u'Доставлен'),
+            (u'Отказ', u'Отказ'),
+)
 
 
 class MyRegistrationProfile(RegistrationProfile):
@@ -39,15 +74,15 @@ class MyRegistrationProfile(RegistrationProfile):
 class Profile(models.Model):
     user = models.ForeignKey(User, unique=True)
     fio = models.CharField(max_length=120)
-    client_type = models.CharField(max_length=120)
+    client_type = models.CharField(verbose_name='Тип клиента', choices=CLIENT_TYPE, max_length=120)
     country = models.CharField(max_length=120)
     city = models.CharField(max_length=120)
     phiz_adress = models.CharField(max_length=120, blank=True, null=True)
     phone = models. CharField(max_length=120)
     contacts = models.CharField(max_length=120, blank=True, null=True)
     additional_info = models.CharField(max_length=120, blank=True, null=True)
-    carrier_default = models.CharField(max_length=120, blank=True, null=True)
-    carrier_select = models.CharField(max_length=120)
+    carrier_default = models.CharField(verbose_name='Перевозчик по умолчанию', choices=CARRIER_CHOICES, max_length=120, blank=True, null=True)
+    carrier_select = models.CharField(max_length=120, blank=True, null=True)
     font_color = models.CharField(max_length=120, blank=True, null=True)
     discount_group = models.ForeignKey(DiscountGroup, blank=True, null=True)
 
@@ -57,17 +92,6 @@ class Profile(models.Model):
     class Meta:
         verbose_name = "User profile"
         verbose_name_plural = "User profiles"
-
-
-VALUTA_CHOICES = (
-            ('UAH', 'UAH'),
-            ('USD', 'USD'),
-)
-
-TYPE_OF_PAYMENT_CHOICES = (
-            ('Webmoney', 'Webmoney'),
-            ('Yandex money', 'yandex money'),
-)
 
 
 class Prepays(models.Model):
@@ -85,13 +109,6 @@ class Prepays(models.Model):
     class Meta:
         verbose_name = "Prepays"
         verbose_name_plural = "Prepays"
-
-
-CARRIER_CHOICES = (
-            (u'Гюнсел', u'Гюнсел'),
-            (u'САТ', u'САТ'),
-            (u'Новая почта', u'Новая почта'),
-)
 
 
 class OrderDispatch(models.Model):
@@ -127,85 +144,5 @@ class Sendings(models.Model):
         verbose_name_plural = "Sendings"
 
 
-class CarAdditional(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return self.name
-
-    def natural_key(self):
-        return (self.name)
-
-    class Meta:
-        verbose_name = "CarAdditional"
-        verbose_name_plural = "CarAdditional"
-
-from datetime import datetime
-
-
 class VinRequest(models.Model):
-    user = models.ForeignKey(User, unique=False, blank=True, null=True)
-    name = models.CharField(max_length=50, verbose_name='Имя')
-    phone = models.CharField(max_length=50, verbose_name='Телефон')
-    email = models.CharField(max_length=50, verbose_name='Email', blank=True, null=True)
-    delivery_adress = models.CharField(max_length=50, verbose_name='Адресс доставки', blank=True, null=True)
-    car_brand = models.CharField(max_length=120, verbose_name='Марка автомобиля')
-    car_vin = models.CharField(max_length=120, verbose_name='VIN')
-    car_model = models.CharField(max_length=120, verbose_name='Модель/Серия')
-    car_engine = models.CharField(max_length=120, verbose_name='Двигатель', blank=True, null=True)
-    car_year = models.CharField(max_length=120, verbose_name='Год выпуска')
-    engine_capacity = models.CharField(max_length=120, verbose_name='Объем двигателя', blank=True, null=True)
-    car_body = models.CharField(max_length=120, verbose_name='Кузов', blank=True, null=True)
-    car_kpp = models.CharField(max_length=120, verbose_name='КПП', blank=True, null=True)
-    car_additionals = models.ManyToManyField(CarAdditional)
-    additional_info = models.CharField(max_length=500, verbose_name='Дополнительная информация', blank=True, null=True)
-    date = models.DateTimeField(max_length=50, default=datetime.now, blank=True, verbose_name='Дата запроса')
-    comment = models.CharField(max_length=220, verbose_name='Комментарии')
-    status = models.CharField(max_length=220, default=u'Принят', verbose_name='Статус')
-
-    def __unicode__(self):
-        return "request from user = %s" % self.user
-
-    class Meta:
-        verbose_name = "VinRequest"
-        verbose_name_plural = "VinRequest"
-
-
-# class Vin_Car_Additional(models.Model):
-#     vinrequest_id = models.ForeignKey(VinRequest)
-#     caradditional_id = models.ForeignKey(CarAdditional)
-
-
-class VinDetails(models.Model):
-    vin = models.ForeignKey(VinRequest, unique=False)
-    name = models.CharField(max_length=500, verbose_name='Название детали')
-    number = models.IntegerField(max_length=10, verbose_name='Колличество деталей')
-
-    def __unicode__(self):
-        return "vin id = %d" % self.vin.id
-
-    class Meta:
-        verbose_name = "VinDetails"
-        verbose_name_plural = "VinDetails"
-
-
-ORDER_CHOICES = (
-            (u'Сообщен', u'Сообщен'),
-            (u'Оформлен', u'Оформлен'),
-            (u'Заказан', u'Заказан'),
-            (u'Доставлен', u'Доставлен'),
-            (u'Отказ', u'Отказ'),
-)
-
-
-# class Order(models.Model):
-#     user = models.ForeignKey(User, unique=False, blank=True, null=True)
-#     name = models.CharField(max_length=50, verbose_name='Имя', blank=True, null=True)
-#     phone = models.CharField(max_length=50, verbose_name='Телефон', blank=True, null=True)
-#     items = models.ManyToManyField(Item)
-#     order_time = models.DateTimeField(max_length=120, default=datetime.now, blank=True, verbose_name='Дата заказа')
-#     comment = models.CharField(max_length=500, verbose_name='Комментарии к заказу', blank=True, null=True)
-#     status = models.CharField(max_length=30, choices=ORDER_CHOICES, verbose_name='Статус заказа')
-
-#     def __unicode__(self):
-#         return self.status
+    order = models.ForeignKey(Order)

@@ -10,7 +10,32 @@ margin-right: 10px;
 {% block javascript %}
 <script type="text/javascript"> 
 	$(function(){
-		$("#menu ul li:eq(5)").addClass("active")
+
+		$('#order_details').live('click',function () {
+			list1 = Array()
+			list2 = Array()
+			$("#offered_details .num_offered_detail").each(function() {
+				console.log($(this).val())
+				list1.push($(this).val())
+			})
+
+			$("#offered_details .detail_status_checkbox").each(function() {
+				console.log($(this).is(':checked'))
+				list2.push($(this).is(':checked'))
+			})
+
+			
+
+			$.ajax({
+              type: "POST",
+              url: '/order_details/',
+              data: {"vin_id": vin_id, "num_offered_detail": list1, "statuses": list2}
+              }).done(function( msg ) {
+              	$("#alert").html('<div class="alert alert-success"> <strong>Спасибо за заказ!</strong> Дальнейший статус заказа вы можете посмотреть в разделе Заказы</div>')
+              })
+		});
+
+		$("#menu ul li:eq(7)").addClass("active")
 		var details_count = 0;
 		var offered_details_count = 0;
 		var vin_id = -1
@@ -24,7 +49,7 @@ margin-right: 10px;
                   }).done(function( msg ) {
                   	details_count = 0
                   	offered_details_count = 0
-                  	$("#vin_info").html('<p>Содержимое VIN-запроса № '+ msg["vin_request"][0].pk +' (импортирован в ОЦ, заказ № ' + msg["vin_request"][0].pk + ')</p>'
+                  	$("#vin_info").html('<p>Содержимое VIN-запроса № '+ msg["vin_request_id"] +' (импортирован в ОЦ, заказ № ' + msg["vin_request"][0].pk + ')</p>'
                   		+ '<table class="table">'
 	                  		+ '<tr>'
 		                  		+ '<td>Марка автомобиля</td>'
@@ -79,26 +104,21 @@ margin-right: 10px;
                   		+ '</table>'                  		
                   		);
 					var details = msg["vin_request"][0].fields.order_info
-					console.log(details)
 					var n=details.split(";"); 
-					console.log(n.length)
-					n.pop()
 					$.each(n,function(index, value) {
 						$("#vin_details").append(
 							  '<tr>'
 								+ '<td>'+ ++details_count +'</td>'
-								+ '<td><input type="text" class="detail_name" value="'+ n[index].split(",")[0] +'"></td>'
-								+ '<td><input type="text" class="detail_number" value="'+ n[index].split(",")[1].split(" ")[1] +'"></td><td><label class="error_label"></label></td>'
+								+ '<td><input style="width:400px" type="text" class="detail_name" value="'+ n[index].split(",")[0] +'"></td>'
+								+ '<td><input style="width:50px" type="text" class="detail_number" value="'+ n[index].split(",")[1].split(" ")[1] +'"></td><td><label class="error_label"></label></td>'
 							+ '</tr>')
 					})
-
-					console.log(msg["vin_request"][0].fields.order_status)
-					if (msg["vin_request"][0].fields.order_status == 'Обработан (зеленый)'){
-						$("#vin_info").append(
+					$("#vin_info").append(
 						'<button style="margin-left:100px" class="btn" id="add_to_details">Добавить строку</button>'
 						+'<button class="btn"  id="delete_details">Удалить строку</button>'
 						+'<button class="btn"  id="save_details">Сохранить</button>'
-						)
+					)
+					if (msg["vin_request"][0].fields.order_status == 'Обработан (зеленый)'){
 						$("#vin_info").append(
 							'<p style="margin-left:200px; margin-top:20px;">Предлагаемые вам запчасти</p>'
 							+ '<table class="table" id="offered_details">'
@@ -113,24 +133,26 @@ margin-right: 10px;
 										+ '<th>Статус</th>'
 									+ '</tr>'
 								+ '</thead>'
-	                  		+ '</table>'     
+	                  		+ '</table>'    
+	                  		+ '<button type="" class="btn btn-primary" id="order_details">Оформить заказ</button>'
+	                  		+ '<div id="alert" style="margin-top:20px;"></div>'
 						)
 						$.each(msg["vin_details"],function(index, value) {
+							var input_checkbox = '<input class="detail_status_checkbox" name="detail_status" type="checkbox">'
+							if (msg["vin_details"][index].fields.status == 'Оформлен'){
+								input_checkbox = '<input class="detail_status_checkbox" name="detail_status" type="checkbox" checked>'
+							}
 							$("#offered_details").append(
 								  '<tr>'
-									+ '<td>'+ ++offered_details_count +'</td>'
-									+ '<td>'+ msg["vin_details"][index].fields.code + '</td>'
+									+ '<td>'+ msg["vin_details"][index].fields.code +'</td>'
 									+ '<td>'+ msg["vin_details"][index].fields.brand + '</td>'
 									+ '<td>'+ msg["vin_details"][index].fields.comment + '</td>'
-									+ '<td><input class="num_offered_detail input-mini" type="text" value="'+ msg["vin_details"][index].fields.count + '"></td>'
+									+ '<td>'+ parseFloat(msg["vin_details"][index].fields.price_2) * parseInt(msg["vin_details"][index].fields.count)  + '</td>'
+									+ '<td><input class="num_offered_detail input-mini" name="detail_count" type="text" value="'+ msg["vin_details"][index].fields.count + '"></td>'
 									+ '<td>'+ msg["vin_details"][index].fields.delivery_time + '</td>'
-									+ '<td><input type="checkbox" checked></td>'
+									+ '<td>' + input_checkbox + '</td>'
 								+ '</tr>')
 						})
-
-						$("#vin_info").append(
-						'<button type="button" class="btn btn-primary" id="order_details">Оформить заказ</button>'
-						)
 					}
 
                   })
@@ -142,8 +164,8 @@ margin-right: 10px;
 			(
 				  '<tr>'
 				+ '<td>'+ ++details_count +'</td>'
-				+ '<td><input type="text" class="detail_name"></td>'
-				+ '<td><input type="text" class="detail_number"></td><td><label class="error_label"></label></td>'
+				+ '<td><input style="width:400px" type="text" class="detail_name"></td>'
+				+ '<td><input style="width:50px" type="text" class="detail_number" value="1"></td><td><label class="error_label"></label></td>'
 				+ '</tr>'
 			);
 		});
@@ -203,27 +225,13 @@ margin-right: 10px;
 	                  })
               }
 		});
-
-		$('#order_details').live('click',function () {
-			$("#offered_details .num_offered_detail").each(function() {
-				console.log($(this).val())
-			})
-			$.ajax({
-              type: "POST",
-              url: '/order_details/',
-              data: {"vin_id": vin_id}
-              }).done(function( msg ) {
-
-              })
-		});
-
 	})
 
 </script>
 {% endblock %}
 
 {% block main %}
-<h3>Фильтр по VIN запросам...</h3>
+<pre>Здесь Вы можете просмотреть статистику сделанных подборов, выбрав нужный период по датам.</pre>
 {% load bootstrap_toolkit %}
 {{ form.media }}
 <form class="form-inline frame-pre" action="/show_vin/" method="post">
@@ -248,11 +256,11 @@ margin-right: 10px;
 		
 			<tr>
 			  <td>{{ row.id }}</td>
-			  <td>{{ row.creation_date }}</td>
-			  <td><a class="vin_link" href="{{row.id}}">{{ row.car_vin }}</a></td>
+			  <td>{{ row.order.creation_date }}</td>
+			  <td><a class="vin_link" href="{{row.order.id}}">{{ row.order.car_vin }}</a></td>
 			  <td>Не понятно что сюда писать</td>
 			  <td>
-			  	{% if row.order_status == 'Принят (черный)' %}
+			  	{% if row.order.order_status == 'Принят (черный)' %}
 			  		Обрабатывается
 			  	{% else %}
 			  		Обработан

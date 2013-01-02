@@ -8,10 +8,12 @@
 <p>Логин и пароль могут содержать только латинские буквы и цифры и не должен содержать только цифры. Длина логина должна быть не менее 4 символов.</p>
 <p>Пароль не должен быть равным логину и его длина должна быть не менее 6 символов.</p>
 <p style="text-align:center; font-weight:bold;">Форма регистрации</p>
-<form method="post" action="">
+{% load bootstrap_toolkit %}
+{{ form.media }}
+<form class="form-horizontal" method="post" action="">
 <table>
-	{{form.as_table}}
+	{{ form|as_bootstrap:"horizontal" }}
 </table>
-<input type="submit" value="Зарегистрироваться" / class="clearfix">
+<button type="submit" class="btn btn-primary">Зарегистрироваться</button>
 </form>
 {% endblock %}

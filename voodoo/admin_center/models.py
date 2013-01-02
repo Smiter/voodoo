@@ -94,7 +94,7 @@ class Order(models.Model):
 #    order_total_price2 = DecimalField(verbose_name='Всего Цена 2', max_length=120, max_digits=20, decimal_places=1, blank=True)
 
     def __unicode__(self):
-        return self.client_name
+        return str(self.id)
 
 
 class Supplier(models.Model):
@@ -159,9 +159,6 @@ class OrderItem(models.Model):
         return self.code
 
     def total_price(self):
-        print "HUI"
-        print self.count
-        print self.price_2
         return self.count * self.price_2
     total_price = property(total_price)
 

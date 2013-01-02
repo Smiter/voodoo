@@ -42,6 +42,7 @@
         $('#loginForm').ajaxForm(function(e) { 
         	if (e.user){
         		location.reload();
+                e.preventDefault();
         	}
         	else{
         		$("#login_msg").text(e.msg)
@@ -64,12 +65,9 @@
         <div id="header" class="navbar gradient-control">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="float-left" href="/index"><img width="101" height="57" title="Интернет магазин" alt="Интернет магазин" src="/static/images/photo.jpg"></a>
+                    <a class="float-left" href="/index"><img style="width:200px; height:110px" title="Интернет магазин" alt="Интернет магазин" src="/static/images/photo.jpg"></a>
                     <div id="right">
-                        <p style="margin-top:10px;">Contacts: Odessa, Ukraine тел: 0937403959</p>
-                        <div style="float:right;margin: 30px 40px 0 0px" >
-                            <a href="/basket">Корзина({{request.basket_number}})</a>
-                    </div>
+                        <p style="margin-top:10px;">Наши контакты: Украина, г.Черкассы.</p>
                     </div>
                     <div id="middle">
                         <form id="search" class="navbar-search pull-left" method="GET" action="/search_product/">
@@ -100,24 +98,26 @@
             		<!-- <a href="{% url auth_logout %}?next=/index">Logout</a> -->
                     <div style="margin-top:5px;">
                         <span id="login_message">Добро пожаловать, {{ request.user.username }}</span>
-                        <a href="{% url auth_logout %}?next=/index">Выход</a>
                     </div>
             		<div style="margin-top:10px;" id="menu">
             			<ul style="width:200px;margin:0;" class="nav nav-list bs-docs-sidenav">
-                            <!-- <li class="nav-header">Меню</li> -->
-            				<li><a href="/notice_of_payment">Уведомить об оплате<i class="icon-chevron-right"></i></a></li>
-                            <li><a href="/prepays">Проплаты<i class="icon-chevron-right"></i></a></li>
-            				<li><a href="/order_dispatch">Заказ отправки<i class="icon-chevron-right"></i></a></li>
-            				<li><a href="/sendings">Отправки<i class="icon-chevron-right"></i></a></li>
-            				<li><a href="/vin_request">Подать VIN запрос<i class="icon-chevron-right"></i></a></li>
-            				<li><a href="/show_vin">VIN запросы<i class="icon-chevron-right"></i></a></li>
+                            <li><a href="/basket">Корзина({{request.basket_number}})<i class="icon-chevron-right"></i></a></li>
                             <li><a href="/orders">Заказы<i class="icon-chevron-right"></i></a></li>
-                            {# <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li> #}
+            				<li style="margin-top:15px" ><a href="/notice_of_payment">Сообщить об оплате<i class="icon-chevron-right"></i></a></li>
+                            <li><a href="/prepays">Баланс<i class="icon-chevron-right"></i></a></li>
+            				<li style="margin-top:15px" ><a href="/order_dispatch">Заказ отгрузки<i class="icon-chevron-right"></i></a></li>
+            				<li><a href="/sendings">Отгрузки<i class="icon-chevron-right"></i></a></li>
+            				<li style="margin-top:15px" ><a href="/vin_request">Подбор по авто<i class="icon-chevron-right"></i></a></li>
+            				<li><a href="/show_vin">Статистика подборов<i class="icon-chevron-right"></i></a></li>
+                            <li style="margin-top:15px" ><a href="{% url auth_logout %}?next=/index">Выход<i class="icon-chevron-right"></i></a></li>
             			</ul>
 
             		</div>
 
             		{% else %}
+                    <ul>
+                        <li><a href="{% url registration_register %}">Регистрация</a></li>
+                    </ul>
                     <p style="margin-left:20px">Вход для клиентов</p>
                     <p id="login_msg"></p>
             		{% if errors %}
@@ -127,32 +127,30 @@
             		           {% endfor %}
             		       </ul>
             		{% endif %}
-            		<form id="loginForm" method="post" action="/login/" name="login">
+            		<form style="margin: 0 0" id="loginForm" method="post" action="/login/" name="login">
             			  {% csrf_token %}
             			  <table>
             			  		<tr>
             			  			<td>
-                                        <input id="id_username"  name="username" class="input-medium" type="text" placeholder="Логин" value="{{ username }}">
+                                        <input id="id_username"  style="width:184px" name="username" class="input-medium" type="text" placeholder="Логин" value="{{ username }}">
             			  			</td>
             			  		</tr>
             			  		<tr>
             			  			<td>
-                                        <input id="id_username"  name="password" class="input-medium" type="password" placeholder="Пароль" value="{{ id_password }}">
-            			  			</td>
+                                        <div class="input-append">
+                                        <input style="width:126px" id="id_username"  name="password" class="input-medium" type="password" placeholder="Пароль" value="{{ id_password }}">
+                                        <button class="btn btn-primary" type="submit">Вход</button>
+                                        </div>
+
+                                    </td>
             			  		</tr>
             			  </table>            		     
-            		      <button class="btn btn-primary" type="submit">Вход</button>
+            		     
             		</form>
-
-            		<ul>
-            		    <li><a href="{% url registration_register %}">Регистрация</a></li>
-                        <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
-            		</ul> 
-
-
+                    <p style="margin-bottom:20px;" ><a style="color: #999999;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);font-size: 11px;" href="{% url auth_password_reset %}">Забыли пароль?</a></p>
                             <div id="menu">
                                 <ul style="width:200px;margin:0;" class="nav nav-list bs-docs-sidenav">
-                                    {# <li><a href="/catalog">Каталог запчастей<i class="icon-chevron-right"></i></a></li> #}
+                                    <li><a href="/basket">Корзина({{request.basket_number}})<i class="icon-chevron-right"></i></a></li>
                                     <li><a href="/vin_request">Мгновенный подбор запчастей<i class="icon-chevron-right"></i></a></li>
                                 </ul>
                             </div>
@@ -204,7 +202,7 @@
 
             </div>
             <div id="footer">
-                <span class="float-left copyright">Copyright &copy; 2012 <a href="http://www.linkedin.com/pub/serhii-mikhaylenko/40/27/9b7">Mikhaylenko Sergey</a>, Все права защищены</span>
+                <span class="float-left copyright">Copyright &copy; 2012 <a href="#">Наша компания</a>, Все права защищены</span>
                 <ul class="float-right body-footer-social">
                         <li style="padding-top:5px;" class="body-footer-social-i">Следите за нами:</li>
                         <li class="body-footer-social-i"><a href="#" class="vk"></a></li>
@@ -213,9 +211,9 @@
                         <li class="body-footer-social-i"><a href="#" class="youtube"></a></li>
                 </ul>
                 <p>
-                <a href="/contact/">Контакты</a> 
-                | <a href="/terms.html">Условия работы</a>
-                | <a href="/privacy.html">Каталог</a>
+                <a href="#">Контакты</a> 
+                | <a href="#">Помощь в работе</a>
+                | <a href="#">Каталог</a>
             </div>
     </div><!--end wrap-->
 </body>

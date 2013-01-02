@@ -2,12 +2,12 @@
 {% block javascript%}
 <script type="text/javascript">
 	$(function(){
-	  $("#menu ul li:eq(1)").addClass("active")
+	  $("#menu ul li:eq(3)").addClass("active")
 	})
 </script>
 {% endblock %}
 {% block main %}
-<h3>Проплаты...</h3>
+<pre>Здесь Вы можете просмотреть статистику сделанных оплат и баланс денег на счете, выбрав нужный период по датам.</pre>
 {% load bootstrap_toolkit %}
 {{ form.media }}
 <form class="form-inline frame-pre" action="/prepays/" method="post">

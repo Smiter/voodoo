@@ -57,6 +57,7 @@ class Cart:
             item.supplier = product.supplier.name
             item.delivery_time = product.supplier.delivery_time
             item.count = quantity
+            item.status = 'Сообщен'
             item.save()
         else:
             print "Продукт уже добавлен в корзину"

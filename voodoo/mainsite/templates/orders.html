@@ -2,12 +2,12 @@
 {% block javascript%}
 <script type="text/javascript">
 	$(function(){
-	  $("#menu ul li:eq(6)").addClass("active")
+	  $("#menu ul li:eq(1)").addClass("active")
 	})
 </script>
 {% endblock %}
 {% block main %}
-<h3>Фильтр отбора заказов...</h3>
+<pre>Здесь Вы можете просмотреть статистику заказов, выбрав нужный период по датам.</pre>
 {% load bootstrap_toolkit %}
 {{ form.media }}
 <form class="form-inline frame-pre" action="/orders/" method="post">
@@ -21,9 +21,10 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th></th>
+			{# <th></th> #}
 			<th>Дата заказа</th>
-			<th>Товар</th>
+			<th>Номер</th>
+			<th>Бренд</th>
 			<th>Коллич.</th>
 			<th>Сумма</th>
 			<th>Комментарии к заказу</th>
@@ -32,26 +33,33 @@
 	</thead>
 	<tbody>
 		{% for row in result %}
-			{% for r in row.items.all %}
-				
 				<tr>
-				  <td><img width="50" height="50" src="/static/images/{{r.product.image}}"></td>
-				  <td>{{ row.order_time }}</td>
-				  <td>{{r.product.name}}</td>
-				  <td>{{ r.quantity }}</td>
-				  <td>{{ r.total_price }}</td>
+				  {# <td><img width="50" height="50" src="/static/images/{{r.product.image}}"></td> #}
+				  <td>{{ row.order.creation_date }}</td>
+				  <td>{{row.product.code}}</td>
+				  <td>{{ row.product.brand }}</td>
+				  <td>{{ row.count }}</td>
+				  <td>{{ row.total_price }}</td>
 				  <td>{{ row.comment }}</td>
-				  <td>{{ row.status }}</td>
+				  {% if row.status == 'Сообщен' %}
+					  <td>Принят</td>
+				  {% elif row.status == 'Оформлен' or row.status == 'Заказан' %}
+					  <td>Заказан</td>
+				  {% elif row.status == 'Доставлен' %}
+					  <td style="color:green">{{ row.status }}</td>
+				  {% elif row.status == 'Отказ' %}
+					  <td style="color:red">{{ row.status }}</td>
+				  {% endif %}
 				</tr>
-			{% endfor %}
-			
 		{% endfor %}
 	</tbody>
 </table>
-
-
+<p style="text-align:center;font-weight:bold">Значения статусов заказов</p>
+<span style="font-weight:bold">Принят</span><span> - Заказываемая позиция принята на обработку.</span><br>
+<span style="font-weight:bold">Заказан</span><span> - (при отсутствии в наличии) выполнен заказ позиции у поставщика, ожидается доставка.</span><br>
+<span style="font-weight:bold;color:green">Доставлен</span><span> - Позиция фактически находится у нас на складе.</span><br>
+<span style="font-weight:bold;color:red">Отказ</span><span> - Выполнение заказа невозможно по тем или иным причинам.</span>
 {% else %}
 <h3>{{error}}</h3>
 {% endif %}
-
 {% endblock %}

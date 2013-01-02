@@ -45,19 +45,13 @@ class UserRegistrationForm(forms.Form):
         label="Дополнительная информация",
         widget=Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}
+                  + 'max-width:300px;min-width:300px'}
         ),
         required=False)
     carrier_default = ChoiceField(
         label="Перевозчик по умолчанию",
         widget=Select(),
-        choices=([
-            ('выберите из списка', 'выберите из списка'),
-            ('Новая почта', 'Новая почта'),
-            ('Гюнсел', 'Гюнсел'),
-            ('САТ', 'САТ')
-        ]),
-        initial='1',
+        choices=CARRIER_CHOICES,
         required=False)
     carrier_select = CharField(label="Ваш перевозчик", required=False)
     captcha = CaptchaField()
@@ -118,8 +112,9 @@ class UserRegistrationForm(forms.Form):
 
     def clean_phiz_adress(self):
         phiz_adress = self.cleaned_data['phiz_adress']
-        if not re.match(u'^[a-zA-Zа-яА-Я ]+$', phiz_adress):
-            raise forms.ValidationError('Поле должно содержать латиницу или кирилицу без цифр')
+        if phiz_adress != "":
+            if not re.match(u'^[a-zA-Zа-яА-Я ]+$', phiz_adress):
+                raise forms.ValidationError('Поле должно содержать латиницу или кирилицу без цифр')
         return phiz_adress
 
     def clean_phone(self):
@@ -130,15 +125,23 @@ class UserRegistrationForm(forms.Form):
 
     def clean_contacts(self):
         contacts = self.cleaned_data['contacts']
-        if not re.match(u'^[a-zA-Zа-яА-Я ]+$', contacts):
-            raise forms.ValidationError('Поле должно содержать латиницу или кирилицу без цифр')
+        if contacts != "":
+            if not re.match(u'^[a-zA-Zа-яА-Я ]+$', contacts):
+                raise forms.ValidationError('Поле должно содержать латиницу или кирилицу без цифр')
         return contacts
 
-from django.contrib.admin.widgets import AdminDateWidget
+    def clean_carrier_select(self):
+        carrier = self.cleaned_data.get('carrier_default', None)
+        your_carrier = self.cleaned_data['carrier_select']
+        if carrier == u'Ваш перевозчик':
+            if your_carrier == "":
+                raise forms.ValidationError('Укажите вашего перевозчика')
+        return your_carrier
 
 
 class PrepaysForm(ModelForm):
     required_css_class = 'required'
+
     class Meta:
         model = Prepays
         fields = ('date', 'summa', 'valuta', 'type_of_payment', 'additional_info')
@@ -153,29 +156,39 @@ class PrepaysForm(ModelForm):
 
 class OrderDispatchForm(ModelForm):
     required_css_class = 'required'
+    your_carrier = CharField(label="Ваш перевозчик", required=False)
+
     class Meta:
         model = OrderDispatch
-        fields = ('carrier', 'department', 'city_recipient', 'name_recipient', 'comment')
+        fields = ('carrier', 'your_carrier', 'department', 'city_recipient', 'name_recipient', 'comment')
         widgets = {
             'comment': Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}
-        ),
-            'department': TextInput(attrs={'size': '63', 'maxlength': '63'}),
-            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
-            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
+                  + 'max-width:300px;min-width:300px'}
+        )
         }
+
+    def clean_your_carrier(self):
+        carrier = self.cleaned_data.get('carrier', None)
+        your_carrier = self.cleaned_data['your_carrier']
+        if carrier == u'Ваш перевозчик':
+            if your_carrier == "":
+                raise forms.ValidationError('Укажите вашего перевозчика')
+        return your_carrier
+
+
+import datetime
+from datetime import date, timedelta
 
 
 class SendingsForm(forms.Form):
-    min_date = DateField(label="Создана/редактирована между ", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
-    max_date = DateField(label=" и", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    min_date = DateField(label="Создана/редактирована между ", initial=date.today() - timedelta(days=3), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    max_date = DateField(label=" и", initial=datetime.datetime.now(), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
 
 
 ORDER_CHOICES = (
             (u'Все', u'Все'),
-            (u'Сообщен', u'Сообщен'),
-            (u'Оформлен', u'Оформлен'),
+            (u'Принят', u'Принят'),
             (u'Заказан', u'Заказан'),
             (u'Доставлен', u'Доставлен'),
             (u'Отказ', u'Отказ'),
@@ -188,8 +201,8 @@ class OrdersForm(forms.Form):
         widget=Select(attrs={'style': 'width:100px'}),
         choices=ORDER_CHOICES,
         initial='1')
-    min_date = DateField(label="Дата от ", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
-    max_date = DateField(label=" по", widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    min_date = DateField(label="Дата от ", initial=date.today() - timedelta(days=3), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    max_date = DateField(label=" по", initial=datetime.datetime.now(), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
 
 CAR_ADDITIONS = (
             ('ABS', 'ABS'),
@@ -206,7 +219,7 @@ def getVinRequestForm(exclude_list, *args, **kwargs):
 
         class Meta:
             model = Order
-            exclude = exclude_list + ('user', 'order_status', 'creation_date', 'order_info')
+            exclude = exclude_list + ('user', 'client_code', 'client_additional_information', 'delivery_adress', 'order_status', 'creation_date', 'order_info')
 
         def __init__(self):
             super(VinRequestForm, self).__init__(*args, **kwargs)
