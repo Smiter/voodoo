@@ -8,7 +8,6 @@ import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
 from decimal import Decimal
-from django.forms.models import model_to_dict
 #from django.db import models
 
 
@@ -99,7 +98,7 @@ def order_edit(request, id):
             # editing order
             print None
     else:
-        form = OrderForm(model_to_dict(Order.objects.get(id=id)))
+        form = OrderForm(instance=Order.objects.get(id=id))
     return direct_to_template(request, 'order_edit.html', {'form': form})
 
 
