@@ -145,11 +145,12 @@ def xls_import(request):
             # going through rows in range
             for rownum in range(start_row, sheet.nrows):
                 row = sheet.row_values(rownum)
-                # creating Model
+                # creating Model              
                 product = Product(code=row[column_number], brand=row[column_brand],
                                   description=row[column_description], count=row[column_count],
-                                  price=Decimal([column_price]))
+                                  price=Decimal(row[column_price]))           
                 product.save()
+                
                 product.supplier.add(supplier)
                 product.supplier.add(currency)
                 rows_added += 1
