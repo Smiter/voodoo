@@ -7,7 +7,7 @@ from voodoo.admin_center.forms import *
 import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
-from decimal import Decimals
+from decimal import Decimal
 #from django.db import models
 
 
