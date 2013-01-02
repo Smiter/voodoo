@@ -29,4 +29,5 @@ docsite/_static/*.gif
 docsite/_static/*.png
 docsite/_static/websupport.js
 # deb building stuff...
-debian/
+debian/voodoo/files/sql/28-12-12_mainsite_profile.sql
+voodoo/files/sql/28-12-12_mainsite_profile.sql

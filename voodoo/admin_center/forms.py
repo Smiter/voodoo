@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 from django import forms
-from voodoo.admin_center.models import Order, Supplier
+from voodoo.admin_center.models import *
 import os.path
 
 class OrderForm(forms.ModelForm):
@@ -61,6 +61,7 @@ class XlsImportForm(forms.Form):
     column_price = forms.IntegerField(label='Столбец "Цена"', min_value = 1)
     start_row = forms.IntegerField(label='Строка с которой начать импорт', min_value = 1)
     supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all())
+    currency = forms.ModelChoiceField(label="Цена в валюте", queryset=Currency.objects.all())
     
     def clean_file(self):
         file = self.cleaned_data['file']

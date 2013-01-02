@@ -102,8 +102,28 @@
 			{% endfor %}
 		}
 		
-		function validateTable() {
-			alert('hello');
+		function validateForm() {
+			var client_name = document.getElementById("id_client_name").value;
+			var client_phone = document.getElementById("id_client_phone").value;
+			if (client_name == null || client_name == "") {
+				alert("Поле 'Ф.И.О. или название клиента' не должно быть пустым.");
+				return false;
+			}
+			
+			if (client_phone == null || client_phone == "") {
+				alert("Поле 'Контактные телефоны' не должно быть пустым.");
+				return false;
+			}
+			
+			for (var row = 1; i < rowId; i++) {
+				var price_1 = document.getElementById("row" + row +"_price_1").value;
+				var price_2 = document.getElementById("row" + row +"_price_2").value;
+				
+				if (price_1 > price_2) {
+					alert("Товар № " + row + ". Закупочная цена не может быть выше цены продажи.");
+				}
+			} 
+			
 		}
 	</script>
 {% endblock %}
@@ -115,7 +135,7 @@
 		{{ message }}
 	</div>
 {% endif %}
-<form name="order_create_form" action="/admin_center/order_create" method="POST">
+<form name="order_create_form" action="/admin_center/order_create" method="POST" onsubmit="return validateForm()">
 		{% csrf_token %}
 		{{ form.non_field_errors }}
 		<div>
