@@ -114,7 +114,14 @@ class Supplier(models.Model):
     def __unicode__(self):
         return self.name
 
-
+class Currency(models.Model):
+    name = CharField(verbose_name='Название', max_length=120)
+    code = CharField(verbose_name='Код', max_length=120)
+    ratio = DecimalField(verbose_name='Коэффициент', max_length=120, max_digits=20, decimal_places=1)
+    
+    def __unicode__(self):
+        return self.code
+    
 class Product(models.Model):
     code = CharField(verbose_name='Номер', max_length=120)
     brand = CharField(verbose_name='Бдэнд', max_length=120)
@@ -122,6 +129,7 @@ class Product(models.Model):
     count = CharField(verbose_name='Количество', max_length=120, blank=True)
     price = DecimalField(verbose_name='Цена', max_length=120, max_digits=20, decimal_places=1)
     supplier = models.ForeignKey(Supplier)
+    currency = models.ForeignKey(Currency)
     date_of_import = DateTimeField(verbose_name='Дата импорта', max_length=120, auto_now_add=True)
 
     def __unicode__(self):
@@ -180,22 +188,12 @@ class OrderStatus(models.Model):
     status = CharField(verbose_name='Статус выполнения заказа', max_length=120)
     color = CharField(verbose_name='Цвет', max_length=120)
 
-
 class ItemStatus(models.Model):
     status = CharField(verbose_name='Статус', max_length=120)
     color = CharField(verbose_name='Цвет', max_length=120)
     
     def __unicode__(self):
         return self.status
-
-
-class Currency(models.Model):
-    name = CharField(verbose_name='Название', max_length=120)
-    code = CharField(verbose_name='Код', max_length=120)
-    ratio = DecimalField(verbose_name='Коэффициент', max_length=120, max_digits=20, decimal_places=1)
-    
-    def __unicode__(self):
-        return self.code
 
 class DiscountGroup(models.Model):
     name = CharField(verbose_name='Название', max_length=120)

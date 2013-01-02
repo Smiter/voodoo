@@ -7,6 +7,7 @@ from voodoo.admin_center.forms import *
 import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
+from decimal import Decimal
 #from django.db import models
 
 
@@ -29,7 +30,12 @@ def order_create(request):
         if form.is_valid():
             # order_total_price1 = request.POST['total_sum_1']
             # order_total_price2 = request.POST['total_sum_2']
+            
+            #TODO if code/brand empty - skipp item
             order = form.save()
+            # message about saving
+            message = 'Заказ создан. ID: %s' % order.id
+            
             rowCount = int(request.POST['row_count'])
             for i in range(1, rowCount + 1):
                 code = request.POST['row%s_code' % i]
@@ -42,17 +48,19 @@ def order_create(request):
                 supplier = request.POST['row%s_supplier' % i]
                 delivery_time = request.POST['row%s_delivery_time' % i]
                 status = request.POST['row%s_status' % i]
-                try:
-                    product = Product.objects.get(code=code)
-                except Product.DoesNotExist:
-                    raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
-                    # should return validation error
-
-                item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
-                                 currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
-                item.save()
-            # message about saving
-            message = 'Заказ создан. ID: %s' % order.id
+                # working only with rows where 'code' is not empty
+                if (code):
+                    try:
+                        product = Product.objects.get(code=code)
+                        
+                        item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
+                                         currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
+                        item.save()
+                        
+                    except Product.DoesNotExist:
+                        # raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
+                        # should return validation error
+                        message = u"Продукт с id '" + code + u"' не существует";
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             form = OrderForm()
     else:
@@ -129,6 +137,7 @@ def xls_import(request):
             if request.POST['column_description'] is not None:
                 column_description = int(request.POST['column_description']) - 1
             supplier = Supplier.objects.get(id=int(request.POST['supplier']))
+            currency = Currency.objects.get(id=int(request.POST['currency']))
             # opening file
             file_name = request.FILES['file']
             rb = xlrd.open_workbook(file_contents=file_name.read())
@@ -139,9 +148,10 @@ def xls_import(request):
                 # creating Model
                 product = Product(code=row[column_number], brand=row[column_brand],
                                   description=row[column_description], count=row[column_count],
-                                  price=[column_price])
+                                  price=Decimal([column_price]))
                 product.save()
                 product.supplier.add(supplier)
+                product.supplier.add(currency)
                 rows_added += 1
             # message
             message = "Файл %s успешно импортирован. %s записей добавлено." % (file_name, rows_added)
