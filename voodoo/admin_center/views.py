@@ -136,6 +136,7 @@ def xls_import(request):
             # column_description optional
             if request.POST['column_description'] is not None:
                 column_description = int(request.POST['column_description']) - 1
+            
             supplier = Supplier.objects.get(id=int(request.POST['supplier']))
             currency = Currency.objects.get(id=int(request.POST['currency']))
             # opening file
@@ -147,12 +148,13 @@ def xls_import(request):
                 row = sheet.row_values(rownum)
                 # creating Model              
                 product = Product(code=row[column_number], brand=row[column_brand],
-                                  description=row[column_description], count=row[column_count],
+                                  description=row[column_description], count=int(row[column_count]),
                                   price=Decimal(row[column_price]))           
+                
+                product.supplier = supplier
+                product.currency = currency
                 product.save()
                 
-                product.supplier.add(supplier)
-                product.supplier.add(currency)
                 rows_added += 1
             # message
             message = "Файл %s успешно импортирован. %s записей добавлено." % (file_name, rows_added)

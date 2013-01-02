@@ -126,7 +126,7 @@ class Product(models.Model):
     code = CharField(verbose_name='Номер', max_length=120)
     brand = CharField(verbose_name='Бдэнд', max_length=120)
     description = CharField(verbose_name='Описание', max_length=120, blank=True)
-    count = CharField(verbose_name='Количество', max_length=120, blank=True)
+    count = IntegerField(verbose_name='Количество', max_length=120, blank=True)
     price = DecimalField(verbose_name='Цена', max_length=120, max_digits=20, decimal_places=1)
     supplier = models.ForeignKey(Supplier)
     currency = models.ForeignKey(Currency)
