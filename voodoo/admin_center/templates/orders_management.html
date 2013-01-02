@@ -23,7 +23,7 @@
 		<tbody>
 			{% for row in results %}
 			<tr>
-				<td>{{ row.id }}</td>
+				<td><a href="order_edit/{{ row.id }}">{{ row.id }}</a></td>
 				<td>{{ row.creation_date }}</td>
 				{% if row.user %}
 					<td>{{ row.user.username }}</td>

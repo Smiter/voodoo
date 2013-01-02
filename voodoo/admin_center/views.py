@@ -8,6 +8,7 @@ import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
 from decimal import Decimal
+from django.forms.models import model_to_dict
 #from django.db import models
 
 
@@ -88,7 +89,7 @@ def orders_management(request):
 
 
 @login_required(login_url='/admin_center/login/')
-def order_edit(request):
+def order_edit(request, id):
     if request.method == 'POST':
         #TODO
         # edit order
@@ -98,9 +99,7 @@ def order_edit(request):
             # editing order
             print None
     else:
-        #TODO
-        # drawing order
-        form = OrderForm()
+        form = OrderForm(model_to_dict(Order.objects.get(id=id)))
     return direct_to_template(request, 'order_edit.html', {'form': form})
 
 
