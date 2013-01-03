@@ -22,8 +22,8 @@
 		</thead>
 		<tbody>
 			{% for row in results %}
-			<tr>
-				<td><a href="order_edit/{{ row.id }}">{{ row.id }}</a></td>
+			<tr class="highlightable" onclick="document.location = 'order_edit/{{ row.id }}';">
+				<td>{{ row.id }}</td>
 				<td>{{ row.creation_date }}</td>
 				{% if row.user %}
 					<td>{{ row.user.username }}</td>
