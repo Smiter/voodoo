@@ -127,7 +127,13 @@ def xls_import(request):
     if request.method == 'POST':
         form = XlsImportForm(request.POST, request.FILES or None)
         if form.is_valid():
+            supplier = Supplier.objects.get(id=int(request.POST['supplier']))
+            
+            # setting all products count for current supplier to 0
+            beforeImport(supplier)
+            
             rows_added = 0
+            rows_updated = 0
             # adapting column numbers to xlrd: -1
             column_number = int(request.POST['column_number']) - 1
             column_brand = int(request.POST['column_brand']) - 1
@@ -138,7 +144,6 @@ def xls_import(request):
             if request.POST['column_description'] is not None:
                 column_description = int(request.POST['column_description']) - 1
             
-            supplier = Supplier.objects.get(id=int(request.POST['supplier']))
             currency = Currency.objects.get(id=int(request.POST['currency']))
             # opening file
             file_name = request.FILES['file']
@@ -147,18 +152,32 @@ def xls_import(request):
             # going through rows in range
             for rownum in range(start_row, sheet.nrows):
                 row = sheet.row_values(rownum)
-                # creating Model              
-                product = Product(code=row[column_number], brand=row[column_brand],
-                                  description=row[column_description], count=int(row[column_count]),
-                                  price=Decimal(row[column_price]))           
                 
-                product.supplier = supplier
-                product.currency = currency
-                product.save()
+                products = Product.objects.filter(code=row[column_number], supplier_id=supplier.id)
                 
-                rows_added += 1
+                product = products[1]
+                
+                if product is not None:
+                    # updating model
+                    product.brand = brand=row[column_brand]
+                    product.description = row[column_description]
+                    product.count = int(row[column_count])
+                    product.price = Decimal(row[column_price])
+                    
+                    rows_updated += 1
+                else:
+                    # creating Model
+                    product = Product(code=row[column_number], brand=row[column_brand],
+                                      description=row[column_description], count=int(row[column_count]),
+                                      price=Decimal(row[column_price]))           
+                    
+                    product.supplier = supplier
+                    product.currency = currency
+                    product.save()
+                    
+                    rows_added += 1
             # message
-            message = "Файл %s успешно импортирован. %s записей добавлено." % (file_name, rows_added)
+            message = "Файл %s успешно импортирован. %s записей добавлено. %s записей обновлено." % (file_name, rows_added, rows_updated)
             # cleaning form
             form = XlsImportForm()
     else:
@@ -187,3 +206,12 @@ def getMenuElements():
         # Was decided to use element.name instead of external configuration file or hard-code link inside DB
         element.link = element.name
     return menu_elements
+
+def beforeImport(supplier):
+    products = Product.objects.filter(supplier_id=supplier.id)
+    
+    print products
+    
+    for product in products:
+        product.count = 0;
+        product.save()

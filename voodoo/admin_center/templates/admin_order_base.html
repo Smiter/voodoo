@@ -136,8 +136,8 @@
 		}
 		
 		function fillOrderItems() {
-			'{% if order_items %}'
-				'{% for item in order_items %}'
+			{% if order_items %}
+				{% for item in order_items %}
 					addRowIntoTable();
 					document.getElementById("row" + rowId + "_code").value = '{{ item.code }}';
 					document.getElementById("row" + rowId + "_brand").value = '{{ item.brand }}';
@@ -149,10 +149,10 @@
 					document.getElementById("row" + rowId + "_supplier").value = '{{ item.supplier }}';
 					document.getElementById("row" + rowId + "_delivery_time").value = '{{ item.delivery_time }}';
 					document.getElementById("row" + rowId + "_status").value = '{{ item.status }}';
-				'{% endfor %}'
-			'{% else %}'
+				{% endfor %}
+			{% else %}
 				addRowIntoTable();
-			'{% endif %}'
+			{% endif %}
 		}
 	</script>
 {% endblock %}
