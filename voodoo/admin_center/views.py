@@ -93,6 +93,7 @@ def order_edit(request, id):
         
         if form.is_valid():
             order = form.save()
+            order = Order.objects.get(id=id)
             
             rowCount = int(request.POST['row_count'])
             for i in range(1, rowCount + 1):
