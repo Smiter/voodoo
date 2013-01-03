@@ -5,8 +5,21 @@
 	<script type="text/javascript">
 		var rowId = 0;
 		function convertStringsToTableRows() {
-			var element = document.getElementById("id_order_info");
-			alert("Not implemented yet.");
+			var order_info = document.getElementById("id_order_info").value;
+			var order_items = order_info.split(";");
+			for (var i = 0; i < order_items.length; i++) {
+				var order_item = order_items[i];
+				var comment = order_item.split(",")[0];
+				var count = order_item.split(",")[1].split(" ")[1];
+				
+			    document.getElementById("row" + rowId + "_code").value = comment;
+			    document.getElementById("row" + rowId + "_comment").value = comment;
+			    document.getElementById("row" + rowId + "_count").value = count;
+			    
+			    if (i + 1 < order_items.length) {
+			    	addRowIntoTable();
+			    }
+			}
 		}
 		
 		function addRowIntoTable() {
@@ -104,6 +117,8 @@
 		function validateForm() {
 			var client_name = document.getElementById("id_client_name").value;
 			var client_phone = document.getElementById("id_client_phone").value;
+			var car_vin = document.getElementById("id_car_vin").value;
+			
 			if (client_name == null || client_name == "") {
 				alert("Поле 'Ф.И.О. или название клиента' не должно быть пустым.");
 				return false;
@@ -111,6 +126,11 @@
 			
 			if (client_phone == null || client_phone == "") {
 				alert("Поле 'Контактные телефоны' не должно быть пустым.");
+				return false;
+			}
+			
+			if (car_vin != null && car_vin.length != 17) {
+				alert("Поле 'VIN' должно содержать строго 17 символов.");
 				return false;
 			}
 			
