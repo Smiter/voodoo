@@ -14,7 +14,7 @@ js_info_dict = {'packages': ('django.conf', 'django.contrib.admin',), }
 
 
 urlpatterns = patterns('',
-    ('^index/$', index),
+    ('^$', index),
     ('^login/$', login),
     (r'^admin/jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict),
     ('^notice_of_payment/$', notice_of_payment),
