@@ -19,11 +19,9 @@ def admin_center(request):
 
 @login_required(login_url='/admin_center/login/')
 def order_create(request):
-    message = ''
+    message = u''
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
-        # TODO validating
-        # JS validation
         # rowCount = int(request.POST['row_count'])
         # TODO use OrderStatus, ItemStatus, Currency models
 
@@ -34,7 +32,7 @@ def order_create(request):
             #TODO if code/brand empty - skipp item
             order = form.save()
             # message about saving
-            message = 'Заказ создан. ID: %s' % order.id
+            message = u'Заказ создан. ID: %s' % order.id
             
             rowCount = int(request.POST['row_count'])
             for i in range(1, rowCount + 1):
@@ -81,7 +79,7 @@ def orders_management(request):
             # TODO rendering order
             # message
             order = 'id will be here'
-            message = 'Заказ сохранен. ID: %s' % order
+            message = u'Заказ сохранен. ID: %s' % order
     else:
         form = OrdersManagementForm()
     return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
@@ -89,17 +87,91 @@ def orders_management(request):
 
 @login_required(login_url='/admin_center/login/')
 def order_edit(request, id):
+    message =''
     if request.method == 'POST':
-        #TODO
-        # edit order
         form = OrderForm(request.POST or None)
+        
         if form.is_valid():
-            # TODO validating
-            # editing order
-            print None
+            order = Order.objects.get(id=id)
+            
+            order.client_name = request.POST['client_name']
+            order.client_phone = request.POST['client_phone']
+            order.client_code = request.POST['client_code']
+            order.client_additional_information = request.POST['client_additional_information']
+            order.car_brand = request.POST['car_brand']
+            order.car_vin = request.POST['car_vin']
+            order.car_model = request.POST['car_model']
+            order.car_engine = request.POST['car_engine']
+            order.car_year = request.POST['car_year']
+            order.car_engine_size = request.POST['car_engine_size']
+            order.car_body = request.POST['car_body']
+            order.car_gearbox = request.POST['car_gearbox']
+            order.car_additional_information = request.POST['car_additional_information']
+            order.order_info = request.POST['order_info']
+            order.order_additional_information = request.POST['order_additional_information']
+            order.order_status = request.POST['order_status']
+            
+            order.save()
+            
+            rowCount = int(request.POST['row_count'])
+            for i in range(1, rowCount + 1):
+                # working only with rows where 'code' is not empty
+                code = request.POST['row%s_code' % i]
+                item = None
+                if (code):
+                    try:
+                        item = OrderItem.objects.get(order_id=order.id, code=code)
+                    except OrderItem.DoesNotExist:
+                        message = u"OrderItem с кодом '" + code + u"' не существует";
+                        
+                    if item is not None:
+                        # updating current item
+                        item.code = request.POST['row%s_code' % i]
+                        item.brand = request.POST['row%s_brand' % i]
+                        item.comment = request.POST['row%s_comment' % i]
+                        item.price_1 = request.POST['row%s_price_1' % i]
+                        item.price_2 = request.POST['row%s_price_2' % i]
+                        item.currency = request.POST['row%s_currency' % i]
+                        item.count = request.POST['row%s_count' % i]
+                        item.supplier = request.POST['row%s_supplier' % i]
+                        item.delivery_time = request.POST['row%s_delivery_time' % i]
+                        item.status = request.POST['row%s_status' % i]
+                        
+                        item.save()
+                    else:
+                        #creating new item
+                        code = request.POST['row%s_code' % i]
+                        brand = request.POST['row%s_brand' % i]
+                        comment = request.POST['row%s_comment' % i]
+                        price_1 = request.POST['row%s_price_1' % i]
+                        price_2 = request.POST['row%s_price_2' % i]
+                        currency = request.POST['row%s_currency' % i]
+                        count = request.POST['row%s_count' % i]
+                        supplier = request.POST['row%s_supplier' % i]
+                        delivery_time = request.POST['row%s_delivery_time' % i]
+                        status = request.POST['row%s_status' % i]
+                        
+                        try:
+                            product = Product.objects.get(code=code)
+                            
+                            item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
+                                             currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
+                            item.save()
+                            
+                        except Product.DoesNotExist:
+                            # raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
+                            # should return validation error
+                            message = u"Продукт с id '" + code + u"' не существует";
+            # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
+            # message about saving
+            message = u'Заказ ID: %s обновлен.' % order.id
+            order_items = OrderItem.objects.filter(order_id=order.id)
     else:
-        form = OrderForm(instance=Order.objects.get(id=id))
-    return direct_to_template(request, 'order_edit.html', {'form': form})
+        order = Order.objects.get(id=id)
+        order_items = OrderItem.objects.filter(order_id=order.id)
+        form = OrderForm(instance=order)
+        
+    return direct_to_template(request, 'order_edit.html', {'form': form, 'message': message, 'order': order, 'order_items': order_items})
 
 
 @login_required(login_url='/admin_center/login/')
@@ -124,7 +196,13 @@ def xls_import(request):
     if request.method == 'POST':
         form = XlsImportForm(request.POST, request.FILES or None)
         if form.is_valid():
+            supplier = Supplier.objects.get(id=int(request.POST['supplier']))
+            
+            # setting all products count for current supplier to 0
+            beforeImport(supplier)
+            
             rows_added = 0
+            rows_updated = 0
             # adapting column numbers to xlrd: -1
             column_number = int(request.POST['column_number']) - 1
             column_brand = int(request.POST['column_brand']) - 1
@@ -135,7 +213,6 @@ def xls_import(request):
             if request.POST['column_description'] is not None:
                 column_description = int(request.POST['column_description']) - 1
             
-            supplier = Supplier.objects.get(id=int(request.POST['supplier']))
             currency = Currency.objects.get(id=int(request.POST['currency']))
             # opening file
             file_name = request.FILES['file']
@@ -144,18 +221,31 @@ def xls_import(request):
             # going through rows in range
             for rownum in range(start_row, sheet.nrows):
                 row = sheet.row_values(rownum)
-                # creating Model              
-                product = Product(code=row[column_number], brand=row[column_brand],
-                                  description=row[column_description], count=int(row[column_count]),
-                                  price=Decimal(row[column_price]))           
                 
-                product.supplier = supplier
-                product.currency = currency
-                product.save()
+                products = Product.objects.filter(code=row[column_number], supplier_id=supplier.id)
                 
-                rows_added += 1
+                if len(products) > 0:
+                    product = products[0]
+                    # updating model
+                    product.brand = brand=row[column_brand]
+                    product.description = row[column_description]
+                    product.count = int(row[column_count])
+                    product.price = Decimal(row[column_price])
+                    
+                    rows_updated += 1
+                else:
+                    # creating Model
+                    product = Product(code=row[column_number], brand=row[column_brand],
+                                      description=row[column_description], count=int(row[column_count]),
+                                      price=Decimal(row[column_price]))           
+                    
+                    product.supplier = supplier
+                    product.currency = currency
+                    product.save()
+                    
+                    rows_added += 1
             # message
-            message = "Файл %s успешно импортирован. %s записей добавлено." % (file_name, rows_added)
+            message = u"Файл %s успешно импортирован. %s записей добавлено. %s записей обновлено." % (file_name, rows_added, rows_updated)
             # cleaning form
             form = XlsImportForm()
     else:
@@ -184,3 +274,12 @@ def getMenuElements():
         # Was decided to use element.name instead of external configuration file or hard-code link inside DB
         element.link = element.name
     return menu_elements
+
+def beforeImport(supplier):
+    products = Product.objects.filter(supplier_id=supplier.id)
+    
+    print products
+    
+    for product in products:
+        product.count = 0;
+        product.save()

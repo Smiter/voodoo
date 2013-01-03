@@ -1,4 +1,8 @@
 {% extends 'admin_order_base.html' %}
+{% block onload %}
+addRowIntoTable();
+{% endblock %}
 {% block header %}Создание нового заказа{% endblock %}
+{% block form_name %}create{% endblock %}
 {% block buttons %}<input type="submit" value="Создать заказ"> <a href=".">Отмена</a>{% endblock %}
 
