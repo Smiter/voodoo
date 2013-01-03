@@ -3,4 +3,5 @@
 fillOrderItems();
 {% endblock %}
 {% block header %}Редактирование заказа{% endblock %}
+{% block form_name %}edit/{{ order.id }}/{% endblock %}
 {% block buttons %}<input type="submit" value="Сохранить заказ"> <a href=".">Отмена</a>{% endblock %}

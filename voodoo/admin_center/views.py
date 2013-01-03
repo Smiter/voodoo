@@ -87,6 +87,7 @@ def orders_management(request):
 
 @login_required(login_url='/admin_center/login/')
 def order_edit(request, id):
+    message =''
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
         
@@ -121,12 +122,13 @@ def order_edit(request, id):
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             # message about saving
             message = u'Заказ ID: %s обновлен.' % order.id
+            order_items = OrderItem.objects.filter(order_id=order.id)
     else:
         order = Order.objects.get(id=id)
         order_items = OrderItem.objects.filter(order_id=order.id)
         form = OrderForm(instance=order)
         
-    return direct_to_template(request, 'order_edit.html', {'form': form, 'order': order, 'order_items': order_items})
+    return direct_to_template(request, 'order_edit.html', {'form': form, 'message': message, 'order': order, 'order_items': order_items})
 
 
 @login_required(login_url='/admin_center/login/')
