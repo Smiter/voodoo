@@ -92,34 +92,76 @@ def order_edit(request, id):
         form = OrderForm(request.POST or None)
         
         if form.is_valid():
-            order = form.save()
             order = Order.objects.get(id=id)
+            
+            order.client_name = request.POST['client_name']
+            order.client_phone = request.POST['client_phone']
+            order.client_code = request.POST['client_code']
+            order.client_additional_information = request.POST['client_additional_information']
+            order.car_brand = request.POST['car_brand']
+            order.car_vin = request.POST['car_vin']
+            order.car_model = request.POST['car_model']
+            order.car_engine = request.POST['car_engine']
+            order.car_year = request.POST['car_year']
+            order.car_engine_size = request.POST['car_engine_size']
+            order.car_body = request.POST['car_body']
+            order.car_gearbox = request.POST['car_gearbox']
+            order.car_additional_information = request.POST['car_additional_information']
+            order.order_info = request.POST['order_info']
+            order.order_additional_information = request.POST['order_additional_information']
+            order.order_status = request.POST['order_status']
+            
+            order.save()
             
             rowCount = int(request.POST['row_count'])
             for i in range(1, rowCount + 1):
-                code = request.POST['row%s_code' % i]
-                brand = request.POST['row%s_brand' % i]
-                comment = request.POST['row%s_comment' % i]
-                price_1 = request.POST['row%s_price_1' % i]
-                price_2 = request.POST['row%s_price_2' % i]
-                currency = request.POST['row%s_currency' % i]
-                count = request.POST['row%s_count' % i]
-                supplier = request.POST['row%s_supplier' % i]
-                delivery_time = request.POST['row%s_delivery_time' % i]
-                status = request.POST['row%s_status' % i]
                 # working only with rows where 'code' is not empty
+                code = request.POST['row%s_code' % i]
+                item = None
                 if (code):
                     try:
-                        product = Product.objects.get(code=code)
+                        item = OrderItem.objects.get(order_id=order.id, code=code)
+                    except OrderItem.DoesNotExist:
+                        message = u"OrderItem с кодом '" + code + u"' не существует";
                         
-                        item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
-                                         currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
+                    if item is not None:
+                        # updating current item
+                        item.code = request.POST['row%s_code' % i]
+                        item.brand = request.POST['row%s_brand' % i]
+                        item.comment = request.POST['row%s_comment' % i]
+                        item.price_1 = request.POST['row%s_price_1' % i]
+                        item.price_2 = request.POST['row%s_price_2' % i]
+                        item.currency = request.POST['row%s_currency' % i]
+                        item.count = request.POST['row%s_count' % i]
+                        item.supplier = request.POST['row%s_supplier' % i]
+                        item.delivery_time = request.POST['row%s_delivery_time' % i]
+                        item.status = request.POST['row%s_status' % i]
+                        
                         item.save()
+                    else:
+                        #creating new item
+                        code = request.POST['row%s_code' % i]
+                        brand = request.POST['row%s_brand' % i]
+                        comment = request.POST['row%s_comment' % i]
+                        price_1 = request.POST['row%s_price_1' % i]
+                        price_2 = request.POST['row%s_price_2' % i]
+                        currency = request.POST['row%s_currency' % i]
+                        count = request.POST['row%s_count' % i]
+                        supplier = request.POST['row%s_supplier' % i]
+                        delivery_time = request.POST['row%s_delivery_time' % i]
+                        status = request.POST['row%s_status' % i]
                         
-                    except Product.DoesNotExist:
-                        # raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
-                        # should return validation error
-                        message = u"Продукт с id '" + code + u"' не существует";
+                        try:
+                            product = Product.objects.get(code=code)
+                            
+                            item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
+                                             currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
+                            item.save()
+                            
+                        except Product.DoesNotExist:
+                            # raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
+                            # should return validation error
+                            message = u"Продукт с id '" + code + u"' не существует";
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             # message about saving
             message = u'Заказ ID: %s обновлен.' % order.id
