@@ -27,7 +27,7 @@
 	{% block javascript %} {% endblock %} 
 	{% block css %} {% endblock %}   
 </head>
-<body {% block onload %}{% endblock %}>
+<body onload="{% block onload %}{% endblock %}">
 	<div id="wraper" class="content">
 	    <div>{% include 'admin_header.html' %}</div>
 	    <div class="admin-container">

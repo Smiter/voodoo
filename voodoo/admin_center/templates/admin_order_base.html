@@ -1,16 +1,16 @@
 {% extends 'admin_base.html' %}
 {% block onload %}
-	onload="addRowIntoTable()"
 {% endblock %}
 {% block javascript %}
 	<script type="text/javascript">
-		var rowId = 1;
+		var rowId = 0;
 		function convertStringsToTableRows() {
 			var element = document.getElementById("id_order_info");
 			alert("Not implemented yet.");
 		}
 		
 		function addRowIntoTable() {
+			rowId += 1;
 			var table = document.getElementById("order_details");
 			var newRow = table.insertRow(table.getElementsByTagName("tr").length - 2);
 			newRow.id = 'row_' + rowId;
@@ -60,7 +60,6 @@
 								'<td>&nbsp;</td>';
 								
 			document.getElementById("row_count").value = rowId;
-			rowId += 1;
 		}
 		
 		function refreshTotal() {
@@ -70,7 +69,7 @@
 			var totalSumm1 = 0;
 			var totalSumm2 = 0;
 			
-			for (var i = 1; i < rowId; i++) {
+			for (var i = 1; i <= rowId; i++) {
 				sum1 = parseFloat(document.getElementById("row" + i + "_price_1").value);
 				sum2 = parseFloat(document.getElementById("row" + i + "_price_2").value)
 				count = parseFloat(document.getElementById("row" + i + "_count").value);
@@ -124,6 +123,26 @@
 				}
 			} 
 			
+		}
+		
+		function fillOrderItems() {
+			'{% if order_items %}'
+				'{% for item in order_items %}'
+					addRowIntoTable();
+					document.getElementById("row" + rowId + "_code").value = '{{ item.code }}';
+					document.getElementById("row" + rowId + "_brand").value = '{{ item.brand }}';
+					document.getElementById("row" + rowId + "_comment").value = '{{ item.comment }}';
+					document.getElementById("row" + rowId + "_price_1").value = '{{ item.price_1 }}';
+					document.getElementById("row" + rowId + "_price_2").value = '{{ item.price_2 }}';
+					document.getElementById("row" + rowId + "_currency").value = '{{ item.currency }}';
+					document.getElementById("row" + rowId + "_count").value = '{{ item.count }}';
+					document.getElementById("row" + rowId + "_supplier").value = '{{ item.supplier }}';
+					document.getElementById("row" + rowId + "_delivery_time").value = '{{ item.delivery_time }}';
+					document.getElementById("row" + rowId + "_status").value = '{{ item.status }}';
+				'{% endfor %}'
+			'{% else %}'
+				addRowIntoTable();
+			'{% endif %}'
 		}
 	</script>
 {% endblock %}

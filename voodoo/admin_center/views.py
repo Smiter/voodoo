@@ -98,8 +98,11 @@ def order_edit(request, id):
             # editing order
             print None
     else:
-        form = OrderForm(instance=Order.objects.get(id=id))
-    return direct_to_template(request, 'order_edit.html', {'form': form})
+        order = Order.objects.get(id=id)
+        order_items = OrderItem.objects.filter(order_id=order.id)
+        form = OrderForm(instance=order)
+        
+    return direct_to_template(request, 'order_edit.html', {'form': form, 'order': order, 'order_items': order_items})
 
 
 @login_required(login_url='/admin_center/login/')
