@@ -19,11 +19,9 @@ def admin_center(request):
 
 @login_required(login_url='/admin_center/login/')
 def order_create(request):
-    message = ''
+    message = u''
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
-        # TODO validating
-        # JS validation
         # rowCount = int(request.POST['row_count'])
         # TODO use OrderStatus, ItemStatus, Currency models
 
@@ -34,7 +32,7 @@ def order_create(request):
             #TODO if code/brand empty - skipp item
             order = form.save()
             # message about saving
-            message = 'Заказ создан. ID: %s' % order.id
+            message = u'Заказ создан. ID: %s' % order.id
             
             rowCount = int(request.POST['row_count'])
             for i in range(1, rowCount + 1):
@@ -81,7 +79,7 @@ def orders_management(request):
             # TODO rendering order
             # message
             order = 'id will be here'
-            message = 'Заказ сохранен. ID: %s' % order
+            message = u'Заказ сохранен. ID: %s' % order
     else:
         form = OrdersManagementForm()
     return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
@@ -90,13 +88,39 @@ def orders_management(request):
 @login_required(login_url='/admin_center/login/')
 def order_edit(request, id):
     if request.method == 'POST':
-        #TODO
-        # edit order
         form = OrderForm(request.POST or None)
+        
         if form.is_valid():
-            # TODO validating
-            # editing order
-            print None
+            order = form.save()
+            
+            rowCount = int(request.POST['row_count'])
+            for i in range(1, rowCount + 1):
+                code = request.POST['row%s_code' % i]
+                brand = request.POST['row%s_brand' % i]
+                comment = request.POST['row%s_comment' % i]
+                price_1 = request.POST['row%s_price_1' % i]
+                price_2 = request.POST['row%s_price_2' % i]
+                currency = request.POST['row%s_currency' % i]
+                count = request.POST['row%s_count' % i]
+                supplier = request.POST['row%s_supplier' % i]
+                delivery_time = request.POST['row%s_delivery_time' % i]
+                status = request.POST['row%s_status' % i]
+                # working only with rows where 'code' is not empty
+                if (code):
+                    try:
+                        product = Product.objects.get(code=code)
+                        
+                        item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
+                                         currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
+                        item.save()
+                        
+                    except Product.DoesNotExist:
+                        # raise Product.DoesNotExist(u"Продукт с id = " + code + u" не существует")
+                        # should return validation error
+                        message = u"Продукт с id '" + code + u"' не существует";
+            # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
+            # message about saving
+            message = u'Заказ ID: %s обновлен.' % order.id
     else:
         order = Order.objects.get(id=id)
         order_items = OrderItem.objects.filter(order_id=order.id)
@@ -155,9 +179,8 @@ def xls_import(request):
                 
                 products = Product.objects.filter(code=row[column_number], supplier_id=supplier.id)
                 
-                product = products[1]
-                
-                if product is not None:
+                if len(products) > 0:
+                    product = products[0]
                     # updating model
                     product.brand = brand=row[column_brand]
                     product.description = row[column_description]
@@ -177,7 +200,7 @@ def xls_import(request):
                     
                     rows_added += 1
             # message
-            message = "Файл %s успешно импортирован. %s записей добавлено. %s записей обновлено." % (file_name, rows_added, rows_updated)
+            message = u"Файл %s успешно импортирован. %s записей добавлено. %s записей обновлено." % (file_name, rows_added, rows_updated)
             # cleaning form
             form = XlsImportForm()
     else:
