@@ -114,13 +114,23 @@
 				return false;
 			}
 			
-			for (var row = 1; i < rowId; i++) {
+			for (var row = 1; row <= rowId; i++) {
 				var price_1 = document.getElementById("row" + row +"_price_1").value;
 				var price_2 = document.getElementById("row" + row +"_price_2").value;
+				var count = document.getElementById("row" + row +"_count").value;
 				
 				if (price_1 > price_2) {
 					alert("Товар № " + row + ". Закупочная цена не может быть выше цены продажи.");
+					return false;
 				}
+				
+				alert(count);
+				if (count < 1) {
+					alert("Колличество не может быть меньше '1'.");
+					return false;
+				}
+				
+				row += 1;
 			} 
 			
 		}
