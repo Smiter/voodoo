@@ -3,6 +3,12 @@
 {% endblock %}
 {% block javascript %}
 	<script type="text/javascript">
+	
+		$(document).ready(function() {
+			$("#id_client_phone").autocomplete("/admin_center/autocomplete_client_phone/");
+			
+	    });
+	    
 		var rowId = 0;
 		function convertStringsToTableRows() {
 			var order_info = document.getElementById("id_order_info").value;
@@ -73,6 +79,8 @@
 								'<td>&nbsp;</td>';
 								
 			document.getElementById("row_count").value = rowId;
+			$("#row" + rowId + "_code").autocomplete("/admin_center/autocomplete_code/");
+			$("#row" + rowId + "_brand").autocomplete("/admin_center/autocomplete_brand/");
 		}
 		
 		function refreshTotal() {

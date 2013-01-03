@@ -8,6 +8,7 @@ import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
 from decimal import Decimal
+from django.http import HttpResponse
 #from django.db import models
 
 
@@ -283,3 +284,36 @@ def beforeImport(supplier):
     for product in products:
         product.count = 0;
         product.save()
+
+def autocomplete_client_phone(request):
+    if request.method == 'GET':
+        GET = request.GET
+        if GET.has_key('q'):
+            q = request.GET.get( 'q' )
+            results = Profile.objects.filter(phone__contains = q)
+            matches = ""
+            for result in results:
+                matches = matches + "%s\n" % (result.phone)
+            return HttpResponse(matches, mimetype="text/plain")
+
+def autocomplete_code(request):
+    if request.method == 'GET':
+        GET = request.GET
+        if GET.has_key('q'):
+            q = request.GET.get( 'q' )
+            results = Product.objects.filter(code__contains = q)
+            matches = ""
+            for result in results:
+                matches = matches + "%s\n" % (result.code)
+            return HttpResponse(matches, mimetype="text/plain")
+
+def autocomplete_brand(request):
+    if request.method == 'GET':
+        GET = request.GET
+        if GET.has_key('q'):
+            q = request.GET.get( 'q' )
+            results = Product.objects.filter(brand__contains = q)
+            matches = ""
+            for result in results:
+                matches = matches + "%s\n" % (result.brand)
+            return HttpResponse(matches, mimetype="text/plain")
