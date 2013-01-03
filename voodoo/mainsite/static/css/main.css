@@ -59,6 +59,14 @@
       box-sizing: border-box;
   }
 */
+
+  .bs-docs-example::after {
+      display: none;
+  }
+  .bs-docs-example {
+      margin: 5px 0;
+      padding: 0px 8px 5px;
+  }
   pre {
       white-space: pre-wrap;       /* Chrome & Safari */
       white-space: -moz-pre-wrap;  /* Mozilla since 1999 */

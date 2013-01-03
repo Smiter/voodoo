@@ -3,41 +3,20 @@
 <html lang="ru">
 <head>
   	<meta charset="utf-8" />
-  	<title>Sergey Mikhaylenko </title>
+  	<title>topparts.com.ua</title>
   	<meta name="application-name" content="Тут имя сайта" />
   	<meta http-equiv="X-UA-Compatible" content="IE=8" />
     {% bootstrap_stylesheet_tag %}
-    <!-- {% bootstrap_javascript_tag "dropdown" %} -->
-  	<!-- <LINK href="{{STATIC_URL}}css/reset.css" rel="stylesheet" type="text/css">  -->
   	<LINK href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
     {% load i18n admin_modify adminmedia %}
-    <!-- <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" /> -->
     <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
-    <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/docs.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/docs.css" />
     <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
     <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/static/admin/css/ie.css" /><![endif]-->
     <script type="text/javascript" src="/admin/jsi18n/"></script>
-    <script type="text/javascript" src="/static/admin/js/core.js"></script>
-    <script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
-    <script type="text/javascript" src="/static/admin/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
-    <script type="text/javascript" src="/static/admin/js/actions.js"></script>
-    <script type="text/javascript" src="/static/admin/js/SelectBox.js"></script>
-    <script type="text/javascript" src="/static/admin/js/SelectFilter2.js"></script>
-    <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
-    <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
-  	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="http://malsup.github.com/jquery.form.js"></script>
+  	<script type="text/javascript" src="/static/js/jquery.min.js"></script> 
+    <script type="text/javascript" src="/static/js/jquery.form.js"></script> 
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-    <style type="text/css">
-        .bs-docs-example::after {
-            display: none;
-        }
-        .bs-docs-example {
-            margin: 5px 0;
-        padding: 0px 8px 5px;
-        }
-    </style>
     <script type="text/javascript"> 
         $('#loginForm').ajaxForm(function(e) { 
         	if (e.user){
@@ -65,7 +44,7 @@
         <div id="header" class="navbar gradient-control">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="float-left" href="/index"><img style="width:200px; height:110px" title="Интернет магазин" alt="Интернет магазин" src="/static/images/photo.jpg"></a>
+                    <a class="float-left" href="/"><img style="width:200px; height:110px" title="Интернет магазин" alt="Интернет магазин" src="/static/images/photo.jpg"></a>
                     <div id="right">
                         <p style="margin-top:10px;">Наши контакты: Украина, г.Черкассы.</p>
                     </div>
@@ -93,9 +72,6 @@
             	
             	<div style="margin:5px 5px 0 5px;"class="" id="left_sidebar">
             		{% if request.user.is_authenticated %}
-            		<!-- <p id="login_message">Добро пожаловать, {{ request.user.username }}.</p> -->
-            		<!-- <br> -->
-            		<!-- <a href="{% url auth_logout %}?next=/index">Logout</a> -->
                     <div style="margin-top:5px;">
                         <span id="login_message">Добро пожаловать, {{ request.user.username }}</span>
                     </div>
@@ -109,7 +85,7 @@
             				<li><a href="/sendings">Отгрузки<i class="icon-chevron-right"></i></a></li>
             				<li style="margin-top:15px" ><a href="/vin_request">Подбор по авто<i class="icon-chevron-right"></i></a></li>
             				<li><a href="/show_vin">Статистика подборов<i class="icon-chevron-right"></i></a></li>
-                            <li style="margin-top:15px" ><a href="{% url auth_logout %}?next=/index">Выход<i class="icon-chevron-right"></i></a></li>
+                            <li style="margin-top:15px" ><a href="{% url auth_logout %}?next=/">Выход<i class="icon-chevron-right"></i></a></li>
             			</ul>
 
             		</div>
@@ -164,35 +140,24 @@
 
             	<div style="margin-left:10px;" id="right_sidebar">
             		<div id="right_top">
-            			<!-- <p>Флешка</p>
-            			<p>реклама</p>
-            			<p>СТО</p> -->
                                 <div id="myCarousel" class="carousel slide">
                                 <!-- Carousel items -->
                                 <div class="carousel-inner">
                                 <!-- <div class="active item">…</div> -->
                                 <div class="item"><img  title="Интернет магазин" alt="Интернет магазин" src="/static/images/detail1.jpg"></div>
                                 <div class="item"><img title="Интернет магазин" alt="Интернет магазин" src="/static/images/detail2.jpg"></div>
-                                <div class="item"><img  title="Интернет магазин" alt="Интернет магазин" src="/static/images/detail3.jpg"></div>
                                 </div>
                                 <!-- Carousel nav -->
                                 <!-- <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a> -->
                                 <!-- <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a> -->
                                 </div>
-
-
             		</div>
-
             		<div style="margin-top:10px; margin-right:10px;margin-bottom:10px; border-top: 1px solid #DDDDDD" id="right_bottom">
-
                         <center>
                         <object width="290" height="250" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" style="width: 290px; height: 250px;">
                         <embed width="290" height="250" src="/static/images/flash-banner-7.swf" type="application/x-shockwave-flash" style="width: 290px; height: 250px;">
                         </object>
                         </center>
-
-            			<!-- <p>Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.Смена кадров запчастей.</p> -->
-
             		</div>
             	</div>
 
