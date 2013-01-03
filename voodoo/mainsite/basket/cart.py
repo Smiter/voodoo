@@ -52,6 +52,8 @@ class Cart:
             item = OrderItem()
             item.cart = self.cart
             item.product = product
+            item.code = product.code
+            item.brand = product.brand
             item.price_1 = product.price
             item.price_2 = product.price
             item.supplier = product.supplier.name
