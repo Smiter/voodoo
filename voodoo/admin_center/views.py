@@ -290,7 +290,7 @@ def autocomplete_client_phone(request):
         GET = request.GET
         if GET.has_key('q'):
             q = request.GET.get( 'q' )
-            results = Profile.objects.filter(phone__contains = q)
+            results = Profile.objects.filter(phone__istartswith = q)
             matches = ""
             for result in results:
                 matches = matches + "%s\n" % (result.phone)
@@ -301,7 +301,7 @@ def autocomplete_code(request):
         GET = request.GET
         if GET.has_key('q'):
             q = request.GET.get( 'q' )
-            results = Product.objects.filter(code__contains = q)
+            results = Product.objects.filter(code__icontains = q)
             matches = ""
             for result in results:
                 matches = matches + "%s\n" % (result.code)
@@ -312,7 +312,7 @@ def autocomplete_brand(request):
         GET = request.GET
         if GET.has_key('q'):
             q = request.GET.get( 'q' )
-            results = Product.objects.filter(brand__contains = q)
+            results = Product.objects.filter(brand__icontains = q)
             matches = ""
             for result in results:
                 matches = matches + "%s\n" % (result.brand)
