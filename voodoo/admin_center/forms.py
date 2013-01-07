@@ -78,3 +78,13 @@ class UserManagementForm(forms.Form):
     name = forms.CharField(label = 'name', required=False)
     phone = forms.CharField(label = 'phone', required=False)
     role = forms.CharField(label = 'role', required=False)
+
+class ItemsManagementForm(forms.Form):
+    order_id = forms.CharField(label = 'Номер заказа', required=False)
+    item_status = forms.CharField(label = 'Статус запчасти', required=False)
+    added_after = forms.DateField(label='Создан между', required=False)
+    added_before = forms.DateField(label='и', required=False)
+    supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all(), required=False)
+    item_code = forms.CharField(label = 'Номер запчасти', required=False)
+    expired_items = forms.BooleanField(label = 'Выборка "просроченных" запчастей', required=False)
+    expired_date = forms.DateField(label='по дату', required=False)

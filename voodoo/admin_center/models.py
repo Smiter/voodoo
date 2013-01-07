@@ -162,6 +162,7 @@ class OrderItem(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     objects = ItemManager()
+    creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
 
     def __unicode__(self):
         return self.code

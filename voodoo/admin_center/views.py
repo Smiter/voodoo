@@ -269,6 +269,21 @@ def user_management(request):
     
     return direct_to_template(request, 'user_management.html', {'form': form, 'message': message, 'results': results})
 
+@login_required(login_url='/admin_center/login/')
+def items_management(request):
+    #TODO
+    message = ''
+    results = None
+    if request.method == 'POST':
+        form = ItemsManagementForm(request.POST or None)
+        if form.is_valid():
+            # TODO validating
+            results = OrderItem.objects.all()
+            # TODO rendering items
+    else:
+        form = ItemsManagementForm()
+    return direct_to_template(request, 'items_management.html', {'form': form, 'results': results, 'message': message})
+
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())
     for element in menu_elements:

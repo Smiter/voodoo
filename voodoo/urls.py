@@ -51,6 +51,7 @@ urlpatterns = patterns('',
     (r'^admin_center/autocomplete_client_phone/$', autocomplete_client_phone),
     (r'^admin_center/autocomplete_code/$', autocomplete_code),
     (r'^admin_center/autocomplete_brand/$', autocomplete_brand),
+    ('^admin_center/items_management$', items_management),
     
 #    ('^admin_center/service$', include('voodoo.admin_center.dhtmlScheduler.urls')),
 

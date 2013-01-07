@@ -1,0 +1,60 @@
+{% extends 'admin_base.html' %}
+{% block javascript %}
+
+{% endblock %}
+{% block content %}
+<h3>Управление Запчастями</h3>
+<form name="items_management_form" action="/admin_center/items_management" method="POST">
+	<table>
+		{{ form.as_table }}
+	</table>
+	<input type="submit" value="Применить фильтр">
+</form>
+{% if results %}
+	<div>Найдены следующие запчасти...</div>
+	<table id="myTable" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Добавлено</th>
+				<th>?</th>
+				<th>Номер</th>
+				<th>Бренд</th>
+				<th>Комментарии</th>
+				<th>Цена 1</th>
+				<th>Цена 2</th>
+				<th>Валюта</th>
+				<th>Кол.</th>
+				<th>Поставщик</th>
+				<th>Статус поставки</th>
+				<th>Статус</th>
+				<th>x</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for row in results %}
+			<tr class="highlightable">
+				<td>{{ row.id }}</td>
+				<td>{{ row.creation_date }}</td>
+				<td>{{ row.order.id }}</td>
+				<td>{{ row.code }}</td>
+				<td>{{ row.brand }}</td>
+				<td>{{ row.comment }}</td>
+				<td>{{ row.price_1 }}</td>
+				<td>{{ row.price_2 }}</td>
+				<td>{{ row.currency }}</td>
+				<td>{{ row.count }}</td>
+				<td>{{ row.supplier }}</td>
+				<td>{{ row.delivery_time }}</td>
+				<td>{{ row.status }}</td>
+				<td>&nbsp;</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<script>$("#myTable").tablesorter();</script>
+{% else %}
+	Noting to display
+{% endif %}
+
+{% endblock %}
