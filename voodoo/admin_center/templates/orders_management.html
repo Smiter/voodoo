@@ -22,7 +22,7 @@
 		</thead>
 		<tbody>
 			{% for row in results %}
-			<tr class="highlightable" onclick="document.location = 'order_edit/{{ row.id }}';">
+			<tr class="highlightable_pointer" onclick="document.location = 'order_edit/{{ row.id }}';">
 				<td>{{ row.id }}</td>
 				<td>{{ row.creation_date }}</td>
 				{% if row.user %}

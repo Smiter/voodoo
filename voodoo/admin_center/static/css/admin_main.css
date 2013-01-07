@@ -108,7 +108,11 @@ div {
 	width: 300px;
 }
 
-.highlightable:hover {
+.highlightable_pointer:hover {
 	background-color: #ECECEC;
 	cursor: pointer;
+}
+
+.highlightable:hover {
+	background-color: #ECECEC;
 }

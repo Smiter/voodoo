@@ -42,7 +42,7 @@
 								'<td><input id="row' + rowId + '_price_2" name="row' + rowId + '_price_2" type="text" style="width:40px" value="0.0" onchange="refreshTotal()"/></td>' +
 								'<td>' +
 									'{% if currencyList %}' +
-										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency" onchange="fillDeliveryTime()">' + 
+										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency">' + 
 											'{% for currency in currencyList %}' +
 												'<option value="{{ currency }}">{{ currency }}</option>' +
 											'{% endfor %}' +

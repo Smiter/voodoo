@@ -375,6 +375,35 @@ def item_edit(request):
     return HttpResponse({post_value})
 
 @login_required(login_url='/admin_center/login/')
+def item_ajax_edit(request, id):
+    if request.method == 'POST':
+        item = OrderItem.objects.get(id = id)
+        
+        print request.POST['code']
+        print request.POST['brand']
+        print request.POST['comment']
+        print request.POST['price_1']
+        print request.POST['price_2']
+        print request.POST['currency']
+        print request.POST['count']
+        print request.POST['delivery_time']
+        print request.POST['status']
+        
+        item.code = request.POST['code']
+        item.brand = request.POST['brand']
+        item.comment = request.POST['comment']
+        item.price_1 = request.POST['price_1']
+        item.price_2 = request.POST['price_2']
+        item.currency = request.POST['currency']
+        item.count = request.POST['count']
+        item.delivery_time = request.POST['delivery_time']
+        item.status = request.POST['status']
+        
+        item.save()
+    
+    return HttpResponse()
+
+@login_required(login_url='/admin_center/login/')
 def feeds_currency(request):
     response_data = dict()
     currencyList = Currency.objects.all()

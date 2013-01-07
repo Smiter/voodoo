@@ -4,6 +4,7 @@
 <script type="text/javascript">
 
  $(document).ready(function() {
+ 	
     $('.edit').editable('/admin_center/item_edit', {
 		indicator : 'Saving...',
 		tooltip   : 'Click to edit...'
@@ -28,6 +29,28 @@
 	});
 	
  });
+ 
+function editAjax(item_id){
+$.ajax({
+    url: "item_ajax_edit/"+ item_id +"/",
+    type: "POST",
+    data: 	{'code': $("#order_item_1_code").val(), 
+    		'brand': $('#order_item_' + item_id + '_brand').val(),
+    		'comment': $('#order_item_' + item_id + '_comment').val(),
+    		'price_1': $('#order_item_' + item_id + '_price_1').val(),
+    		'price_2': $('#order_item_' + item_id + '_price_2').val(),
+    		'currency': $('#order_item_' + item_id + '_currency option:selected').val(),
+    		'count': $('#order_item_' + item_id + '_count').val(),
+    		'delivery_time': $('#order_item_' + item_id + '_delivery_time').val(),
+    		'status': $('#order_item_' + item_id + '_status option:selected').val(),
+    		},
+    success: function(){
+        alert('Сохранено');
+    }
+    
+    
+});
+}
  
 </script>
 {% endblock %}
@@ -64,19 +87,52 @@
 			{% for row in results %}
 			<tr class="highlightable">
 				<td>{{ row.id }}</td>
-				<td>{{ row.creation_date }}</td>
+				<td>{{ row.creation_date|date:"d.m.Y f" }}</td>
 				<td>{{ row.order.id }}</td>
-				<td><span id="order_item_{{ row.id }}_code" class="edit">{{ row.code }}</span></td>
-				<td><span id="order_item_{{ row.id }}_brand" class="edit">{{ row.brand }}</span></td>
-				<td><span id="order_item_{{ row.id }}_comment" class="edit">{{ row.comment }}</span></td>
-				<td><span id="order_item_{{ row.id }}_price_1" class="edit">{{ row.price_1 }}</span></td>
-				<td><span id="order_item_{{ row.id }}_price_2" class="edit">{{ row.price_2 }}</span></td>
-				<td><span id="order_item_{{ row.id }}_currency" class="edit_currency">{{ row.currency }}</span></td>
-				<td><span id="order_item_{{ row.id }}_count" class="edit">{{ row.count }}</span></td>
-				<td>{{ row.supplier }}</td>
-				<td><span id="order_item_{{ row.id }}_delivery_time" class="edit">{{ row.delivery_time }}</span></td>
-				<td><span id="order_item_{{ row.id }}_status" class="edit_status">{{ row.status }}</span></td>
-				<td><!-- <a href="/admin_center/item_edit/{{row.id}}">Edit</a> --></td>
+				<td><input id="order_item_{{ row.id }}_code" value="{{ row.code }}" style="width:50px"></td>
+				<td><input id="order_item_{{ row.id }}_brand" value="{{ row.brand }}" style="width:40px"></td>
+				<td><input id="order_item_{{ row.id }}_comment" value="{{ row.comment }}" style="width:70px"></td>
+				<td><input id="order_item_{{ row.id }}_price_1" value="{{ row.price_1 }}" style="width:40px"></td>
+				<td><input id="order_item_{{ row.id }}_price_2" value="{{ row.price_2 }}" style="width:40px"></td>
+				<td>
+					{% if currencyList %}
+					<select id="order_item_{{ row.id }}_currency"> 
+						{% for currency in currencyList %}
+							{% ifequal currency.code row.currency %}
+								<option value="{{ currency }}" selected="selected">{{ currency }}</option>
+							{% else %}
+								<option value="{{ currency }}">{{ currency }}</option>
+							{% endifequal %}
+						{% endfor %}
+					</select>
+					{% else %}
+						<span>Нет ни одной валюты</span>
+					{% endif %}
+				</td>
+				<td><input id="order_item_{{ row.id }}_count" value="{{ row.count }}" style="width:40px"></td>
+				<td><span>{{ row.supplier }}</span></td>
+				<td><input id="order_item_{{ row.id }}_delivery_time" value="{{ row.delivery_time }}" style="width:40px"></td>
+				<td>
+					{% if statusList %}
+						<select id="order_item_{{ row.id }}_status">
+							{% for status in statusList %}
+								{% ifequal status.status row.status %}
+									<option value="{{ status }}" selected="selected">{{ status }}</option>
+								{% else %}
+									<option value="{{ status }}">{{ status }}</option>
+								{% endifequal %}
+							{% endfor %}
+						</select>
+					{% else %}
+						<span>Нет ни одного статуса</span>
+					{% endif %}
+				</td>
+				<td>
+					<div onclick="editAjax({{ row.id }}); return false;">
+						<input type="image" src="/static/images/pencil.gif" width="20" height="20">
+					</div>
+					
+				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
