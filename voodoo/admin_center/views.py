@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
 from decimal import Decimal
 from django.http import HttpResponse
+import json
+from django.core.serializers import serialize
+from django.utils.simplejson import dumps, loads, JSONEncoder
 #from django.db import models
 
 
@@ -284,6 +287,7 @@ def items_management(request):
         form = ItemsManagementForm()
     return direct_to_template(request, 'items_management.html', {'form': form, 'results': results, 'message': message})
 
+@login_required(login_url='/admin_center/login/')
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())
     for element in menu_elements:
@@ -291,6 +295,7 @@ def getMenuElements():
         element.link = element.name
     return menu_elements
 
+@login_required(login_url='/admin_center/login/')
 def beforeImport(supplier):
     products = Product.objects.filter(supplier_id=supplier.id)
     
@@ -300,6 +305,7 @@ def beforeImport(supplier):
         product.count = 0;
         product.save()
 
+@login_required(login_url='/admin_center/login/')
 def autocomplete_client_phone(request):
     if request.method == 'GET':
         GET = request.GET
@@ -311,6 +317,7 @@ def autocomplete_client_phone(request):
                 matches = matches + "%s\n" % (result.phone)
             return HttpResponse(matches, mimetype="text/plain")
 
+@login_required(login_url='/admin_center/login/')
 def autocomplete_code(request):
     if request.method == 'GET':
         GET = request.GET
@@ -322,6 +329,7 @@ def autocomplete_code(request):
                 matches = matches + "%s\n" % (result.code)
             return HttpResponse(matches, mimetype="text/plain")
 
+@login_required(login_url='/admin_center/login/')
 def autocomplete_brand(request):
     if request.method == 'GET':
         GET = request.GET
@@ -332,3 +340,28 @@ def autocomplete_brand(request):
             for result in results:
                 matches = matches + "%s\n" % (result.brand)
             return HttpResponse(matches, mimetype="text/plain")
+
+@login_required(login_url='/admin_center/login/')
+def item_edit(request, id):
+    print 'saving..'
+    print request
+
+@login_required(login_url='/admin_center/login/')
+def feeds_currency(request):
+    response_data = dict()
+    currencyList = Currency.objects.all()
+    if currencyList :
+        for curr in currencyList :
+            response_data[curr.code] = curr.code
+        
+    return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+@login_required(login_url='/admin_center/login/')
+def feeds_status(request):
+    response_data = dict()
+    statusList = ItemStatus.objects.all()
+    if statusList :
+        for status in statusList :
+            response_data[status.status] = status.status
+        
+    return HttpResponse(json.dumps(response_data), mimetype="application/json")

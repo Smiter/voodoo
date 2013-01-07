@@ -1,6 +1,35 @@
 {% extends 'admin_base.html' %}
 {% block javascript %}
 
+<script type="text/javascript">
+
+ $(document).ready(function() {
+    $('.edit').editable('/admin_center/item_edit', {
+		indicator : 'Saving...',
+		tooltip   : 'Click to edit...'
+    });
+    
+    $('.edit_area').editable('/admin_center/item_edit', { 
+         type      : 'textarea',
+         cancel    : 'Cancel',
+         submit    : 'OK',
+         indicator : '<img src="img/indicator.gif">',
+         tooltip   : 'Click to edit...'
+    });
+    
+	$('.edit_currency').editable('/admin_center/item_edit', {
+		loadurl : '/admin_center/feeds_currency', 
+		type   : 'select',
+	});
+	
+	$('.edit_status').editable('/admin_center/item_edit', {
+		loadurl : '/admin_center/feeds_status', 
+		type   : 'select',
+	});
+	
+ });
+ 
+</script>
 {% endblock %}
 {% block content %}
 <h3>Управление Запчастями</h3>
@@ -12,7 +41,7 @@
 </form>
 {% if results %}
 	<div>Найдены следующие запчасти...</div>
-	<table id="myTable" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+	<table id="table" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 		<thead>
 			<tr>
 				<th>#</th>
@@ -26,7 +55,7 @@
 				<th>Валюта</th>
 				<th>Кол.</th>
 				<th>Поставщик</th>
-				<th>Статус поставки</th>
+				<th>Срок поставки</th>
 				<th>Статус</th>
 				<th>x</th>
 			</tr>
@@ -37,22 +66,22 @@
 				<td>{{ row.id }}</td>
 				<td>{{ row.creation_date }}</td>
 				<td>{{ row.order.id }}</td>
-				<td>{{ row.code }}</td>
-				<td>{{ row.brand }}</td>
-				<td>{{ row.comment }}</td>
-				<td>{{ row.price_1 }}</td>
-				<td>{{ row.price_2 }}</td>
-				<td>{{ row.currency }}</td>
-				<td>{{ row.count }}</td>
+				<td><span id="order_item_{{ row.id }}_code" class="edit">{{ row.code }}</span></td>
+				<td><span id="order_item_{{ row.id }}_brand" class="edit">{{ row.brand }}</span></td>
+				<td><span id="order_item_{{ row.id }}_comment" class="edit">{{ row.comment }}</span></td>
+				<td><span id="order_item_{{ row.id }}_price_1" class="edit">{{ row.price_1 }}</span></td>
+				<td><span id="order_item_{{ row.id }}_price_2" class="edit">{{ row.price_2 }}</span></td>
+				<td><span id="order_item_{{ row.id }}_currency" class="edit_currency">{{ row.currency }}</span></td>
+				<td><span id="order_item_{{ row.id }}_count" class="edit">{{ row.count }}</span></td>
 				<td>{{ row.supplier }}</td>
-				<td>{{ row.delivery_time }}</td>
-				<td>{{ row.status }}</td>
-				<td>&nbsp;</td>
+				<td><span id="order_item_{{ row.id }}_delivery_time" class="edit">{{ row.delivery_time }}</span></td>
+				<td><span id="order_item_{{ row.id }}_status" class="edit_status">{{ row.status }}</span></td>
+				<td><a href="/admin_center/item_edit/{{row.id}}">Edit</a></td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-	<script>$("#myTable").tablesorter();</script>
+	<script>$("#table").tablesorter();</script>
 {% else %}
 	Noting to display
 {% endif %}

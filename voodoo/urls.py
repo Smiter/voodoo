@@ -52,6 +52,9 @@ urlpatterns = patterns('',
     (r'^admin_center/autocomplete_code/$', autocomplete_code),
     (r'^admin_center/autocomplete_brand/$', autocomplete_brand),
     ('^admin_center/items_management$', items_management),
+    ('^admin_center/item_edit/(?P<id>\d+)/$', item_edit),
+    ('^admin_center/feeds_currency$', feeds_currency),
+    ('^admin_center/feeds_status$', feeds_status),
     
 #    ('^admin_center/service$', include('voodoo.admin_center.dhtmlScheduler.urls')),
 
