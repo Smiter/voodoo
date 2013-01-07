@@ -30,28 +30,46 @@
 	
  });
  
-function editAjax(item_id){
-$.ajax({
-    url: "item_ajax_edit/"+ item_id +"/",
-    type: "POST",
-    data: 	{'code': $("#order_item_1_code").val(), 
-    		'brand': $('#order_item_' + item_id + '_brand').val(),
-    		'comment': $('#order_item_' + item_id + '_comment').val(),
-    		'price_1': $('#order_item_' + item_id + '_price_1').val(),
-    		'price_2': $('#order_item_' + item_id + '_price_2').val(),
-    		'currency': $('#order_item_' + item_id + '_currency option:selected').val(),
-    		'count': $('#order_item_' + item_id + '_count').val(),
-    		'delivery_time': $('#order_item_' + item_id + '_delivery_time').val(),
-    		'status': $('#order_item_' + item_id + '_status option:selected').val(),
-    		},
-    success: function(){
-        alert('Сохранено');
-    }
-    
-    
-});
+function editAjax(item_id) {
+	if (validateForm(item_id)) {
+		$.ajax({
+		    url: "item_ajax_edit/"+ item_id +"/",
+		    type: "POST",
+		    data: 	{'code': $('#order_item_' + item_id + '_code').val(), 
+		    		'brand': $('#order_item_' + item_id + '_brand').val(),
+		    		'comment': $('#order_item_' + item_id + '_comment').val(),
+		    		'price_1': $('#order_item_' + item_id + '_price_1').val(),
+		    		'price_2': $('#order_item_' + item_id + '_price_2').val(),
+		    		'currency': $('#order_item_' + item_id + '_currency option:selected').val(),
+		    		'count': $('#order_item_' + item_id + '_count').val(),
+		    		'delivery_time': $('#order_item_' + item_id + '_delivery_time').val(),
+		    		'status': $('#order_item_' + item_id + '_status option:selected').val(),
+		    		},
+		    success: function(){
+		        alert('Сохранено');
+		    }
+		});
+	} 
 }
- 
+
+function validateForm(item_id) {
+	var price_1 = document.getElementById("order_item_" + item_id +"_price_1").value;
+	var price_2 = document.getElementById("order_item_" + item_id +"_price_2").value;
+	var count = document.getElementById("order_item_" + item_id +"_count").value;
+	
+	if (price_1 > price_2) {
+		alert("Товар № " + item_id + ". Закупочная цена не может быть выше цены продажи.");
+		return false;
+	}
+	
+	if (count < 1) {
+		alert("Колличество не может быть меньше '1'.");
+		return false;
+	}
+	
+	return true;
+}
+
 </script>
 {% endblock %}
 {% block content %}
@@ -134,10 +152,16 @@ $.ajax({
 					
 				</td>
 			</tr>
+			<script>
+				$("#order_item_{{ row.id }}_code").autocomplete("/admin_center/autocomplete_code/");
+				$("#order_item_{{ row.id }}_brand").autocomplete("/admin_center/autocomplete_brand/");
+			</script>
 			{% endfor %}
 		</tbody>
 	</table>
-	<script>$("#table").tablesorter();</script>
+	<script>
+		$("#table").tablesorter();
+	</script>
 {% else %}
 	Noting to display
 {% endif %}
