@@ -534,7 +534,7 @@
         onblur     : 'cancel',
         loadtype   : 'GET',
         loadtext   : 'Loading...',
-        placeholder: 'Редактировать',
+        placeholder: 'Нажать для изменения',
         loaddata   : {},
         submitdata : {},
         ajaxoptions: {}
