@@ -126,7 +126,7 @@ def dataprocessor(request):
                                     mimetype="application/xhtml+xml")
 
 def calendar(request):
-    return direct_to_template(request, 'calendar.html', {'menu_elements': getMenuElements()})
+    return direct_to_template(request, 'calendar.html')
 #    return render_to_response('calendar.html')
 
 
