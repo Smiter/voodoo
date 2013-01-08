@@ -1,21 +1,22 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 
-from voodoo.admin_center.dhtmlScheduler.models import Event
+from voodoo.admin_center.dhtmlScheduler.models import Event, Event2
 from django.views.generic.simple import direct_to_template
-from voodoo.admin_center.views import getMenuElements
 
-def eventsXML(request):
+
+def eventsXML(request, event_model):
     """
     For now, return the whole event DB.
     """
-    eventList = Event.objects.all()
+    eventList = event_model.objects.all()
     users = User.objects.all()
     return render_to_response('events.xml',
                               {'eventList' : eventList, 'userList' : users},
                                 mimetype="application/xhtml+xml")
 
-def dataprocessor(request):
+
+def dataprocessor(request, event_model):
     """
     QueryDict data format:
     <QueryDict:{
@@ -55,9 +56,7 @@ def dataprocessor(request):
         for id in idList:
             command = request.POST[id + '_!nativeeditor_status']
             if command == 'inserted':
-                e = Event()
-                print "HUI"
-                print request.POST
+                e = event_model()
                 e.start_date = request.POST[id + '_start_date']
                 e.end_date = request.POST[id + '_end_date']
                 e.client_name = request.POST[id + '_client_name']
@@ -66,7 +65,7 @@ def dataprocessor(request):
                 e.car_description = request.POST[id + '_car_description']
                 try:
                     if request.POST.get(id + '_worker'):
-                        user = User.objects.get(username = request.POST[id + '_worker'])
+                        user = User.objects.get(username=request.POST[id + '_worker'])
                     else:
                         user = request.user
                 except User.DoesNotExist:
@@ -74,16 +73,11 @@ def dataprocessor(request):
                     user = request.user
                 e.worker = user
                 e.price = request.POST[id + '_price']
-                e.lift = request.POST[id + '_lift']
                 e.save()
-                response = {'type' : 'insert',
-                            'sid': request.POST[id + '_id'],
-                            'tid' : e.id}
+                response = {'type': 'insert', 'sid': request.POST[id + '_id'], 'tid': e.id}
 
             elif command == 'updated':
-                print "HUI"
-                print request.POST
-                e = Event(pk=request.POST[id + '_id'])
+                e = event_model(pk=request.POST[id + '_id'])
                 e.start_date = request.POST[id + '_start_date']
                 e.end_date = request.POST[id + '_end_date']
                 e.client_name = request.POST[id + '_client_name']
@@ -92,7 +86,7 @@ def dataprocessor(request):
                 e.car_description = request.POST[id + '_car_description']
                 try:
                     if request.POST.get(id + '_worker'):
-                        user = User.objects.get(username = request.POST[id + '_worker'])
+                        user = User.objects.get(username=request.POST[id + '_worker'])
                     else:
                         user = request.user
                 except User.DoesNotExist:
@@ -100,34 +94,27 @@ def dataprocessor(request):
                     user = request.user
                 e.worker = user
                 e.price = request.POST[id + '_price']
-                e.lift = request.POST[id + '_lift']
-                print e.lift
                 e.save()
-                response = {'type' : 'update',
-                            'sid': e.id,
-                            'tid' : e.id}
+                response = {'type': 'update', 'sid': e.id, 'tid': e.id}
 
-                
             elif command == 'deleted':
-                 e = Event(pk=request.POST[id + '_id'])
-                 e.delete()
-                 response = {'type' : 'delete',
-                            'sid': request.POST[id + '_id'],
-                            'tid' : '0'}
+                e = event_model(pk=request.POST[id + '_id'])
+                e.delete()
+                response = {'type': 'delete', 'sid': request.POST[id + '_id'], 'tid': '0'}
                 
             else:
-                 response = {'type' : 'error',
-                            'sid': request.POST[id + '_id'],
-                            'tid' : '0'}
+                response = {'type': 'error', 'sid': request.POST[id + '_id'], 'tid': '0'}
                 
             responseList.append(response)
             
     return render_to_response('dataprocessor.xml', {"responseList": responseList},
                                     mimetype="application/xhtml+xml")
 
+
 def calendar(request):
     return direct_to_template(request, 'calendar.html')
 #    return render_to_response('calendar.html')
 
 
-
+def showCalendar(request, template_name):
+    return direct_to_template(request, template_name)
