@@ -105,7 +105,11 @@ class Order(models.Model):
 
 class Supplier(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
+    time_out = IntegerField(verbose_name='Часов до просрочки', max_length=20)
     delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
+    transporter = CharField(verbose_name='Перевозчик', max_length=120, blank=True, null=True)
+    contact_information = CharField(verbose_name='Контактная информация', max_length=500, blank=True, null=True)
+    time_closing_order = TimeField(verbose_name='Время закрытия заказа', max_length=20)
 
     def getProducts(self):
         print None

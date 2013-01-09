@@ -356,7 +356,6 @@ def getMenuElements():
         element.link = element.name
     return menu_elements
 
-@login_required(login_url='/admin_center/login/')
 def beforeImport(supplier):
     products = Product.objects.filter(supplier_id=supplier.id)
     
