@@ -125,7 +125,7 @@ def orders_management(request):
                 
             # message
             if results:
-                message = 'Найдены следующие запчасти...'
+                message = 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)'
             else:
                 message = 'Ничего не найдено.'
     else:
