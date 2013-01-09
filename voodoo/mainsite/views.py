@@ -227,7 +227,6 @@ def save_del_details(request):
 
 
 def order_details(request):
-    print request.POST
     detail_count_list = request.POST.getlist("num_offered_detail[]")
     detail_status_list = request.POST.getlist("statuses[]")
     order = Order.objects.filter(id=request.POST["vin_id"])

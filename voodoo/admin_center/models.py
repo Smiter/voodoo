@@ -164,6 +164,7 @@ class ItemStatus(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, blank=True, null=True)
+    user = models.ForeignKey(User, unique=False, blank=True, null=True)
     code = CharField(verbose_name='Номер', max_length=120)
     brand = CharField(verbose_name='Бдэнд', max_length=120)
     comment = CharField(verbose_name='Комментарий', max_length=120, blank=True)

@@ -1,13 +1,62 @@
 {% extends 'admin_base.html' %}
+
+{% block javascript %}
+<script type="text/javascript"> 
+    $(function(){
+
+        $('#import_button').live('click',function () {
+            list1 = Array()
+            $("#order_import_form .detail_checkbox").each(function() {
+                list1.push($(this).is(':checked'))
+            })
+            $.ajax({
+              type: "POST",
+              url: '/admin_center/orders_import_submit',
+              data: {"detail_checkboxes": list1}
+              }).done(function( msg ) {
+                location.reload();
+              })
+        });
+    })
+</script>
+{% endblock %}
 {% block content %}
-<h3>Orders Import Form</h3>
-</br>
+<h3>Импорт заказов</h3>
 {% if results %}
-	Rendering table
-	<form name="orders_import_form" action="/admin_center/orders_import" method="POST">
-		<input type="submit" value="Импортировать выбраные заказы">
+	<form id="order_import_form" name="orders_import_form" action="/admin_center/orders_import" method="POST">
+        <table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+        <thead>
+            <tr>
+                <th>Дата заказа</th>
+                <th>Поставщик</th>
+                <th>Клиент</th>
+                <th>Запчасть</th>
+                <th>Коллич.</th>
+                <th>Цена 1</th>
+                <th>Цена 2</th>
+                <th>Комментарии</th>
+                <th>?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr>
+                <td>{{ row.creation_date }}</td>
+                <td>{{ row.supplier.name }}</td>
+                <td>{{ row.user.username }}</td>
+                <td>{{ row.brand }}</td>
+                <td>{{ row.count }}</td>
+                <td>{{ row.price_1 }}</td>
+                <td>{{ row.price_2 }}</td>
+                <td>{{ row.comment }}</td>
+                <td><input type="checkbox" class="detail_checkbox"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+		<button id="import_button" type="button">Импортировать выбраные заказы</button>
 	</form>
 {% else %}
-	Nothing to display
+	Таблица пустая
 {% endif %}
 {% endblock %}

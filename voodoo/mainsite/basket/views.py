@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import *
 from voodoo.admin_center.models import Product
-from voodoo.admin_center.models import Order
+from voodoo.admin_center.models import Order, OrderStatus
 from django.utils.simplejson import dumps
 
 
@@ -44,17 +44,20 @@ def make_order(request):
     user = request.user
     order = None
     if not user.is_authenticated():
-        order = Order(client_name=u'Не зарегистрирован, ' + request.POST["name"], client_phone=request.POST["phone"], order_status=u'Принят (черный)')
+        order = Order(client_name=u'Не зарегистрирован, ' + request.POST["name"], client_phone=request.POST["phone"], order_status=OrderStatus.objects.get(status='Принят'))
+        order.order_info = ";".join([item.product.brand + ", " + str(item.count) + u" шт." for item in cart])
+        order.save()
+        for item in cart:
+            item.order = order
+            item.save()
     else:
-        order = Order(user=user, order_status=u'Принят (черный)')
-        
-    order.order_info = ";".join([item.product.brand + ", " + str(item.count) + u" шт." for item in cart])
-    order.save()
-    for item in cart:
-        item.order = order
-        item.save()
+        for item in cart:
+            item.user = user
+            item.save()
+        # order = Order(user=user, order_status=u'Принят (черный)')
+    cart.cart.checked_out = True
+    cart.cart.save()
     cart.change_id(request)
     cart = Cart(request)
-    request.basket_number = cart.getItemCount()
+    request.basket_number = 0
     return HttpResponseRedirect("/basket")
-    # return render_to_response('basket.html',  dict(cart=cart, products=Product.objects.all(), total_price=0), context_instance=RequestContext(request))

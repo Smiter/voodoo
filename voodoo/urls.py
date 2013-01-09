@@ -56,6 +56,7 @@ urlpatterns = patterns('',
     ('^admin_center/item_ajax_edit/(?P<id>\d+)/$', item_ajax_edit),
     ('^admin_center/feeds_currency$', feeds_currency),
     ('^admin_center/feeds_status$', feeds_status),
+    ('^admin_center/orders_import_submit$', orders_import_submit),
     
 #    ('^admin_center/service$', include('voodoo.admin_center.dhtmlScheduler.urls')),
 

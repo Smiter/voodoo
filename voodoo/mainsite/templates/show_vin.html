@@ -15,12 +15,10 @@ margin-right: 10px;
 			list1 = Array()
 			list2 = Array()
 			$("#offered_details .num_offered_detail").each(function() {
-				console.log($(this).val())
 				list1.push($(this).val())
 			})
 
 			$("#offered_details .detail_status_checkbox").each(function() {
-				console.log($(this).is(':checked'))
 				list2.push($(this).is(':checked'))
 			})
 

@@ -198,18 +198,30 @@ def order_edit(request, id):
 
 @login_required(login_url='/admin_center/login/')
 def orders_import(request):
-    # TODO
-    # remove copy/paste
-    form = OrdersManagementForm(request.POST or None)
-    if form.is_valid():
-    # using results
-    # TODO filtering from DB
-    # TODO rendering filtered data
-        print None
-    else:
-        # remove copy/paste
-        form = OrdersManagementForm()
-    return direct_to_template(request, 'orders_import.html', {'form': form})
+    results = OrderItem.objects.filter(order=None, cart__checked_out=True)
+    return direct_to_template(request, 'orders_import.html', {'results': results})
+
+
+@login_required(login_url='/admin_center/login/')
+def orders_import_submit(request):
+    detail_checkboxes = request.POST.getlist("detail_checkboxes[]")
+    results = OrderItem.objects.filter(order=None, cart__checked_out=True)
+    groups_by_client = {}
+    for i in range(len(results)):
+        if detail_checkboxes[i] == 'true':
+            if results[i].user not in groups_by_client:
+                groups_by_client[results[i].user] = [results[i]]
+            else:
+                groups_by_client[results[i].user].append(results[i])
+    for user, list_of_items in groups_by_client.items():
+        order = Order(user=user, order_status=OrderStatus.objects.get(status='Обработан'))
+        order.order_info = ";".join([item.product.brand + ", " + str(item.count) + u" шт." for item in list_of_items])
+        order.save()
+        for item in list_of_items:
+            item.order = order
+            item.status = ItemStatus.objects.get(status=u'Оформлен')
+            item.save()
+    return HttpResponse('')
 
 
 @login_required(login_url='/admin_center/login/')

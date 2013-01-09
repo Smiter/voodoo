@@ -1,7 +1,7 @@
 #coding=utf-8
 
 import datetime
-from voodoo.admin_center.models import OrderItem
+from voodoo.admin_center.models import OrderItem, ItemStatus
 import models
 
 CART_ID = 'CART-ID'
@@ -56,10 +56,9 @@ class Cart:
             item.brand = product.brand
             item.price_1 = product.price
             item.price_2 = product.price
-            item.supplier = product.supplier.name
-            item.delivery_time = product.supplier.delivery_time
+            item.supplier = product.supplier
             item.count = quantity
-            item.status = 'Сообщен'
+            item.status = ItemStatus.objects.get(status=u'Сообщен')
             item.save()
         else:
             print "Продукт уже добавлен в корзину"
