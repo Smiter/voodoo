@@ -38,19 +38,9 @@ class OrdersManagementForm(forms.Form):
     # Фильтр
     required_css_class = 'required'
     order_filter_number = forms.CharField(label='Номер заказа', required=False)
-    order_filter_status = forms.ChoiceField(
-                                      label="Статус заказа",
-                                      widget=forms.Select(),
-                                      choices=([
-                                                ('Принят', 'Принят'),
-                                                ('Обработан', 'Обработан'),
-                                                ('Закрыт', 'Закрыт')
-                                                ]),
-                                      initial='Принят',
-                                      required=False)                        
-    
-    order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False)
-    order_filter_creation_date_2 = forms.CharField(label='и', required=False)
+    order_filter_status = forms.ModelChoiceField(label="Статус заказа", queryset=OrderStatus.objects.all(), required=False)
+    order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    order_filter_creation_date_2 = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     order_filter_text = forms.CharField(label='Искать текст', required=False)
     order_filter_order_part = forms.CharField(label='в инфе о', required=False)
 

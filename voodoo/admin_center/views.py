@@ -87,12 +87,47 @@ def orders_management(request):
     if request.method == 'POST':
         form = OrdersManagementForm(request.POST or None)
         if form.is_valid():
+            order_id = None
+            order_status = None
+            creation_date_after = None
+            creation_date_before = None
+            search_text = None
+            search_where = None
             # TODO validating
+            if request.POST["order_filter_number"] != '' :
+                order_id = int(request.POST["order_filter_number"])
+            
+            print request.POST["order_filter_status"]
+            
+            if request.POST["order_filter_status"] != '' :
+                order_status = int(request.POST["order_filter_status"])
+                
+            if request.POST["order_filter_creation_date_1"] != '' :
+                creation_date_after = datetime.datetime.strptime(request.POST["order_filter_creation_date_1"] + " 00:00:00", '%d.%m.%Y %H:%M:%S')
+                
+            if request.POST["order_filter_creation_date_2"] != '' :
+                creation_date_before = datetime.datetime.strptime(request.POST["order_filter_creation_date_2"] + " 23:59:59", '%d.%m.%Y %H:%M:%S')
+                
+            if request.POST["order_filter_text"] != '' :
+                search_text = request.POST["order_filter_text"]
+            
             results = Order.objects.all()
-            # TODO rendering order
+            
+            if order_id is not None :
+                results = results.filter(id=order_id)
+            if order_status is not None:
+                results = results.filter(order_status_id=order_status)
+            if creation_date_after is not None:
+                results = results.filter(creation_date__gte=creation_date_after)
+            if creation_date_before is not None:
+                results = results.filter(creation_date__lte=creation_date_before)
+            #TODO Search text
+                
             # message
-            order = 'id will be here'
-            message = u'Заказ сохранен. ID: %s' % order
+            if results:
+                message = 'Найдены следующие запчасти...'
+            else:
+                message = 'Ничего не найдено.'
     else:
         form = OrdersManagementForm()
     return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
