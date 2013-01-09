@@ -8,7 +8,7 @@
 	<input type="submit" value="Применить фильтр">
 </form>
 {% if results %}
-	<div>Найдены следующие заказы(для полного просмотра выберите нужный в списке)</div>
+	<div>{{message}}</div>
 	<div style="text-align: center">Краткое содержание заказов</div>
 	<table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 		<thead>
@@ -24,7 +24,7 @@
 			{% for row in results %}
 			<tr class="highlightable_pointer" onclick="document.location = 'order_edit/{{ row.id }}';">
 				<td>{{ row.id }}</td>
-				<td>{{ row.creation_date }}</td>
+				<td>{{ row.creation_date|date:"d.m.Y f" }}</td>
 				{% if row.user %}
 					<td>{{ row.user.username }}</td>
 				{% else %}
@@ -37,7 +37,7 @@
 		</tbody>
 	</table>
 {% else %}
-	Noting to display
+	{{message}}
 {% endif %}
 
 {% endblock %}
