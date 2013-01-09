@@ -63,6 +63,13 @@ ORDER_STATUS = (
 )
 
 
+class OrderStatus(models.Model):
+    status = CharField(verbose_name='Статус выполнения заказа', max_length=120)
+    color = CharField(verbose_name='Цвет', max_length=120)
+    
+    def __unicode__(self):
+        return self.status
+    
 class Order(models.Model):
     # Создание заказа
     required_css_class = 'required'
@@ -87,8 +94,7 @@ class Order(models.Model):
     # Информация о заказе и запчастям
     order_info = CharField(verbose_name='Полная формулировка заказа', max_length=500, blank=True)
     order_additional_information = CharField(verbose_name='Дополнительная информация по заказу', max_length=500, blank=True)
-    # TODO use OrderStatus and ItemStatus
-    order_status = CharField(verbose_name='Статус выполнения заказа', choices=ORDER_STATUS, max_length=120, default=0)
+    order_status = models.ForeignKey(OrderStatus, verbose_name='Статус выполнения заказа', blank=True, null=True)
     creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
 #    order_total_price1 = DecimalField(verbose_name='Всего Цена 1', max_length=120, max_digits=20, decimal_places=1, blank=True)
 #    order_total_price2 = DecimalField(verbose_name='Всего Цена 2', max_length=120, max_digits=20, decimal_places=1, blank=True)
@@ -145,6 +151,13 @@ class ItemManager(models.Manager):
         return super(ItemManager, self).get(*args, **kwargs)
 
 
+class ItemStatus(models.Model):
+    status = CharField(verbose_name='Статус', max_length=120)
+    color = CharField(verbose_name='Цвет', max_length=120)
+    
+    def __unicode__(self):
+        return self.status
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, blank=True, null=True)
     code = CharField(verbose_name='Номер', max_length=120)
@@ -154,9 +167,9 @@ class OrderItem(models.Model):
     price_2 = DecimalField(verbose_name='Цена2', max_length=120, max_digits=20, decimal_places=1)
     currency = CharField(verbose_name='Тип валюты', max_length=120)
     count = PositiveIntegerField(verbose_name='Количество', max_length=120)
-    supplier = CharField(verbose_name='Поставщик', max_length=120)
+    supplier = models.ForeignKey(Supplier, verbose_name='Поставщик', blank=True, null=True)
     delivery_time = CharField(verbose_name='Срок поставки', max_length=120)
-    status = CharField(verbose_name='Статус', max_length=120)
+    status = models.ForeignKey(ItemStatus)
     cart = models.ForeignKey(Cart, verbose_name='Корзина', blank=True, null=True)
     # quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
     content_type = models.ForeignKey(ContentType)
@@ -181,17 +194,6 @@ class OrderItem(models.Model):
 
     product = property(get_product, set_product)
 
-
-class OrderStatus(models.Model):
-    status = CharField(verbose_name='Статус выполнения заказа', max_length=120)
-    color = CharField(verbose_name='Цвет', max_length=120)
-
-class ItemStatus(models.Model):
-    status = CharField(verbose_name='Статус', max_length=120)
-    color = CharField(verbose_name='Цвет', max_length=120)
-    
-    def __unicode__(self):
-        return self.status
 
 class DiscountGroup(models.Model):
     name = CharField(verbose_name='Название', max_length=120)

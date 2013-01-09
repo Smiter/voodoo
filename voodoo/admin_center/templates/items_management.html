@@ -5,6 +5,8 @@
 
  $(document).ready(function() {
  	
+ 	$("#id_item_code").autocomplete("/admin_center/autocomplete_code/");
+ 	
     $('.edit').editable('/admin_center/item_edit', {
 		indicator : 'Saving...',
 		tooltip   : 'Click to edit...'
@@ -81,7 +83,7 @@ function validateForm(item_id) {
 	<input type="submit" value="Применить фильтр">
 </form>
 {% if results %}
-	<div>Найдены следующие запчасти...</div>
+	<div>{{message}}</div>
 	<table id="table" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 		<thead>
 			<tr class="create-new-order-table-header">
@@ -134,7 +136,7 @@ function validateForm(item_id) {
 					{% if statusList %}
 						<select id="order_item_{{ row.id }}_status">
 							{% for status in statusList %}
-								{% ifequal status.status row.status %}
+								{% ifequal status.status row.status.status %}
 									<option value="{{ status }}" selected="selected">{{ status }}</option>
 								{% else %}
 									<option value="{{ status }}">{{ status }}</option>
@@ -163,7 +165,7 @@ function validateForm(item_id) {
 		$("#table").tablesorter();
 	</script>
 {% else %}
-	Noting to display
+	{{message}}
 {% endif %}
 
 {% endblock %}

@@ -1,5 +1,6 @@
 # encoding: UTF-8
 from datetime import datetime
+import time
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import direct_to_template
 from voodoo.admin_center.models import Menu, Order, Product, Supplier, OrderItem
@@ -54,6 +55,14 @@ def order_create(request):
                 if (code):
                     try:
                         product = Product.objects.get(code=code)
+                        
+                        try:
+                            supplier = Supplier.objects.get(name=request.POST['row%s_supplier' % i])
+                        except Supplier.DoesNotExist:
+                            supplier = None
+                            
+                        supplier = supplier
+                        status = ItemStatus.objects.get(status=status)
                         
                         item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
                                          currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
@@ -113,7 +122,7 @@ def order_edit(request, id):
             order.car_additional_information = request.POST['car_additional_information']
             order.order_info = request.POST['order_info']
             order.order_additional_information = request.POST['order_additional_information']
-            order.order_status = request.POST['order_status']
+            order.status = OrderStatus.objects.get(id=int(request.POST['order_status']))
             
             order.save()
             
@@ -121,13 +130,23 @@ def order_edit(request, id):
             for i in range(1, rowCount + 1):
                 # working only with rows where 'code' is not empty
                 code = request.POST['row%s_code' % i]
+                
                 item = None
                 if (code):
                     try:
-                        item = OrderItem.objects.get(order_id=order.id, code=code)
+                        id = request.POST['row%s_id' % i]
+                        if id != '':
+                            item = OrderItem.objects.get(id=id)
                     except OrderItem.DoesNotExist:
                         message = u"OrderItem с кодом '" + code + u"' не существует";
+                    
+                    try:
+                        supplier = Supplier.objects.get(name=request.POST['row%s_supplier' % i])
+                    except Supplier.DoesNotExist:
+                        supplier = None
                         
+                    status = ItemStatus.objects.get(status=request.POST['row%s_status' % i])
+                    
                     if item is not None:
                         # updating current item
                         item.code = request.POST['row%s_code' % i]
@@ -137,9 +156,9 @@ def order_edit(request, id):
                         item.price_2 = request.POST['row%s_price_2' % i]
                         item.currency = request.POST['row%s_currency' % i]
                         item.count = request.POST['row%s_count' % i]
-                        item.supplier = request.POST['row%s_supplier' % i]
+                        item.supplier = supplier
                         item.delivery_time = request.POST['row%s_delivery_time' % i]
-                        item.status = request.POST['row%s_status' % i]
+                        item.status = status
                         
                         item.save()
                     else:
@@ -151,12 +170,11 @@ def order_edit(request, id):
                         price_2 = request.POST['row%s_price_2' % i]
                         currency = request.POST['row%s_currency' % i]
                         count = request.POST['row%s_count' % i]
-                        supplier = request.POST['row%s_supplier' % i]
                         delivery_time = request.POST['row%s_delivery_time' % i]
-                        status = request.POST['row%s_status' % i]
                         
                         try:
                             product = Product.objects.get(code=code)
+                            status = ItemStatus.objects.get(status=status)
                             
                             item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2,
                                              currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=product)
@@ -275,14 +293,57 @@ def user_management(request):
 @login_required(login_url='/admin_center/login/')
 def items_management(request):
     #TODO
+    #filter
     message = ''
     results = None
     if request.method == 'POST':
         form = ItemsManagementForm(request.POST or None)
         if form.is_valid():
-            # TODO validating
+            order_id = None
+            item_status = None
+            added_after = None
+            added_before = None
+            supplier = None
+            code = None
+            
+            # TODO validating to properly values
+            if request.POST["order_id"] != '' :
+                order_id = int(request.POST["order_id"])
+                
+            if request.POST["item_status"] != '' :
+                item_status = request.POST["item_status"]
+            
+            if request.POST["added_after"] != '' :
+                added_after = datetime.datetime.strptime(request.POST["added_after"] + " 00:00:00", '%d.%m.%Y %H:%M:%S')
+                
+            if request.POST["added_before"] != '' :
+                added_before = datetime.datetime.strptime(request.POST["added_before"] + " 23:59:59", '%d.%m.%Y %H:%M:%S')
+            
+            if request.POST["supplier"] != '' :
+                supplier = request.POST["supplier"]
+                
+            if request.POST["item_code"] != '' :
+                code = request.POST["item_code"]
+                    
+            # Fetching results
             results = OrderItem.objects.all()
-            # TODO rendering items
+            if order_id is not None :
+                results = results.filter(order_id=order_id)
+            if item_status is not None:
+                results = results.filter(status_id=item_status)
+            if added_after is not None:
+                results = results.filter(creation_date__gte=added_after)
+            if added_before is not None:
+                results = results.filter(creation_date__lte=added_before)
+            if supplier is not None:
+                results = results.filter(supplier_id=supplier)
+            if code is not None:
+                results = results.filter(code=code)
+            # message
+            if results:
+                message = 'Найдены следующие запчасти...'
+            else:
+                message = 'Ничего не найдено.'
     else:
         form = ItemsManagementForm()
     return direct_to_template(request, 'items_management.html', {'form': form, 'results': results, 'message': message})
@@ -298,8 +359,6 @@ def getMenuElements():
 @login_required(login_url='/admin_center/login/')
 def beforeImport(supplier):
     products = Product.objects.filter(supplier_id=supplier.id)
-    
-    print products
     
     for product in products:
         product.count = 0;
@@ -379,15 +438,7 @@ def item_ajax_edit(request, id):
     if request.method == 'POST':
         item = OrderItem.objects.get(id = id)
         
-        print request.POST['code']
-        print request.POST['brand']
-        print request.POST['comment']
-        print request.POST['price_1']
-        print request.POST['price_2']
-        print request.POST['currency']
-        print request.POST['count']
-        print request.POST['delivery_time']
-        print request.POST['status']
+        #TODO validation on server side
         
         item.code = request.POST['code']
         item.brand = request.POST['brand']
@@ -397,7 +448,7 @@ def item_ajax_edit(request, id):
         item.currency = request.POST['currency']
         item.count = request.POST['count']
         item.delivery_time = request.POST['delivery_time']
-        item.status = request.POST['status']
+        item.status = ItemStatus.objects.get(status=request.POST['status'])
         
         item.save()
     

@@ -1,11 +1,17 @@
 # encoding: UTF-8
 
 from django import forms
+from django.forms import *
 from voodoo.admin_center.models import *
+from bootstrap_toolkit.widgets import BootstrapDateInput
+from datetime import date, timedelta
+import datetime
 import os.path
 
 class OrderForm(forms.ModelForm):
     required_css_class = 'required'
+    order_status = ModelChoiceField(OrderStatus.objects.all(), label='Статус выполнения заказа', empty_label=None, required=False)
+    
     class Meta:
         model = Order
         widgets = {
@@ -21,6 +27,7 @@ class OrderForm(forms.ModelForm):
             'order_additional_information': forms.Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
                   + 'max-width:400px;min-width:400px'}),
+#            'order_status': forms.ChoiceField(),
             #'car_vin': TextInput(attrs={'size': '17', 'minlength': '17', 'maxlength': '17'}),
 #            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
 #            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
@@ -81,9 +88,13 @@ class UserManagementForm(forms.Form):
 
 class ItemsManagementForm(forms.Form):
     order_id = forms.CharField(label = 'Номер заказа', required=False)
-    item_status = forms.CharField(label = 'Статус запчасти', required=False)
-    added_after = forms.DateField(label='Создан между', required=False)
-    added_before = forms.DateField(label='и', required=False)
+    item_status = forms.ModelChoiceField(label = 'Статус запчасти', queryset=ItemStatus.objects.all(), required=False)
+    added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    
+#    min_date = forms.DateField(label="Дата от ", initial=date.today() - timedelta(days=3), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+#    max_date = forms.DateField(label=" по", initial=datetime.datetime.now(), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
+    
     supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all(), required=False)
     item_code = forms.CharField(label = 'Номер запчасти', required=False)
     expired_items = forms.BooleanField(label = 'Выборка "просроченных" запчастей', required=False)

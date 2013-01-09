@@ -35,7 +35,10 @@
 			newRow.id = 'row_' + rowId;
 			newRow.innerHTML = 	'<td id="row' + rowId + '_number">'+ rowId + '.</td>' + 
 								'<td>&nbsp;</td>' +
-								'<td><input id="row' + rowId + '_code" name="row' + rowId + '_code" type="text" style="width:50px"/></td>' +
+								'<td>' +
+									'<input id="row' + rowId + '_id" name="row' + rowId + '_id" type="hidden"/>' + 
+									'<input id="row' + rowId + '_code" name="row' + rowId + '_code" type="text" style="width:50px"/>' +
+								'</td>' +
 								'<td><input id="row' + rowId + '_brand" name="row' + rowId + '_brand" type="text" style="width:40px"/></td>' +
 								'<td><input id="row' + rowId + '_comment" name="row' + rowId + '_comment" type="text" style="width:70px"/></td>' +
 								'<td><input id="row' + rowId + '_price_1" name="row' + rowId + '_price_1" type="text" style="width:40px" value="0.0" onchange="refreshTotal()"/></td>' +
@@ -132,7 +135,7 @@
 				return false;
 			}
 			
-			if (car_vin != null && car_vin.length != 17) {
+			if (car_vin != '' && car_vin.length != 17) {
 				alert("Поле 'VIN' должно содержать строго 17 символов.");
 				return false;
 			}
@@ -161,6 +164,7 @@
 			{% if order_items %}
 				{% for item in order_items %}
 					addRowIntoTable();
+					document.getElementById("row" + rowId + "_id").value = '{{ item.id }}';
 					document.getElementById("row" + rowId + "_code").value = '{{ item.code }}';
 					document.getElementById("row" + rowId + "_brand").value = '{{ item.brand }}';
 					document.getElementById("row" + rowId + "_comment").value = '{{ item.comment }}';
