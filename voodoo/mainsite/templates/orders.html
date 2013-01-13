@@ -41,14 +41,14 @@
 				  <td>{{ row.count }}</td>
 				  <td>{{ row.total_price }}</td>
 				  <td>{{ row.comment }}</td>
-				  {% if row.status == 'Сообщен' %}
+				  {% if row.status.status == 'Сообщен' %}
 					  <td>Принят</td>
-				  {% elif row.status == 'Оформлен' or row.status == 'Заказан' %}
+				  {% elif row.status.status == 'Оформлен' or row.status.status == 'Заказан' %}
 					  <td>Заказан</td>
-				  {% elif row.status == 'Доставлен' %}
-					  <td style="color:green">{{ row.status }}</td>
-				  {% elif row.status == 'Отказ' %}
-					  <td style="color:red">{{ row.status }}</td>
+				  {% elif row.status.status == 'Доставлен' %}
+					  <td style="color:green">{{ row.status.status }}</td>
+				  {% elif row.status.status == 'Отказ' %}
+					  <td style="color:red">{{ row.status.status }}</td>
 				  {% endif %}
 				</tr>
 		{% endfor %}

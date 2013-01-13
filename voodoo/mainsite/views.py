@@ -14,7 +14,7 @@ from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.db.models.query import QuerySet
 from django.contrib.auth.decorators import login_required
-from voodoo.admin_center.models import Product, OrderItem
+from voodoo.admin_center.models import Product, OrderItem, OrderStatus, ItemStatus
 
 
 class DjangoJSONEncoder(JSONEncoder):
@@ -156,7 +156,7 @@ def vin_request(request):
                 if details_name != "" and details_number != "":
                     details.append(details_name + ', ' + details_number + u' шт.')
             order.order_info = ";".join(details)
-            order.order_status = u'Принят (черный)'
+            order.order_status = OrderStatus.objects.get(status='Принят')
             if not request.user.is_authenticated():
                 order.client_name = u'Не зарегистрирован, ' + request.POST["client_name"]
             order.save()
@@ -174,7 +174,7 @@ def vin_request(request):
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def show_vin(request):
     result = None
     error = ''
@@ -234,9 +234,9 @@ def order_details(request):
     for i in range(len(order_details)):
         order_details[i].count = detail_count_list[i]
         if detail_status_list[i] == 'true':
-            order_details[i].status = u'Оформлен'
+            order_details[i].status = ItemStatus.objects.get(status=u'Оформлен')
         else:
-            order_details[i].status = u'Сообщен'
+            order_details[i].status = ItemStatus.objects.get(status=u'Сообщен')
         order_details[i].save()
     return HttpResponse('')
 
@@ -261,11 +261,11 @@ def orders(request):
                 else:
                     if status == u'Принят':
                         status = u'Сообщен'
-                        result = OrderItem.objects.filter(order__in=orders, status=status)
+                        result = OrderItem.objects.filter(order__in=orders, status=ItemStatus.objects.get(status=status))
                     elif status == u'Заказан':
-                        result = OrderItem.objects.filter(order__in=orders, status__in=[u'Заказан', u'Оформлен'])
+                        result = OrderItem.objects.filter(order__in=orders, status__in=[ItemStatus.objects.get(status=u'Заказан'), ItemStatus.objects.get(status=u'Оформлен')])
                     else:
-                        result = OrderItem.objects.filter(order__in=orders, status=status)
+                        result = OrderItem.objects.filter(order__in=orders, status=ItemStatus.objects.get(status=status))
             if not result:
                 error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
     else:

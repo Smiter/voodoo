@@ -9,6 +9,10 @@
     background: url("/static/images/bg3.jpeg") repeat scroll 0 0 transparent;
     color: #333333;
   }
+
+  a {
+    color: #FF6F6F
+  }
 /*
   html {
     height: 100%;
@@ -125,6 +129,15 @@
     overflow: hidden;
     /*word-wrap: break-word;*/
     float: right;
+  }
+
+  #contacts_list {
+    margin-right: 40px;
+  }
+
+  #contacts_list li{
+    list-style-type: none;
+    margin-bottom: 5px;
   }
   /*#container {
     width: 100%;

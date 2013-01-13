@@ -54,7 +54,6 @@ def make_order(request):
         for item in cart:
             item.user = user
             item.save()
-        # order = Order(user=user, order_status=u'Принят (черный)')
     cart.cart.checked_out = True
     cart.cart.save()
     cart.change_id(request)

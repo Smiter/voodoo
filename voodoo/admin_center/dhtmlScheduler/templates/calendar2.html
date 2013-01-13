@@ -1,7 +1,13 @@
-{% extends 'calendar.html' %}
+{% extends 'calendar_base.html' %}
 
 {% block javascript %}
     {{ block.super }}
+    <script type="text/javascript">
+        $(function(){
+            $('#lift_tabs li:eq(1)').addClass('active');
+            $('#lift_tabs li:eq(0)').removeClass('active');
+        })
+    </script>
 {% endblock %}
 
 {% block onload %}

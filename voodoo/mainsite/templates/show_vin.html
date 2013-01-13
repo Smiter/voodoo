@@ -116,7 +116,7 @@ margin-right: 10px;
 						+'<button class="btn"  id="delete_details">Удалить строку</button>'
 						+'<button class="btn"  id="save_details">Сохранить</button>'
 					)
-					if (msg["vin_request"][0].fields.order_status == 'Обработан (зеленый)'){
+					if (msg["vin_request"][0].fields.order_status == 2){
 						$("#vin_info").append(
 							'<p style="margin-left:200px; margin-top:20px;">Предлагаемые вам запчасти</p>'
 							+ '<table class="table" id="offered_details">'
@@ -137,7 +137,7 @@ margin-right: 10px;
 						)
 						$.each(msg["vin_details"],function(index, value) {
 							var input_checkbox = '<input class="detail_status_checkbox" name="detail_status" type="checkbox">'
-							if (msg["vin_details"][index].fields.status == 'Оформлен'){
+							if (msg["vin_details"][index].fields.status == 2){
 								input_checkbox = '<input class="detail_status_checkbox" name="detail_status" type="checkbox" checked>'
 							}
 							$("#offered_details").append(
@@ -258,7 +258,7 @@ margin-right: 10px;
 			  <td><a class="vin_link" href="{{row.order.id}}">{{ row.order.car_vin }}</a></td>
 			  <td>Не понятно что сюда писать</td>
 			  <td>
-			  	{% if row.order.order_status == 'Принят (черный)' %}
+			  	{% if row.order.order_status.status == 'Принят' %}
 			  		Обрабатывается
 			  	{% else %}
 			  		Обработан

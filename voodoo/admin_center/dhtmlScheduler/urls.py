@@ -3,7 +3,6 @@ from voodoo.admin_center.dhtmlScheduler.models import Event, Event2
 
 
 urlpatterns = patterns('',
-    (r'^$', 'voodoo.admin_center.dhtmlScheduler.views.calendar'),
     ('^calendar1/$', 'voodoo.admin_center.dhtmlScheduler.views.showCalendar', {'template_name': 'calendar1.html'}),
     ('^calendar2/$', 'voodoo.admin_center.dhtmlScheduler.views.showCalendar', {'template_name': 'calendar2.html'}),
     (r'eventsXML1$', 'voodoo.admin_center.dhtmlScheduler.views.eventsXML', {'event_model': Event}),

@@ -111,10 +111,5 @@ def dataprocessor(request, event_model):
                                     mimetype="application/xhtml+xml")
 
 
-def calendar(request):
-    return direct_to_template(request, 'calendar.html')
-#    return render_to_response('calendar.html')
-
-
 def showCalendar(request, template_name):
     return direct_to_template(request, template_name)

@@ -1,5 +1,5 @@
 {% extends 'admin_base.html' %}
-
+{% load bootstrap_toolkit %}
 {% block javascript %}
    	<script src="/static/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/ext/dhtmlxscheduler_active_links.js" type="text/javascript" charset="utf-8"></script>
@@ -59,7 +59,11 @@
 
      //define how text inside event bar looks
      scheduler.templates.event_text=function(start,end,event){
-        return "Описание работы:<b> "+event.work_description+"</b>";
+        return "Описание работы:<b> " 
+        + event.work_description + 
+        "</b>, Клиент: <b>" + event.client_name +
+        "</b>, Цена: <b>" + event.price +
+        "</b>";
      }
      scheduler.templates.event_class=function(start,end,event){
      if (start < (new Date())) //if date in past
@@ -75,7 +79,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="/static/dhtmlxscheduler.css" type="text/css" media="screen" title="no title" charset="utf-8">
-
+    {% bootstrap_stylesheet_tag %}
     <style type="text/css" media="screen">
     	html, body{
     		margin:0px;
@@ -95,6 +99,15 @@
         select {
             width: 78px;
         }
+
+    #lift_tabs {
+        /*display: inline;*/
+        height: 36px;
+    }
+    #lift_tabs li{
+        font-size: 28px;
+        list-style-type: none;
+    }
         /*event in day or week view*/
     	/*.dhx_cal_event.past_event div{*/
     		/*background-color:purple !important;*/
@@ -113,12 +126,11 @@
 
 {% endblock %}
 {% block content %}
-    <div class="bs-docs-example">
-        <ul id="myTab" class="nav nav-tabs">
-          <li><a href="/admin_center/service/calendar1/">Подъемник 1</a></li>
-          <li><a href="/admin_center/service/calendar2/">Подъемник 2</a></li>
-        </ul>
-        {% block calendar_content %}
-        {% endblock %}
-    </div>
+        <div class="bs-docs-example">
+            <ul id="lift_tabs" class="nav-tabs">
+              <li class="active"><a href="/admin_center/service/calendar1/">Подъемник 1</a></li>
+              <li><a href="/admin_center/service/calendar2/">Подъемник 2</a></li>
+            </ul>
+            {% block calendar_content %}{% endblock %}
+        </div>
 {% endblock %}
