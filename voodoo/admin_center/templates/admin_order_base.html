@@ -60,7 +60,7 @@
 									'<select id="row' + rowId + '_supplier" name="row' + rowId + '_supplier" onchange="fillDeliveryTime(this, ' + rowId + ')">' +
 										'<option value="">---------</option>' +
 										'{% for supplier in suppliersList %}' +
-											'<option value="{{ supplier }}">{{ supplier }}</option>' +
+											'<option value="{{ supplier.id }}">{{ supplier.name }}</option>' +
 										'{% endfor %}' +
 									'</select>' +
 									'{% else %}' +
@@ -113,7 +113,7 @@
 			var value = sel.options[sel.selectedIndex].value
 			
 			{% for supplier in suppliersList %}
-				if ('{{ supplier }}' == value) {
+				if ('{{ supplier.id }}' == value) {
 					var delivery_time_element = document.getElementById("row" + row + "_delivery_time");
 					delivery_time_element.value = "{{ supplier.delivery_time }}";
 				}
@@ -172,7 +172,7 @@
 					document.getElementById("row" + rowId + "_price_2").value = '{{ item.price_2 }}';
 					document.getElementById("row" + rowId + "_currency").value = '{{ item.currency }}';
 					document.getElementById("row" + rowId + "_count").value = '{{ item.count }}';
-					document.getElementById("row" + rowId + "_supplier").value = '{{ item.supplier }}';
+					document.getElementById("row" + rowId + "_supplier").value = '{{ item.supplier.id }}';
 					document.getElementById("row" + rowId + "_delivery_time").value = '{{ item.delivery_time }}';
 					document.getElementById("row" + rowId + "_status").value = '{{ item.status }}';
 				{% endfor %}

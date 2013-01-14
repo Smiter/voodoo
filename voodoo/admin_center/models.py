@@ -177,8 +177,8 @@ class OrderItem(models.Model):
     status = models.ForeignKey(ItemStatus)
     cart = models.ForeignKey(Cart, verbose_name='Корзина', blank=True, null=True)
     # quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    object_id = models.PositiveIntegerField(blank=True, null=True)
     objects = ItemManager()
     creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
 
