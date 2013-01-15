@@ -9,7 +9,7 @@ import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
 from decimal import Decimal
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import json
 from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
@@ -27,8 +27,6 @@ def order_create(request):
     message = u''
     if request.method == 'POST':
         form = OrderForm(request.POST or None)
-        # rowCount = int(request.POST['row_count'])
-        # TODO use OrderStatus, ItemStatus, Currency models
 
         if form.is_valid():
             # order_total_price1 = request.POST['total_sum_1']
@@ -42,9 +40,9 @@ def order_create(request):
             # TODO if status is 'Отказ' отправляем письмо на указаный в профиле e-mail(номер заявки, номер запчасти и комментарий)
             # message about saving
             message = u'Заказ создан. ID: %s' % order.id
-            order_items = OrderItem.objects.filter(order_id=order.id)
             
-            return direct_to_template(request, 'order_edit.html', {'form': form, 'message': message, 'order': order, 'order_items': order_items})
+            # TODO forward with message if it possible
+            return HttpResponseRedirect("order_edit/%s/" % order.id)
     else:
         form = OrderForm()
     return direct_to_template(request, 'order_create.html', {'form': form, 'message': message})
