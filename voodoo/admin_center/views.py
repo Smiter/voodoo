@@ -93,7 +93,8 @@ def order_edit(request, id):
 def orders_management(request):
     #TODO
     message = ''
-    results = None
+    # default results
+    results = Order.objects.filter(order_status_id=1)
     if request.method == 'POST':
         form = OrdersManagementForm(request.POST or None)
         if form.is_valid():
