@@ -4,7 +4,7 @@
 		{% for element in menu_elements %}
 			<li><a href="/admin_center/{{element.link}}">{{element.title}}</a></li>
 		{% endfor %}
-		<li><a href="{% url auth_logout %}?next=/admin_center/login">Logout</a></li>
+		<li><a href="{% url auth_logout %}?next=/admin_center/login">Выход</a></li>
 		</ul>
 	{% else %}
 		<p>noting to display</p>
