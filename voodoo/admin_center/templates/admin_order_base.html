@@ -141,8 +141,8 @@
 			}
 			
 			for (var row = 1; row <= rowId; i++) {
-				var price_1 = document.getElementById("row" + row +"_price_1").value;
-				var price_2 = document.getElementById("row" + row +"_price_2").value;
+				var price_1 = parseFloat(document.getElementById("row" + row +"_price_1").value);
+				var price_2 = parseFloat(document.getElementById("row" + row +"_price_2").value);
 				var count = document.getElementById("row" + row +"_count").value;
 				
 				if (price_1 > price_2) {
