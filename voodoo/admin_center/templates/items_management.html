@@ -55,14 +55,16 @@ function editAjax(item_id) {
 }
 
 function deleteAjax(item_id) {
-	$.ajax({
-	    url: "item_delete/"+ item_id +"/",
-	    type: "POST",
-	    success: function() {
-	    	$('#row_id_' + item_id).remove();
-	        alert('Запчасть удалена');
-	    }
-	});
+	if (confirm("Удалить запчасть?")) {
+		$.ajax({
+		    url: "item_delete/"+ item_id +"/",
+		    type: "POST",
+		    success: function() {
+		    	$('#row_id_' + item_id).remove();
+		        alert('Запчасть удалена');
+		    }
+		});
+	}
 }
 
 function validateForm(item_id) {

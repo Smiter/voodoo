@@ -3,14 +3,16 @@
 
 <script type="text/javascript">
 	function deleteAjax(item_id) {
-		$.ajax({
-		    url: "order_delete/"+ item_id +"/",
-		    type: "POST",
-		    success: function() {
-		    	$('#row_id_' + item_id).remove();
-		        alert('Заказ удален');
-		    }
-		});
+		if (confirm("Удалить заказ?")) {
+			$.ajax({
+			    url: "order_delete/"+ item_id +"/",
+			    type: "POST",
+			    success: function() {
+			    	$('#row_id_' + item_id).remove();
+			        alert('Заказ удален');
+			    }
+			});
+		}
 }
 </script>
 {% endblock %}
