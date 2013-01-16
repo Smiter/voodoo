@@ -82,10 +82,18 @@ div {
 	text-align: center;
 }
 
-.create-new-order-table-header {
+.table-header {
 	background-color: #E5E5E5;
 	text-align: center;
 	font-weight: bold;
+}
+
+.table-header th {
+	text-align: center;
+}
+
+.admin-center-table td {
+	vertical-align: middle;
 }
 
 .create-new-order-table-row {

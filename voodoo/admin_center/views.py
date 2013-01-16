@@ -90,6 +90,14 @@ def order_edit(request, id):
     return direct_to_template(request, 'order_edit.html', {'form': form, 'message': message, 'order': order, 'order_items': order_items})
 
 @login_required(login_url='/admin_center/login/')
+def order_delete(request, id):
+    if request.method == 'POST':
+        order = Order.objects.get(id=id)
+        order.delete()
+        
+    return HttpResponse('')
+
+@login_required(login_url='/admin_center/login/')
 def orders_management(request):
     #TODO
     message = ''
@@ -399,8 +407,8 @@ def item_ajax_edit(request, id):
         item.code = request.POST['code']
         item.brand = request.POST['brand']
         item.comment = request.POST['comment']
-        item.price_1 = request.POST['price_1']
-        item.price_2 = request.POST['price_2']
+        item.price_1 = make_decimal_from_string(request.POST['price_1'])
+        item.price_2 = make_decimal_from_string(request.POST['price_2'])
         item.currency = request.POST['currency']
         item.count = request.POST['count']
         item.delivery_time = request.POST['delivery_time']
