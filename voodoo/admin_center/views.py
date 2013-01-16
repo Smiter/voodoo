@@ -419,6 +419,14 @@ def item_ajax_edit(request, id):
     return HttpResponse()
 
 @login_required(login_url='/admin_center/login/')
+def item_delete(request, id):
+    if request.method == 'POST':
+        item = OrderItem.objects.get(id=id)
+        item.delete()
+        
+    return HttpResponse('')
+
+@login_required(login_url='/admin_center/login/')
 def feeds_currency(request):
     response_data = dict()
     currencyList = Currency.objects.all()

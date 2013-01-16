@@ -3,7 +3,6 @@
 
 <script type="text/javascript">
 	function deleteAjax(item_id) {
-		// var row = $(this ~ tr).attr("id");
 		$.ajax({
 		    url: "order_delete/"+ item_id +"/",
 		    type: "POST",
