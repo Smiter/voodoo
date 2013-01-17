@@ -10,21 +10,28 @@
 	    });
 	    
 		var rowId = 0;
+		
 		function convertStringsToTableRows() {
+			// filling ItemTable by each line from order_info
 			var order_info = document.getElementById("id_order_info").value;
-			var order_items = order_info.split(";");
+			var order_items = order_info.split("\n");
 			for (var i = 0; i < order_items.length; i++) {
+				// checking if last row is available for input 
+				if (document.getElementById("row" + rowId + "_code").value != '') {
+					addRowIntoTable();
+				}
 				var order_item = order_items[i];
-				var comment = order_item.split(",")[0];
-				var count = order_item.split(",")[1].split(" ")[1];
+				var comment = '';				var splited_string = order_item.split(" ");
+				// all strings except after last 'space' going to fill code and comment 
+				for (var j = 0; j < splited_string.length - 1; j++) {
+					comment = comment + splited_string[j];
+				}
+				// last string going to fill count
+				var count = splited_string[splited_string.length - 1];
 				
 			    document.getElementById("row" + rowId + "_code").value = comment;
 			    document.getElementById("row" + rowId + "_comment").value = comment;
 			    document.getElementById("row" + rowId + "_count").value = count;
-			    
-			    if (i + 1 < order_items.length) {
-			    	addRowIntoTable();
-			    }
 			}
 		}
 		
