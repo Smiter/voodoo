@@ -154,8 +154,8 @@ def vin_request(request):
                 details_name = request.POST.getlist("details_name")[i]
                 details_number = request.POST.getlist("details_number")[i]
                 if details_name != "" and details_number != "":
-                    details.append(details_name + ', ' + details_number + u' шт.')
-            order.order_info = ";".join(details)
+                    details.append(details_name + ' ' + details_number)
+            order.order_info = "\n".join(details)
             order.order_status = OrderStatus.objects.get(status='Принят')
             if not request.user.is_authenticated():
                 order.client_name = u'Не зарегистрирован, ' + request.POST["client_name"]
@@ -216,12 +216,12 @@ def save_del_details(request):
             name = request.POST.getlist("details_name[]")[i]
             number = request.POST.getlist("details_number[]")[i]
             if i < len(vin_details):
-                vin_details[i] = name + ", " + number + u" шт."
+                vin_details[i] = name + " " + number + "\n"
             else:
-                vin_details.append(name + ", " + number + u" шт.")
+                vin_details.append(name + " " + number + "\n")
         for i in range(len(request.POST.getlist("details_name[]")), len(vin_details)):
             del vin_details[i]
-        vin_request.order_info = ";".join(vin_details)
+        vin_request.order_info = " ".join(vin_details)
         vin_request.save()
     return HttpResponse('')
 
@@ -279,4 +279,13 @@ def catalog(request):
 
 def search_product(request):
     print "SEARCH"
-    return render_to_response('search.html',  dict(result=Product.objects.filter(code__contains=request.GET['detail_id']), detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))
+    detail_code = request.GET['detail_id']
+    profile = Profile.objects.get(user=request.user)
+    if detail_code == "":
+        result = None
+    else:
+        result = Product.objects.filter(code__contains=detail_code)
+        for product in result:
+            product.price = float(product.price) - float(product.price) / 100 * float(profile.discount_group.discount)
+    discount = float(Profile.objects.get(user=request.user).discount_group.discount)
+    return render_to_response('search.html',  dict(result=result, discount= discount, detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))

@@ -3,6 +3,7 @@
 import datetime
 from voodoo.admin_center.models import OrderItem, ItemStatus
 import models
+from voodoo.mainsite.models import Profile
 
 CART_ID = 'CART-ID'
 
@@ -26,6 +27,7 @@ class Cart:
         else:
             cart = self.new(request)
         self.cart = cart
+        self.profile = Profile.objects.get(user=request.user)
 
     def __iter__(self):
         for item in self.cart.orderitem_set.all():
@@ -55,7 +57,7 @@ class Cart:
             item.code = product.code
             item.brand = product.brand
             item.price_1 = product.price
-            item.price_2 = product.price
+            item.price_2 = float(product.price) - float(product.price) / 100 * float(self.profile.discount_group.discount)
             item.supplier = product.supplier
             item.count = quantity
             item.status = ItemStatus.objects.get(status=u'Сообщен')
@@ -81,7 +83,7 @@ class Cart:
                 cart=self.cart,
                 product=product,
             )
-            item.price_2 = product.price
+            item.price_2 = float(product.price) - float(product.price) / 100 * float(self.profile.discount_group.discount)
             item.count = quantity
             item.save()
         except OrderItem.DoesNotExist:

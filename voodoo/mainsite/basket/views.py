@@ -45,7 +45,8 @@ def make_order(request):
     order = None
     if not user.is_authenticated():
         order = Order(client_name=u'Не зарегистрирован, ' + request.POST["name"], client_phone=request.POST["phone"], order_status=OrderStatus.objects.get(status='Принят'))
-        order.order_info = ";".join([item.product.brand + ", " + str(item.count) + u" шт." for item in cart])
+        order.order_info = "\n".join([item.product.brand + " " + str(item.count) for item in cart])
+        print order.order_info
         order.save()
         for item in cart:
             item.order = order
