@@ -27,7 +27,8 @@ class Cart:
         else:
             cart = self.new(request)
         self.cart = cart
-        self.profile = Profile.objects.get(user=request.user)
+        if request.user.is_authenticated():
+            self.profile = Profile.objects.get(user=request.user)
 
     def __iter__(self):
         for item in self.cart.orderitem_set.all():
