@@ -28,8 +28,11 @@ class Cart:
             cart = self.new(request)
         self.cart = cart
         if request.user.is_authenticated():
-            self.profile = Profile.objects.filter(user=request.user)
-
+            try:
+                self.profile = Profile.objects.get(user=request.user)
+            except models.Profile.DoesNotExist:
+                self.profile = None
+            
     def __iter__(self):
         for item in self.cart.orderitem_set.all():
             yield item
