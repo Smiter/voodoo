@@ -22,12 +22,18 @@
 				}
 				var order_item = order_items[i];
 				var comment = '';				var splited_string = order_item.split(" ");
-				// all strings except after last 'space' going to fill code and comment 
-				for (var j = 0; j < splited_string.length - 1; j++) {
-					comment = comment + splited_string[j];
+				var count = parseInt(splited_string[splited_string.length - 1]);
+				
+				// is there is number at the end of the string
+				if (isNaN(count)) {
+					comment = order_item;
+					count = 1;
+				} else {
+					// all strings except last(number) going to fill code and comment 
+					for (var j = 0; j < splited_string.length - 1; j++) {
+						comment = comment + splited_string[j];
+					}
 				}
-				// last string going to fill count
-				var count = splited_string[splited_string.length - 1];
 				
 			    document.getElementById("row" + rowId + "_code").value = comment;
 			    document.getElementById("row" + rowId + "_comment").value = comment;
