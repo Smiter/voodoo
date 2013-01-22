@@ -2,11 +2,14 @@
 {% block javascript %}
 
 <script type="text/javascript">
+$(function() {
+    $("#id_added_after").datepicker({dateFormat: 'dd.mm.yy'});
+    $("#id_added_before").datepicker({dateFormat: 'dd.mm.yy'});
+});
+    
+$(document).ready(function() {
+	$("#id_item_code").autocomplete("/admin_center/autocomplete_code/");
 
- $(document).ready(function() {
- 	
- 	$("#id_item_code").autocomplete("/admin_center/autocomplete_code/");
- 	
     $('.edit').editable('/admin_center/item_edit', {
 		indicator : 'Saving...',
 		tooltip   : 'Click to edit...'
@@ -61,7 +64,6 @@ function deleteAjax(item_id) {
 		    type: "POST",
 		    success: function() {
 		    	$('#row_id_' + item_id).remove();
-		        alert('Запчасть удалена');
 		    }
 		});
 	}
