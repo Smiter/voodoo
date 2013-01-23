@@ -3,7 +3,6 @@
 from django import forms
 from django.forms import *
 from voodoo.admin_center.models import *
-from bootstrap_toolkit.widgets import BootstrapDateInput
 from datetime import date, timedelta
 import datetime
 import os.path
@@ -44,7 +43,7 @@ class OrdersManagementForm(forms.Form):
     order_filter_text = forms.CharField(label='Искать текст', required=False)
     order_filter_order_part = forms.CharField(label='в инфе о', required=False)
 
-IMPORT_FILE_TYPES = ['.xls', ]
+IMPORT_FILE_TYPES = ['.xls', '.xlsx',]
 
 class XlsImportForm(forms.Form):
     required_css_class = 'required'
@@ -81,9 +80,6 @@ class ItemsManagementForm(forms.Form):
     item_status = forms.ModelChoiceField(label = 'Статус запчасти', queryset=ItemStatus.objects.all(), required=False)
     added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
-    
-#    min_date = forms.DateField(label="Дата от ", initial=date.today() - timedelta(days=3), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
-#    max_date = forms.DateField(label=" по", initial=datetime.datetime.now(), widget=BootstrapDateInput(attrs={'style': 'width:80px'}))
     
     supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all(), required=False)
     item_code = forms.CharField(label = 'Номер запчасти', required=False)
