@@ -1,11 +1,30 @@
 {% extends 'admin_base.html' %}
 {% block content %}
-<h3>Index Page</h3></br>
+<h3>Операционный центр</h3></br>
 
-This page is under development.
+Добро пожаловать, {{ user }}. </br>
 </br>
-Information about current user:
-{{ user }}
-</br>
-
+Ваши группы и права доступа:
+{% if user.groups.all %}
+	<ul>
+	{% for g in user.groups.all %}
+	    <li>{{ g.name }}</li>
+    	{% if g.permissions.all %}
+	    	<ul>
+	    	{% for p in g.permissions.all %}
+	    		<li>{{ p.name }}</li>
+	    	{% endfor%}
+	    	</ul>
+	    {% endif %}
+	{% endfor %}
+	</ul>
+{% endif %}
+{% if user.user_permissions.all %}
+	Ваши специальные права доступа:
+	<ul>
+	{% for p in user.user_permissions.all %}
+	    <li>{{ p }}</li>
+	{% endfor %}
+	</ul>
+{% endif %}
 {% endblock %}

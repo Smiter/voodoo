@@ -28,14 +28,7 @@ class Menu(models.Model):
 
     def __unicode__(self):
         return self.name
-    
-# TODO list of permissions
-#    class Meta:
-#        permissions = (
-#            ("view_task", "Can see available tasks"),
-#            ("change_task_status", "Can change the status of tasks"),
-#            ("close_task", "Can remove a task by setting its status as closed"),
-#        )
+        
 #user.has_perm('app.view_task')
 
 CAR_BODIES = (
@@ -102,7 +95,6 @@ class Order(models.Model):
     def __unicode__(self):
         return str(self.id)
 
-
 class Supplier(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     time_out = IntegerField(verbose_name='Часов до просрочки', max_length=20)
@@ -110,16 +102,6 @@ class Supplier(models.Model):
     transporter = CharField(verbose_name='Перевозчик', max_length=120, blank=True, null=True)
     contact_information = CharField(verbose_name='Контактная информация', max_length=500, blank=True, null=True)
     time_closing_order = TimeField(verbose_name='Время закрытия заказа', max_length=20)
-
-    def getProducts(self):
-        print None
-
-    def isProductExists(self):
-        print None
-
-    #TODO Extract this methods into ProductManager class?
-    def getAllSuppliersByProduct(self):
-        print None
 
     def __unicode__(self):
         return self.name
