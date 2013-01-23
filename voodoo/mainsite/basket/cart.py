@@ -30,7 +30,7 @@ class Cart:
         if request.user.is_authenticated():
             try:
                 self.profile = Profile.objects.get(user=request.user)
-            except models.Profile.DoesNotExist:
+            except Profile.DoesNotExist:
                 self.profile = None
             
     def __iter__(self):

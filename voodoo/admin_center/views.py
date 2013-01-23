@@ -1,7 +1,7 @@
 # encoding: UTF-8
 from datetime import datetime
 import time
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.simple import direct_to_template
 from voodoo.admin_center.models import Menu, Order, Product, Supplier, OrderItem
 from voodoo.admin_center.forms import *
@@ -15,14 +15,18 @@ from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
 #from django.db import models
 
+def user_check(user):
+    return user.is_staff
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def admin_center(request):
     #TODO add checking for super user
     return direct_to_template(request, 'admin_center.html', {})
 
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def order_create(request):
     message = u''
     if request.method == 'POST':
@@ -48,6 +52,7 @@ def order_create(request):
     return direct_to_template(request, 'order_create.html', {'form': form, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def order_edit(request, id):
     message =''
     if request.method == 'POST':
@@ -90,6 +95,7 @@ def order_edit(request, id):
     return direct_to_template(request, 'order_edit.html', {'form': form, 'message': message, 'order': order, 'order_items': order_items})
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def order_delete(request, id):
     if request.method == 'POST':
         order = Order.objects.get(id=id)
@@ -98,6 +104,7 @@ def order_delete(request, id):
     return HttpResponse('')
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def orders_management(request):
     #TODO
     message = ''
@@ -150,12 +157,14 @@ def orders_management(request):
     return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def orders_import(request):
     results = OrderItem.objects.filter(order=None, cart__checked_out=True)
     return direct_to_template(request, 'orders_import.html', {'results': results})
 
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def orders_import_submit(request):
     detail_checkboxes = request.POST.getlist("detail_checkboxes[]")
     results = OrderItem.objects.filter(order=None, cart__checked_out=True)
@@ -178,6 +187,7 @@ def orders_import_submit(request):
 
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def xls_import(request):
     message = ''
     if request.method == 'POST':
@@ -242,6 +252,7 @@ def xls_import(request):
 # TODO use permission system
 #@permission_required('polls.can_vote', login_url='/admin_center/login/')
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def user_management(request):
     message = ''
     
@@ -256,6 +267,7 @@ def user_management(request):
     return direct_to_template(request, 'user_management.html', {'form': form, 'message': message, 'results': results})
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def items_management(request):
     #TODO
     #filter
@@ -314,6 +326,7 @@ def items_management(request):
     return direct_to_template(request, 'items_management.html', {'form': form, 'results': results, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())
     for element in menu_elements:
@@ -329,6 +342,7 @@ def beforeImport(supplier):
         product.save()
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def autocomplete_client_phone(request):
     if request.method == 'GET':
         GET = request.GET
@@ -341,6 +355,7 @@ def autocomplete_client_phone(request):
             return HttpResponse(matches, mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def autocomplete_code(request):
     if request.method == 'GET':
         GET = request.GET
@@ -353,6 +368,7 @@ def autocomplete_code(request):
             return HttpResponse(matches, mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def autocomplete_brand(request):
     if request.method == 'GET':
         GET = request.GET
@@ -365,6 +381,7 @@ def autocomplete_brand(request):
             return HttpResponse(matches, mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def item_edit(request):
     if request.method == 'POST':
         post_id = request.POST['id']
@@ -398,6 +415,7 @@ def item_edit(request):
     return HttpResponse({post_value})
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def item_ajax_edit(request, id):
     if request.method == 'POST':
         item = OrderItem.objects.get(id = id)
@@ -419,6 +437,7 @@ def item_ajax_edit(request, id):
     return HttpResponse()
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def item_delete(request, id):
     if request.method == 'POST':
         item = OrderItem.objects.get(id=id)
@@ -427,6 +446,7 @@ def item_delete(request, id):
     return HttpResponse('')
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def feeds_currency(request):
     response_data = dict()
     currencyList = Currency.objects.all()
@@ -437,6 +457,7 @@ def feeds_currency(request):
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
 @login_required(login_url='/admin_center/login/')
+@user_passes_test(user_check)
 def feeds_status(request):
     response_data = dict()
     statusList = ItemStatus.objects.all()
