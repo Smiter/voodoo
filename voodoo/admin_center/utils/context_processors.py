@@ -4,7 +4,7 @@ from voodoo.admin_center.models import *
 def global_vars(request):
     return {
         'menu_elements': getMenuElements(),
-        'suppliersList': Supplier.objects.all(),
+        'suppliersList': Supplier.objects.all().order_by('name'),
         'currencyList': Currency.objects.all(),
         'statusList': ItemStatus.objects.all(),
     }
