@@ -10,10 +10,10 @@
 <pre>Здесь Вы можете просмотреть статистику сделанных оплат и баланс денег на счете, выбрав нужный период по датам.</pre>
 {% load bootstrap_toolkit %}
 {{ form.media }}
-<form class="form-inline frame-pre" action="/prepays/" method="post">
+<form class="form-inline frame-pre center_elements" action="/prepays/" method="post">
              {{ form|as_bootstrap:"inline" }}
-    <div class="actions">
-        <button style="margin: 10px 0 10px 240px;" type="submit" class="btn btn-primary">Применить</button>
+    <div style="margin: 10px auto 0px auto;" class="actions center_elements">
+        <button  type="submit" class="btn btn-primary">Применить</button>
     </div>
 </form>
 

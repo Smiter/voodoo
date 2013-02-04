@@ -232,10 +232,10 @@ margin-right: 10px;
 <pre>Здесь Вы можете просмотреть статистику сделанных подборов, выбрав нужный период по датам.</pre>
 {% load bootstrap_toolkit %}
 {{ form.media }}
-<form class="form-inline frame-pre" action="/show_vin/" method="post">
+<form class="form-inline frame-pre center_elements" action="/show_vin/" method="post">
              {{ form|as_bootstrap:"inline" }}
-    <div class="actions">
-        <button style="margin: 10px 0 10px 240px;" type="submit" class="btn btn-primary">Применить</button>
+    <div style="margin: 10px auto 0px auto;" class="actions center_elements">
+        <button type="submit" class="btn btn-primary">Применить</button>
     </div>
 </form>
 {% if result %}

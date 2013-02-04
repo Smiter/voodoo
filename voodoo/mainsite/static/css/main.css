@@ -40,7 +40,10 @@
   .float-right /* Or whatever name you like */ {
       float: right;
   }
-
+  .center_elements {
+      margin: 0px auto 0px auto;
+      text-align: center;
+  }
 /*  .hide {
       display: none;
   }
@@ -81,7 +84,9 @@
 
   #wrap {
     height: 100%;
-    width: 1024px;
+    /*width: 1024px;*/
+    width: 95%;
+    min-width: 1024px;
     margin: 0 auto;
   }
 
@@ -107,7 +112,7 @@
     overflow: hidden;
   }
   #header #middle #search{
-    float: left;
+    /*float: left;*/
     overflow: hidden;
     padding: 30px 20px 20px 20px;
   }
@@ -125,7 +130,7 @@
   }
   #header #right  {
     /*height: 100px;*/
-    width: 300px;
+    width: 200px;
     overflow: hidden;
     /*word-wrap: break-word;*/
     float: right;
