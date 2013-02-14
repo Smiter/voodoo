@@ -9,7 +9,7 @@ from voodoo.admin_center.forms import *
 import xlrd
 from django.contrib.auth.models import User
 from voodoo.mainsite.models import Profile
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from django.http import HttpResponse, HttpResponseRedirect
 import json
 from django.core.serializers import serialize
@@ -184,6 +184,50 @@ def orders_import_submit(request):
     return HttpResponse('')
 
 
+def readBrandFromRow(column_brand, row):
+    result = row[column_brand]
+    if type(result) is str:
+        result.strip()
+    return result
+
+def readDescriptionFromRow(column_description, row):
+    result = ''
+    if column_description != None:
+        result = row[column_description]
+        if type(result) is str:
+            result.strip()
+    return result
+
+def readCountFromRow(column_count, row):
+    result = 1
+    parsed_value = row[column_count]
+    
+    if type(parsed_value) is float:
+        result = parsed_value
+    else:
+        if type(parsed_value) is str:
+            try:
+                count_string = row[column_count].strip().replace('<','').replace('>','')
+                result = int(count_string)
+            except ValueError:
+                print "Can't cast" + row[column_count] + "to integer. Default value will be used."
+    return result
+
+def readPriceFromRow(column_price, row):
+    result = 0
+    
+    try:
+        result = Decimal(row[column_price])
+    except InvalidOperation:
+        print "Can't cast" + row[column_price] + "to Decimal. Default value will be used."
+    return result
+
+def readCodeFromRow(column_number, row):
+    result = row[column_number]
+    if type(result) is str:
+        result.replace(' ','').replace('-','')
+    return result
+
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def xls_import(request):
@@ -204,8 +248,10 @@ def xls_import(request):
             column_count = int(request.POST['column_count']) - 1
             column_price = int(request.POST['column_price']) - 1
             start_row = int(request.POST['start_row']) - 1
+            
             # column_description optional
-            if request.POST['column_description'] is not None:
+            column_description = None;
+            if request.POST['column_description'] != '':
                 column_description = int(request.POST['column_description']) - 1
             
             currency = Currency.objects.get(id=int(request.POST['currency']))
@@ -222,23 +268,25 @@ def xls_import(request):
                 if len(products) > 0:
                     product = products[0]
                     # updating model
-                    product.brand = brand=row[column_brand]
-                    product.description = row[column_description]
-                    product.count = int(row[column_count])
-                    product.price = Decimal(row[column_price])
+                    product.brand = readBrandFromRow(column_brand, row)
+                    product.description = readDescriptionFromRow(column_description, row)
+                    product.count = readCountFromRow(column_count, row)
+                    product.price = readPriceFromRow(column_price, row)
                     
                     rows_updated += 1
                 else:
-                    # creating Model
-                    product = Product(code=row[column_number], brand=row[column_brand],
-                                      description=row[column_description], count=int(row[column_count]),
-                                      price=Decimal(row[column_price]))           
-                    
-                    product.supplier = supplier
-                    product.currency = currency
-                    product.save()
-                    
-                    rows_added += 1
+                    parsed_code = readCodeFromRow(column_number, row)
+                    if parsed_code != '':
+                        # creating Model
+                        product = Product(code=parsed_code, brand=readBrandFromRow(column_brand, row),
+                                          description=readDescriptionFromRow(column_description, row), count=readCountFromRow(column_count, row),
+                                          price=readPriceFromRow(column_price, row))           
+                        
+                        product.supplier = supplier
+                        product.currency = currency
+                        product.save()
+                        
+                        rows_added += 1
             # message
             message = u"Файл %s успешно импортирован. %s записей добавлено. %s записей обновлено." % (file_name, rows_added, rows_updated)
             # cleaning form
