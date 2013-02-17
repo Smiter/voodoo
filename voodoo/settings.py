@@ -173,14 +173,8 @@ INSTALLED_APPS = (
     'registration',
     'bootstrap_toolkit',
     'captcha',
-    'admin_tools',
-    'admin_tools.theming',
-    'admin_tools.menu',
-    'admin_tools.dashboard',
-    'russian_admin',
     'pymorphy',
     'django.contrib.admin',
-    'voodoo.custom_admin',
     'voodoo.admin_center.dhtmlScheduler',
     'xlrd',
     # Uncomment the next line to enable admin documentation:
@@ -188,7 +182,8 @@ INSTALLED_APPS = (
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
-#LOGIN_REDIRECT_URL='/index/'
+# LOGIN_REDIRECT_URL='/index/'
+# LOGIN_URL='/admin_center/login/'
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

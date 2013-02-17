@@ -125,9 +125,6 @@
     overflow: hidden;
     padding: 10px 0 0 0px;
   }
-  #header #middle #search #search_submit{
-    width: 50px;
-  }
   #header #right  {
     /*height: 100px;*/
     width: 200px;

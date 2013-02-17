@@ -14,6 +14,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 import json
 from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
+from django.http import Http404
+from django.forms.models import modelform_factory
+from django.db.models.loading import get_model
 #from django.db import models
 
 @login_required(login_url='/admin_center/login/')
@@ -566,3 +569,56 @@ def saveItemsForOrder(request, order):
                 item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2, 
                     currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=None)
                 item.save()
+
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def suppliers_list(request):
+    results = Supplier.objects.all()
+    return direct_to_template(request, 'suppliers_list.html', {'results': results})
+
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def delete_model(request, modelname, id):
+    if request.method == 'POST':
+        Model = get_model('admin_center', modelname)
+        if not Model:
+            Model = get_model('mainsite', modelname)
+        if not Model:
+            raise Http404
+        model = Model.objects.get(id=id)
+        model.delete()
+    return HttpResponse('')
+
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def edit_model(request, modelname, id):
+    Model = get_model('admin_center', modelname)
+    if not Model:
+        Model = get_model('mainsite', modelname)
+        if not Model:
+            raise Http404
+    if id == "add":
+        model = Model()
+        title = 'Добавить: ' + model._meta.verbose_name
+    else:
+        try:
+            model = Model.objects.get(id=id)
+        except Model.DoesNotExist:
+            raise Http404
+        title = 'Редактировать: ' + model._meta.verbose_name
+    Form = modelform_factory(Model)
+    if request.method == 'POST':
+        form = Form(request.POST, instance=model)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(request.session['return_url'])
+    else:
+        request.session['return_url'] = request.GET['return_url']
+        form = Form(instance=model)
+
+    form.required_css_class = 'required'
+    return direct_to_template(request, 'edit_model.html', {'form': form, 'id': id, 'title': title, 'modelname': modelname})
+

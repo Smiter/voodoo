@@ -1,0 +1,41 @@
+{% extends 'admin_base.html' %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+{% block content %}
+<h3>Группы скидок</h3>
+<input type="button" value="Добавить группу скидок" onclick="window.location = 'edit/discountgroup/add/?return_url={{ request.path }}';">
+{% if results %}
+        <table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Описание</th>
+                <th>Скидка в процентах</th>
+                <th>Действия</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr id="row_id_{{ row.id }}"> 
+                <td>{{ forloop.counter }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.discount }}</td>
+                <td>
+                    <div style="text-align: center" >
+                        <input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = 'edit/discountgroup/{{ row.id }}?return_url={{ request.path }}';">
+                        <input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteAjax({{ row.id }},'discountgroup'); return false;">
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    Таблица пустая
+{% endif %}
+{% endblock %}

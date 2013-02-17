@@ -1,10 +1,8 @@
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
-# from django.contrib import admin
-from russian_admin import admin
+from django.contrib import admin
 from voodoo.mainsite.models import MyRegistrationProfile, Profile, Prepays, OrderDispatch, Sendings
 from django.utils.translation import ugettext_lazy as _
-# from voodoo.admin_center.models import Product, OrderItem
 import voodoo
 
 

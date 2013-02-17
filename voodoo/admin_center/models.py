@@ -106,6 +106,10 @@ class Supplier(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Поставщик"
+        ordering = ['name']
+
 class Currency(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
     code = CharField(verbose_name='Код', max_length=120)
@@ -184,7 +188,10 @@ class OrderItem(models.Model):
 
 class DiscountGroup(models.Model):
     name = CharField(verbose_name='Название', max_length=120)
-    discount = DecimalField(verbose_name='Скидка в %', max_length=120, max_digits=20, decimal_places=1)
+    discount = DecimalField(verbose_name='Скидка в %', max_length=15, max_digits=4, decimal_places=1)
     
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Группа скидок"

@@ -64,24 +64,49 @@ class XlsImportForm(forms.Form):
         extension = os.path.splitext(file.name)[1]
         
         if not (extension in IMPORT_FILE_TYPES):
-            raise forms.ValidationError( u'%s не валидный xls файл.' % extension )
+            raise forms.ValidationError(u'%s не валидный xls файл.' % extension)
         else:
             return file
+
+
+ORDER_CHOICES = (
+            (u'Все', u'Все'),
+            (u'Принят', u'Принят'),
+            (u'Заказан', u'Заказан'),
+            (u'Доставлен', u'Доставлен'),
+            (u'Отказ', u'Отказ'),
+)
+
+ROLE_CHOICES = (
+  ('Accountants', 'Accountants'),
+  ('Clients', 'Clients'),
+  ('Managers', 'Managers'),
+  ('Super Managers', 'Super Managers'),
+  ('Workers', 'Workers'),
+)
+
+
 class UserManagementForm(forms.Form):
     required_css_class = 'required'
-    id = forms.CharField(label = 'id', required=False)
-    login = forms.CharField(label = 'login', required=False)
-    name = forms.CharField(label = 'name', required=False)
-    phone = forms.CharField(label = 'phone', required=False)
-    role = forms.CharField(label = 'role', required=False)
+    # id = forms.CharField(label='id', required=False)
+    login = forms.CharField(label='login', required=False)
+    name = forms.CharField(label='name', required=False)
+    phone = forms.CharField(label='phone', required=False)
+    role = ChoiceField(
+        label="Роль",
+        widget=Select(attrs={'style': 'width:100px'}),
+        choices=ROLE_CHOICES,
+        initial='1', required=False)
+
 
 class ItemsManagementForm(forms.Form):
-    order_id = forms.CharField(label = 'Номер заказа', required=False)
-    item_status = forms.ModelChoiceField(label = 'Статус запчасти', queryset=ItemStatus.objects.all(), required=False)
-    added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
-    added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    order_id = forms.CharField(label='Номер заказа', required=False)
+    item_status = forms.ModelChoiceField(label='Статус запчасти', queryset=ItemStatus.objects.all(), required=False)
+    added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     
     supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all(), required=False)
-    item_code = forms.CharField(label = 'Номер запчасти', required=False)
-    expired_items = forms.BooleanField(label = 'Выборка "просроченных" запчастей', required=False)
+    item_code = forms.CharField(label='Номер запчасти', required=False)
+    expired_items = forms.BooleanField(label='Выборка "просроченных" запчастей', required=False)
     expired_date = forms.DateField(label='по дату', required=False)
+

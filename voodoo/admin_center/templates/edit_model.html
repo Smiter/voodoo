@@ -1,0 +1,17 @@
+{% extends 'admin_base.html' %}
+{% load admin_center_extras %}
+{% block javascript %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+{% block content %}
+
+<h3>{{title}}</h3>
+<form method="POST" action="/admin_center/edit/{{modelname}}/{{id}}/">
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Сохранить">
+</form>
+{% endblock %}

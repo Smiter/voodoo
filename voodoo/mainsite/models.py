@@ -84,7 +84,7 @@ class Profile(models.Model):
     carrier_default = models.CharField(verbose_name='Перевозчик по умолчанию', choices=CARRIER_CHOICES, max_length=120, blank=True, null=True)
     carrier_select = models.CharField(max_length=120, blank=True, null=True)
     font_color = models.CharField(max_length=120, blank=True, null=True)
-    discount_group = models.ForeignKey(DiscountGroup, blank=True, null=True)
+    discount_group = models.ForeignKey(DiscountGroup, default=1, blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % self.user
@@ -92,6 +92,7 @@ class Profile(models.Model):
     class Meta:
         verbose_name = "User profile"
         verbose_name_plural = "User profiles"
+        ordering = ['phone']
 
 
 class Prepays(models.Model):

@@ -48,7 +48,7 @@ def login(request):
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def notice_of_payment(request):
     success = False
     if request.method == 'POST':
@@ -66,7 +66,7 @@ def notice_of_payment(request):
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def order_dispatch(request):
     success = False
     profile = None
@@ -90,7 +90,7 @@ def order_dispatch(request):
                                {'form': form, 'success': success}, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def sendings(request):
     result = None
     error = ''
@@ -112,7 +112,7 @@ def sendings(request):
     return render_to_response('sendings.html', {'form': form, 'layout': "inline", 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def prepays(request):
     result = None
     error = ''
@@ -196,7 +196,7 @@ def show_vin(request):
     return render_to_response('show_vin.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def get_vin_by_id(request):
     print "get_vin_by_id"
     order = Order.objects.filter(id=request.POST["vin_id"])
@@ -206,7 +206,7 @@ def get_vin_by_id(request):
     return HttpResponse(output, mimetype="application/json")
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def save_del_details(request):
     if request.method == 'POST':
         vin_request = Order.objects.filter(user=request.user, id=request.POST["vin_id"])[0]
@@ -241,7 +241,7 @@ def order_details(request):
     return HttpResponse('')
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/')
 def orders(request):
     result = None
     error = ''
@@ -273,10 +273,6 @@ def orders(request):
     return render_to_response('orders.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
 
 
-def catalog(request):
-    return render_to_response('catalog.html',  dict(products=Product.objects.all()), context_instance=RequestContext(request))
-
-
 def search_product(request):
     print "SEARCH"
     detail_code = request.GET['detail_id']
@@ -284,8 +280,7 @@ def search_product(request):
     if detail_code == "":
         result = None
     else:
-        result = Product.objects.filter(code__contains=detail_code)
+        result = Product.objects.filter(code__contains=detail_code.replace('-', '').replace(' ', ''))
         for product in result:
             product.price = float(product.price) - float(product.price) / 100 * float(profile.discount_group.discount)
-    discount = float(Profile.objects.get(user=request.user).discount_group.discount)
-    return render_to_response('search.html',  dict(result=result, discount= discount, detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))
+    return render_to_response('search.html',  dict(result=result, detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))
