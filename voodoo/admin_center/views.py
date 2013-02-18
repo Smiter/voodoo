@@ -111,6 +111,8 @@ def orders_management(request):
     message = ''
     # default results
     results = Order.objects.filter(order_status_id=1)
+    if len(results) == 0:
+        message = u'Ничего не найдено.'
     if request.method == 'POST':
         form = OrdersManagementForm(request.POST or None)
         if form.is_valid():
@@ -321,7 +323,10 @@ def items_management(request):
     #TODO
     #filter
     message = ''
-    results = None
+    # default results
+    results = OrderItem.objects.filter(status_id=2)
+    if len(results) == 0:
+        message = u'Ничего не найдено.'
     if request.method == 'POST':
         form = ItemsManagementForm(request.POST or None)
         if form.is_valid():

@@ -4,7 +4,8 @@ div {
 
 #wraper {
 	height: 100%;
-	width: 1150px;
+	width: 100%;
+	min-width: 1700px;
 	margin: 0 auto;
 }
  
@@ -34,7 +35,8 @@ div {
  }
  
  .admin-content {
- 	width: 910px;
+ 	width: 100% - 200px;
+ 	min-width: 1460px;
  	min-height: 600px;
  	margin: 0 0 0 200px;
  	padding: 20px 20px 20px 20px;
@@ -123,4 +125,13 @@ div {
 
 .highlightable:hover {
 	background-color: #ECECEC;
+}
+
+#order_details td, #items_management td {
+	padding: 5px 10px 5px 5px;
+}
+
+#order_details input, #items_management input {
+	padding: 0px;
+	height: 20px;
 }

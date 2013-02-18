@@ -34,7 +34,7 @@
 	<table class="admin-center-table" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 		<thead>
 			<tr class="table-header">
-				<th>#</th>
+				<th style="width: 50px;">#</th>
 				<th style="width: 110px;">Дата создания</th>
 				<th style="width: 150px;">Заказчик</th>
 				<th>Информация о заказе</th>
@@ -46,14 +46,14 @@
 			{% for row in results %}
 			<tr id="row_id_{{ row.id }}">
 				<td style="text-align: center;">{{ row.id }}</td>
-				<td style="text-align: center;">{{ row.creation_date|date:"d.m.Y f" }}</td>
+				<td style="text-align: center;">{{ row.creation_date|date:"d.m.y" }}</td>
 				{% if row.user %}
 					<td>{{ row.user.username }}</td>
 				{% else %}
 					<td>{{ row.client_name }}</td>
 				{% endif %}
 				<td>{{ row.order_info }}</td>
-				<td>{{ row.order_status }}</td>
+				<td style="text-align: center;">{{ row.order_status }}</td>
 				<td>
 					<div style="text-align: center" >
 						<input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = 'order_edit/{{ row.id }}';">

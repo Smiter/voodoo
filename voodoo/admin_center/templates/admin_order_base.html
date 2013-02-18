@@ -50,12 +50,12 @@
 								'<td>&nbsp;</td>' +
 								'<td>' +
 									'<input id="row' + rowId + '_id" name="row' + rowId + '_id" type="hidden"/>' + 
-									'<input id="row' + rowId + '_code" name="row' + rowId + '_code" type="text" style="width:50px"/>' +
+									'<input id="row' + rowId + '_code" name="row' + rowId + '_code" type="text" style="width:100%; min-width:180px;"/>' +
 								'</td>' +
-								'<td><input id="row' + rowId + '_brand" name="row' + rowId + '_brand" type="text" style="width:40px"/></td>' +
-								'<td><input id="row' + rowId + '_comment" name="row' + rowId + '_comment" type="text" style="width:70px"/></td>' +
-								'<td><input id="row' + rowId + '_price_1" name="row' + rowId + '_price_1" type="text" style="width:40px" value="0.0" onchange="refreshTotal()"/></td>' +
-								'<td><input id="row' + rowId + '_price_2" name="row' + rowId + '_price_2" type="text" style="width:40px" value="0.0" onchange="refreshTotal()"/></td>' +
+								'<td><input id="row' + rowId + '_brand" name="row' + rowId + '_brand" type="text" style="width:100%; min-width:120px;"/></td>' +
+								'<td><input id="row' + rowId + '_comment" name="row' + rowId + '_comment" type="text" style="width:100%; min-width:300px;"/></td>' +
+								'<td><input id="row' + rowId + '_price_1" name="row' + rowId + '_price_1" type="text" style="width:50px; text-align:right;" value="0.0" onchange="refreshTotal()"/></td>' +
+								'<td><input id="row' + rowId + '_price_2" name="row' + rowId + '_price_2" type="text" style="width:50px; text-align:right;" value="0.0" onchange="refreshTotal()"/></td>' +
 								'<td>' +
 									'{% if currencyList %}' +
 										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency">' + 
@@ -67,10 +67,10 @@
 										'Нет ни одной валюты' +
  									'{% endif %}' +
 								'</td>' +
-								'<td><input id="row' + rowId + '_count" name="row' + rowId + '_count" type="text" style="width:40px" value="1" onchange="refreshTotal()"/></td>' +
+								'<td><input id="row' + rowId + '_count" name="row' + rowId + '_count" type="text" style="width:30px; text-align: right;" value="1" onchange="refreshTotal()"/></td>' +
 								'<td>' +
 									'{% if suppliersList %}' +
-									'<select id="row' + rowId + '_supplier" name="row' + rowId + '_supplier" onchange="fillDeliveryTime(this, ' + rowId + ')">' +
+									'<select id="row' + rowId + '_supplier" name="row' + rowId + '_supplier" style="width:100%" onchange="fillDeliveryTime(this, ' + rowId + ')">' +
 										'<option value="">---------</option>' +
 										'{% for supplier in suppliersList %}' +
 											'<option value="{{ supplier.id }}">{{ supplier.name }}</option>' +
@@ -80,7 +80,7 @@
 										'Нет ни одного поставщика' +
 									'{% endif %}' +
 								'</td>' +
-								'<td><input id="row' + rowId + '_delivery_time" name="row' + rowId + '_delivery_time" type="text" style="width:40px"/></td>' +
+								'<td><input id="row' + rowId + '_delivery_time" name="row' + rowId + '_delivery_time" type="text" style="width:100px"/></td>' +
 								'<td>' +
 								'{% if statusList %}' +
 									'<select id="row' + rowId + '_status" name="row' + rowId + '_status">' +
@@ -353,19 +353,19 @@
 							<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 								<thead>
 									<tr id ="header" class="table-header">
-										<td>№</td>
-										<td>?</td>
+										<td style="width: 30px;">№</td>
+										<td style="width: 10px;">?</td>
 										<td>Номер</td>
 										<td>Бренд</td>
 										<td>Комментарии</td>
-										<td>Цена 1</td>
-										<td>Цена 2</td>
-										<td>Вал.</td>
-										<td>Кол.</td>
+										<td style="width: 50px;">Закупка</td>
+										<td style="width: 50px;">Продажа</td>
+										<td style="width: 50px;">Вал.</td>
+										<td style="width: 30px;">Кол.</td>
 										<td>Поставщик</td>
-										<td>Срок поставки</td>
-										<td>Статус</td>
-										<td>?</td>
+										<td style="width: 100px;">Срок поставки</td>
+										<td style="width: 95px;">Статус</td>
+										<td style="width: 10px;">?</td>
 									</tr>
 								</thead>
 								<tbody><tr></tr></tbody>
@@ -411,6 +411,6 @@
 			</table>
 		</div>
 	<input type="hidden" id ="row_count" name="row_count" value="0">
-	{% block buttons %}{% endblock %}
+	<div style="text-align: center;">{% block buttons %}{% endblock %}</div>
 </form>
 {% endblock %}

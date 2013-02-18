@@ -37,7 +37,7 @@ class OrdersManagementForm(forms.Form):
     # Фильтр
     required_css_class = 'required'
     order_filter_number = forms.CharField(label='Номер заказа', required=False)
-    order_filter_status = forms.ModelChoiceField(label="Статус заказа", queryset=OrderStatus.objects.all(), required=False)
+    order_filter_status = forms.ModelChoiceField(label="Статус заказа", queryset=OrderStatus.objects.all(), initial="1", required=False)
     order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     order_filter_creation_date_2 = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     order_filter_text = forms.CharField(label='Искать текст', required=False)
@@ -101,7 +101,7 @@ class UserManagementForm(forms.Form):
 
 class ItemsManagementForm(forms.Form):
     order_id = forms.CharField(label='Номер заказа', required=False)
-    item_status = forms.ModelChoiceField(label='Статус запчасти', queryset=ItemStatus.objects.all(), required=False)
+    item_status = forms.ModelChoiceField(label='Статус запчасти', queryset=ItemStatus.objects.all(), initial='2', required=False)
     added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     
