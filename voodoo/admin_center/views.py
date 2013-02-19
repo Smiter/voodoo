@@ -397,42 +397,69 @@ def beforeImport(supplier):
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
-def autocomplete_client_phone(request):
+def autocomplete_client_name(request):
     if request.method == 'GET':
         GET = request.GET
-        if GET.has_key('q'):
-            q = request.GET.get( 'q' )
-            results = Profile.objects.filter(phone__istartswith = q)
-            matches = ""
-            for result in results:
-                matches = matches + "%s\n" % (result.phone)
-            return HttpResponse(matches, mimetype="text/plain")
+        if GET.has_key('term'):
+            q = request.GET.get( 'term' )
+            orders = Order.objects.filter(client_name__istartswith = q).values('client_name').distinct()
+            results = []
+            for order in orders:
+                results.append(order['client_name'])
+            return HttpResponse(json.dumps(results), mimetype="text/plain")
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def autocomplete_client_phone(request, client):
+    if request.method == 'GET':
+        GET = request.GET
+        if GET.has_key('term'):
+            q = request.GET.get( 'term' )
+            orders = Order.objects.filter(client_name = client, client_phone__istartswith = q).values('client_phone').distinct()
+            results = []
+            for order in orders:
+                results.append(order['client_phone'])
+            return HttpResponse(json.dumps(results), mimetype="text/plain")
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def autocomplete_client_latest_phone(request):
+    if request.method == 'GET':
+        GET = request.GET
+        if GET.has_key('client'):
+            response = ""
+            client = request.GET.get( 'client' )
+            results = Order.objects.filter(client_name = client).order_by('creation_date')
+            if results:
+                response = results[len(results) - 1].client_phone
+            return HttpResponse(response, mimetype="text/plain")
+            
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def autocomplete_code(request):
     if request.method == 'GET':
         GET = request.GET
-        if GET.has_key('q'):
-            q = request.GET.get( 'q' )
-            results = Product.objects.filter(code__icontains = q)
-            matches = ""
-            for result in results:
-                matches = matches + "%s\n" % (result.code)
-            return HttpResponse(matches, mimetype="text/plain")
+        if GET.has_key('term'):
+            q = request.GET.get( 'term' )
+            products = Product.objects.filter(code__icontains = q)[:10]
+            results = []
+            for product in products:
+                results.append(product.code)
+            return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def autocomplete_brand(request):
     if request.method == 'GET':
         GET = request.GET
-        if GET.has_key('q'):
-            q = request.GET.get( 'q' )
-            results = Product.objects.filter(brand__icontains = q)
-            matches = ""
-            for result in results:
-                matches = matches + "%s\n" % (result.brand)
-            return HttpResponse(matches, mimetype="text/plain")
+        if GET.has_key('term'):
+            q = request.GET.get( 'term' )
+            products = Product.objects.filter(brand__icontains = q).values('brand').distinct()[:10]
+            results = []
+            for product in products:
+                results.append(product['brand'])
+            return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')

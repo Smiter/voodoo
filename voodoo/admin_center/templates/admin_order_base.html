@@ -3,13 +3,29 @@
 {% endblock %}
 {% block javascript %}
 	<script type="text/javascript">
-	
 		$(document).ready(function() {
-			$("#id_client_phone").autocomplete("/admin_center/autocomplete_client_phone/");
+			$("#id_client_phone").autocomplete({
+					source: "/admin_center/autocomplete_client_phone/" + $("#id_client_name").val() + "/"
+				}
+			);
+			$("#id_client_name").autocomplete({
+				source: "/admin_center/autocomplete_client_name/",
+				select: function(event, ui) {
+				    jQuery.get("/admin_center/autocomplete_client_latest_phone/", {client: ui.item.value}, function(result) {
+						$("#id_client_phone").val(result);
+		    		});
+		    							$("#id_client_phone").autocomplete({
+							source: "/admin_center/autocomplete_client_phone/" + ui.item.value + "/"
+						}
+					);
+				   },			});
 			
-	    });
-	    
-		var rowId = 0;
+			$("#id_client_name").change(function() {
+				$("#id_client_phone").autocomplete({
+							source: "/admin_center/autocomplete_client_phone/" + $("#id_client_name").val() + "/"
+						}
+					);
+			}); 		});		var rowId = 0;
 		
 		function convertStringsToTableRows() {
 			// filling ItemTable by each line from order_info
@@ -96,8 +112,14 @@
 								'<td>&nbsp;</td>';
 								
 			document.getElementById("row_count").value = rowId;
-			$("#row" + rowId + "_code").autocomplete("/admin_center/autocomplete_code/");
-			$("#row" + rowId + "_brand").autocomplete("/admin_center/autocomplete_brand/");
+			
+			$("#row" + rowId + "_code").autocomplete({
+				source: "/admin_center/autocomplete_code/"
+			});
+				
+			$("#row" + rowId + "_brand").autocomplete({
+				source: "/admin_center/autocomplete_brand/"
+			});
 		}
 		
 		function refreshTotal() {

@@ -9,7 +9,13 @@ $(function() {
 });
     
 $(document).ready(function() {
-	$("#id_item_code").autocomplete("/admin_center/autocomplete_code/");
+	$("#id_item_code").autocomplete({
+		source: "/admin_center/autocomplete_code/"
+	});
+				
+	$("#id_item_brand").autocomplete({
+		source: "/admin_center/autocomplete_brand/"
+	});
 
  });
  
@@ -48,8 +54,8 @@ function deleteAjax(item_id) {
 }
 
 function validateForm(item_id) {
-	var price_1 = document.getElementById("order_item_" + item_id +"_price_1").value;
-	var price_2 = document.getElementById("order_item_" + item_id +"_price_2").value;
+	var price_1 = parseFloat(document.getElementById("order_item_" + item_id +"_price_1").value);
+	var price_2 = parseFloat(document.getElementById("order_item_" + item_id +"_price_2").value);
 	var count = document.getElementById("order_item_" + item_id +"_count").value;
 	
 	if (price_1 > price_2) {
@@ -147,8 +153,13 @@ function validateForm(item_id) {
 				</td>
 			</tr>
 			<script>
-				$("#order_item_{{ row.id }}_code").autocomplete("/admin_center/autocomplete_code/");
-				$("#order_item_{{ row.id }}_brand").autocomplete("/admin_center/autocomplete_brand/");
+				$("#order_item_{{ row.id }}_code").autocomplete({
+					source: "/admin_center/autocomplete_code/"
+				});
+				
+				$("#order_item_{{ row.id }}_brand").autocomplete({
+					source: "/admin_center/autocomplete_brand/"
+				});
 			</script>
 			{% endfor %}
 		</tbody>
