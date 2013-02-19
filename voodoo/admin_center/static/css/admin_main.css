@@ -141,3 +141,7 @@ div {
 	cursor: hand; 
 	cursor: pointer;
 }
+
+ui, li {
+	list-style-type: none !important; 
+}
