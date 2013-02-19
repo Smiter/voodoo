@@ -436,40 +436,6 @@ def autocomplete_brand(request):
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
-def item_edit(request):
-    if request.method == 'POST':
-        post_id = request.POST['id']
-        post_value = request.POST['value']
-        
-        id = post_id.split('_')[2]
-        field = post_id.split('_')[3]
-        
-        item = OrderItem.objects.get(id = id)
-        
-        if (field == 'code'):
-            item.code = post_value
-        if (field == 'brand'):
-            item.brand = post_value
-        if (field == 'comment'):
-            item.comment = post_value
-        if (field == 'price_1'):
-            item.price_1 = post_value
-        if (field == 'price_2'):
-            item.price_2 = post_value
-        if (field == 'currency'):
-            item.currency = post_value
-        if (field == 'count'):
-            item.count = post_value
-        if (field == 'delivery_time'):
-            item.delivery_time = post_value
-        if (field == 'status'):
-            item.status = post_value
-        
-        item.save()
-    return HttpResponse({post_value})
-
-@login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def item_ajax_edit(request, id):
     if request.method == 'POST':
         item = OrderItem.objects.get(id = id)

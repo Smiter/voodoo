@@ -128,10 +128,16 @@ div {
 }
 
 #order_details td, #items_management td {
-	padding: 5px 10px 5px 5px;
+	padding: 5px 8px 5px 5px;
+	text-align: center;
 }
 
 #order_details input, #items_management input {
 	padding: 0px;
-	height: 20px;
+	height: 17px;
+}
+
+.sortable_header {
+	cursor: hand; 
+	cursor: pointer;
 }

@@ -10,29 +10,6 @@ $(function() {
 $(document).ready(function() {
 	$("#id_item_code").autocomplete("/admin_center/autocomplete_code/");
 
-    $('.edit').editable('/admin_center/item_edit', {
-		indicator : 'Saving...',
-		tooltip   : 'Click to edit...'
-    });
-    
-    $('.edit_area').editable('/admin_center/item_edit', { 
-         type      : 'textarea',
-         cancel    : 'Cancel',
-         submit    : 'OK',
-         indicator : '<img src="img/indicator.gif">',
-         tooltip   : 'Click to edit...'
-    });
-    
-	$('.edit_currency').editable('/admin_center/item_edit', {
-		loadurl : '/admin_center/feeds_currency', 
-		type   : 'select',
-	});
-	
-	$('.edit_status').editable('/admin_center/item_edit', {
-		loadurl : '/admin_center/feeds_status', 
-		type   : 'select',
-	});
-	
  });
  
 function editAjax(item_id) {
@@ -51,7 +28,7 @@ function editAjax(item_id) {
 		    		'status': $('#order_item_' + item_id + '_status option:selected').val(),
 		    		},
 		    success: function(){
-		        alert('Сохранено');
+		        
 		    }
 		});
 	} 
@@ -102,8 +79,8 @@ function validateForm(item_id) {
 	<table id="items_management" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 		<thead>
 			<tr class="table-header">
-				<th style="width: 60px;">Заказ&nbsp;№</th>
-				<th style="width: 75px;">Добавлено</th>
+				<th class="sortable_header" style="width: 60px;">Заказ&nbsp;№</th>
+				<th class="sortable_header" style="width: 75px;">Добавлено</th>
 				<th>Номер</th>
 				<th>Бренд</th>
 				<th>Комментарии</th>
@@ -111,7 +88,7 @@ function validateForm(item_id) {
 				<th style="width: 50px;">Продажа</th>
 				<th style="width: 50px;">Валюта</th>
 				<th style="width: 30px;">Кол.</th>
-				<th>Поставщик</th>
+				<th class="sortable_header">Поставщик</th>
 				<th style="width: 100px;">Срок поставки</th>
 				<th style="width: 95px;">Статус</th>
 				<th style="width: 65px;">Действия</th>
@@ -120,8 +97,8 @@ function validateForm(item_id) {
 		<tbody>
 			{% for row in results %}
 			<tr id="row_id_{{ row.id }}" class="highlightable">
-				<td style="text-align: center;"><a href="order_edit/{{ row.order.id }}/">{{ row.id }}</a></td>
-				<td style="text-align: center;">{{ row.creation_date|date:"d.m.y" }}</td>
+				<td><a href="order_edit/{{ row.order.id }}/">{{ row.id }}</a></td>
+				<td>{{ row.creation_date|date:"d.m.y" }}</td>
 				<td><input id="order_item_{{ row.id }}_code" value="{{ row.code }}" style="min-width:180px; width: 100%;"></td>
 				<td><input id="order_item_{{ row.id }}_brand" value="{{ row.brand }}" style="min-width:120px; width: 100%;"></td>
 				<td><input id="order_item_{{ row.id }}_comment" value="{{ row.comment }}" style="min-width:300px; width: 100%;"></td>
@@ -176,7 +153,7 @@ function validateForm(item_id) {
 		</tbody>
 	</table>
 	<script>
-		$("#table").tablesorter();
+		$("#items_management").tablesorter();
 	</script>
 {% else %}
 	{{message}}
