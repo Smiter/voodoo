@@ -5,6 +5,7 @@
 $(function() {
     $("#id_added_after").datepicker({dateFormat: 'dd.mm.yy'});
     $("#id_added_before").datepicker({dateFormat: 'dd.mm.yy'});
+    $("#items_management").tablesorter();
 });
     
 $(document).ready(function() {
@@ -152,9 +153,6 @@ function validateForm(item_id) {
 			{% endfor %}
 		</tbody>
 	</table>
-	<script>
-		$("#items_management").tablesorter();
-	</script>
 {% else %}
 	{{message}}
 {% endif %}

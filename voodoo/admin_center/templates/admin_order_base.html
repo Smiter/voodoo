@@ -31,8 +31,9 @@
 				} else {
 					// all strings except last(number) going to fill code and comment 
 					for (var j = 0; j < splited_string.length - 1; j++) {
-						comment = comment + splited_string[j];
+						comment = comment + splited_string[j] + " ";
 					}
+					comment = comment.trim();
 				}
 				
 			    document.getElementById("row" + rowId + "_code").value = comment;
