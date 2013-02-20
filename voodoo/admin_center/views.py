@@ -179,8 +179,17 @@ def orders_import_submit(request):
             else:
                 groups_by_client[results[i].user].append(results[i])
     for user, list_of_items in groups_by_client.items():
-        profile = Profile.objects.get(user=user)
-        order = Order(user=user, client_name=profile.fio, client_phone=profile.phone, order_status=OrderStatus.objects.get(status='Обработан'))
+        user_fio = u"Не зарегестрирован"
+        user_phone = u""
+        if user:
+            try:
+                profile = Profile.objects.get(user=user)
+                user_fio = profile.fio
+                user_phone = profile.phone
+            except Profile.DoesNotExist:
+                print u"User not found."
+                
+        order = Order(user=user, client_name=user_fio, client_phone=user_phone, order_status=OrderStatus.objects.get(status='Обработан'))
         order.order_info = "\n".join([item.product.brand + " " + str(item.count) for item in list_of_items])
         order.save()
         for item in list_of_items:
