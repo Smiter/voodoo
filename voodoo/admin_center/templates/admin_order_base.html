@@ -144,8 +144,6 @@
 		}
 		
 		function fillDeliveryTime(sel, row) {
-			//TODO format: 1-2 дня, 2дня, 10-20 дней
-			// is it really needs?
 			var value = sel.options[sel.selectedIndex].value
 			
 			{% for supplier in suppliersList %}
@@ -182,8 +180,7 @@
 				var count = document.getElementById("row" + row +"_count").value;
 				
 				if (price_1 > price_2) {
-					alert("Товар № " + row + ". Закупочная цена не может быть выше цены продажи.");
-					return false;
+					alert("Товар № " + row + ". Закупочная цена выше цены Продажи.");
 				}
 				
 				if (count < 1) {
@@ -231,28 +228,16 @@
 		{{ form.non_field_errors }}
 		<div>
 			<div class="block_title">Информация о заказчике</div>
-			<table class="block_content">
-				<tr class="required">
-					<th>
+			<table class="block_content" cols="3">
+				<tr>
+					<th class="required">
 				        <label for="id_client_name">{{ form.client_name.label }}</label>
 					</th>
-					<td>
+					<td style="width: 200px;">
 				        {{ form.client_name.errors }}
 				        {{ form.client_name }}
 					</td>
-			    </tr>
-				
-			    <tr class="required">
-					<th>
-				        <label for="id_client_name">{{ form.client_phone.label }}</label>
-					</th>
-					<td>
-				        {{ form.client_phone.errors }}
-				        {{ form.client_phone }}
-					</td>
-			    </tr>
-			    <tr>
-					<th>
+					<th style="width: 200px;">
 				        <label for="id_client_code">{{ form.client_code.label }}</label>
 					</th>
 					<td>
@@ -260,11 +245,21 @@
 				        {{ form.client_code }}
 					</td>
 			    </tr>
+				
+			    <tr class="required">
+					<th>
+				        <label for="id_client_phone">{{ form.client_phone.label }}</label>
+					</th>
+					<td colspan="3">
+				        {{ form.client_phone.errors }}
+				        {{ form.client_phone }}
+					</td>
+			    </tr>
 			    <tr>
 					<th>
 				        <label for="id_client_additional_information">{{ form.client_additional_information.label }}</label>
 					</th>
-					<td>
+					<td colspan="3">
 				        {{ form.client_additional_information.errors }}
 				        {{ form.client_additional_information }}
 					</td>
@@ -375,7 +370,7 @@
 			    			<div class="create-new-order-table-title">Список запчастей заказа</div>
 							<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 								<thead>
-									<tr id ="header" class="table-header">
+									<tr class="table-header">
 										<td style="width: 30px;">№</td>
 										<td style="width: 10px;">?</td>
 										<td>Номер</td>

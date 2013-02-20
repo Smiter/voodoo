@@ -16,16 +16,16 @@ class OrderForm(forms.ModelForm):
         widgets = {
             'client_additional_information': forms.Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}),
+                  + 'max-width:550px;min-width:550px'}),
             'order_info': forms.Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}),
+                  + 'max-width:550px;min-width:550px'}),
             'car_additional_information': forms.Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}),
+                  + 'max-width:550px;min-width:550px'}),
             'order_additional_information': forms.Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
-                  + 'max-width:400px;min-width:400px'}),
+                  + 'max-width:550px;min-width:550px'}),
 #            'order_status': forms.ChoiceField(),
             #'car_vin': TextInput(attrs={'size': '17', 'minlength': '17', 'maxlength': '17'}),
 #            'city_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),

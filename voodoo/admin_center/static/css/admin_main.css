@@ -137,6 +137,10 @@ div {
 	height: 17px;
 }
 
+#order_details #header {
+	height: 30px;
+}
+
 .sortable_header {
 	cursor: hand; 
 	cursor: pointer;
