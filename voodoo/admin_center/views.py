@@ -179,7 +179,8 @@ def orders_import_submit(request):
             else:
                 groups_by_client[results[i].user].append(results[i])
     for user, list_of_items in groups_by_client.items():
-        order = Order(user=user, order_status=OrderStatus.objects.get(status='Обработан'))
+        profile = Profile.objects.get(user=user)
+        order = Order(user=user, client_name=profile.fio, client_phone=profile.phone, order_status=OrderStatus.objects.get(status='Обработан'))
         order.order_info = "\n".join([item.product.brand + " " + str(item.count) for item in list_of_items])
         order.save()
         for item in list_of_items:
