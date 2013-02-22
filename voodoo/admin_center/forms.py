@@ -32,6 +32,13 @@ class OrderForm(forms.ModelForm):
 #            'name_recipient': TextInput(attrs={'size': '63', 'maxlength': '63'}),
         }
         exclude = ('creation_date', 'order_total_price1', 'order_total_price2')
+ 
+ORDER_PART_CHOICES = (
+            (u'Запчасти', u'Запчасти'),
+            (u'Клиенте', u'Клиенте'),
+            (u'Авто', u'Авто'),
+            (u'Заказе', u'Заказе'),
+        )
     
 class OrdersManagementForm(forms.Form):
     # Фильтр
@@ -41,8 +48,8 @@ class OrdersManagementForm(forms.Form):
     order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     order_filter_creation_date_2 = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     order_filter_text = forms.CharField(label='Искать текст', required=False)
-    order_filter_order_part = forms.CharField(label='в инфе о', required=False)
-
+    order_filter_order_part = forms.ChoiceField(label='в инфе о', choices=ORDER_PART_CHOICES, required=False)
+    
 IMPORT_FILE_TYPES = ['.xls', '.xlsx',]
 
 class XlsImportForm(forms.Form):

@@ -1,7 +1,3 @@
-div {
-    
- }
-
 #wraper {
 	height: 100%;
 	width: 100%;
@@ -148,4 +144,13 @@ div {
 
 ui, li {
 	list-style-type: none !important; 
+}
+
+.orders_management_filter_table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.orders_management_filter_table th, td{
+	vertical-align: middle;
 }

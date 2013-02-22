@@ -3,6 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Admin Center</title>
+	<link rel=StyleSheet href="{{STATIC_URL}}css/admin_main.css" type="text/css" media=screen>
     <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" />
 	<link rel="stylesheet" type="text/css" href="/static/css/jquery.autocomplete.css">
@@ -10,7 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.theme.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/jquery.ui.datepicker.css">
     
-	<link rel=StyleSheet href="{{STATIC_URL}}css/admin_main.css" type="text/css" media=screen>
 	
 	{% load i18n admin_modify adminmedia %}
     <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>

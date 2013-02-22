@@ -17,6 +17,7 @@ from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.http import Http404
 from django.forms.models import modelform_factory
 from django.db.models.loading import get_model
+from django.db.models import Q
 #from django.db import models
 
 @login_required(login_url='/admin_center/login/')
@@ -137,6 +138,7 @@ def orders_management(request):
                 
             if request.POST["order_filter_text"] != '' :
                 search_text = request.POST["order_filter_text"]
+                search_where = request.POST["order_filter_order_part"]
             
             results = Order.objects.all()
             
@@ -148,8 +150,29 @@ def orders_management(request):
                 results = results.filter(creation_date__gte=creation_date_after)
             if creation_date_before is not None:
                 results = results.filter(creation_date__lte=creation_date_before)
-            #TODO Search text
-                
+            if search_text is not None:
+                if search_where == u'Запчасти':
+                    results = results.filter(orderitem__in=OrderItem.objects.filter(code=search_text))
+                elif search_where == u'Клиенте':
+                    results = results.filter(Q(client_name__icontains=search_text) | 
+                                             Q(client_phone__icontains=search_text) | 
+                                             Q(client_additional_information__icontains=search_text
+                                            ))
+                elif search_where == u'Авто':
+                    results = results.filter(Q(car_brand__icontains=search_text) | 
+                                             Q(car_vin__icontains=search_text) |
+                                             Q(car_model__icontains=search_text) | 
+                                             Q(car_engine__icontains=search_text) | 
+                                             Q(car_year__icontains=search_text) | 
+                                             Q(car_engine_size__icontains=search_text) | 
+                                             Q(car_body__icontains=search_text) | 
+                                             Q(car_gearbox__icontains=search_text) | 
+                                             Q(car_additional_information__icontains=search_text
+                                            ))
+                elif search_where == u'Заказе':
+                    #инфа о заказе. поле полная формулировка заказа
+                    results = results.filter(Q(order_info__icontains=search_text) | 
+                                             Q(order_additional_information__icontains=search_text))
             # message
             if results:
                 message = 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)'

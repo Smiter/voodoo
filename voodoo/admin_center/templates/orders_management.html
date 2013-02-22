@@ -23,10 +23,63 @@
 {% block content %}
 <h3>Управление заказами</h3>
 <form name="orders_management_form" action="/admin_center/orders_management" method="POST">
-	<table>
-		{{ form.as_table }}
-	</table>
-	<input type="submit" value="Применить фильтр">
+	<div>
+		<table class="orders_management_filter_table">
+			<tr>
+				<th>
+			        <label for="id_order_filter_number">{{ form.order_filter_number.label }}</label>
+				</th>
+				<td>
+			        {{ form.order_filter_number.errors }}
+			        {{ form.order_filter_number }}
+				</td>
+				<th>
+			        <label for="id_order_filter_status">{{ form.order_filter_status.label }}</label>
+				</th>
+				<td>
+			        {{ form.order_filter_status.errors }}
+			        {{ form.order_filter_status }}
+				</td>
+				<th>
+			        <label for="id_order_filter_creation_date_1">{{ form.order_filter_creation_date_1.label }}</label>
+				</th>
+				<td>
+			        {{ form.order_filter_creation_date_1.errors }}
+			        {{ form.order_filter_creation_date_1 }}
+				</td>
+				<th>
+			        <label for="id_order_filter_creation_date_2">{{ form.order_filter_creation_date_2.label }}</label>
+				</th>
+				<td>
+			        {{ form.order_filter_creation_date_2.errors }}
+			        {{ form.order_filter_creation_date_2 }}
+				</td>
+		    </tr>
+	    </table>
+    </div>
+    <div>
+	    <table class="orders_management_filter_table">
+		    <tr>
+		    	<th>
+			        <label for="id_order_filter_text">{{ form.order_filter_text.label }}</label>
+				</th>
+				<td>
+			        {{ form.order_filter_text.errors }}
+			        {{ form.order_filter_text }}
+				</td>
+				<th>
+			        <label for="id_order_filter_order_part">{{ form.order_filter_order_part.label }}</label>
+				</th>
+				<td>
+			        {{ form.order_filter_order_part.errors }}
+			        {{ form.order_filter_order_part }}
+				</td>
+		    </tr>
+		</table>
+	</div>
+	<div style="text-align: center;">
+		<input type="submit" value="Применить фильтр">
+	</div>
 </form>
 {% if results %}
 	<div>{{message}}</div>
