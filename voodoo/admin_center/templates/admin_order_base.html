@@ -214,6 +214,23 @@
 				addRowIntoTable();
 			{% endif %}
 		}
+		
+		function showHideWidget() {
+			var widget = $('#widget');
+			widget.toggle(400);
+		}
+		
+		function multiplySellPrice() {
+			var ratio = parseFloat($('#percent-ratio').val());
+			
+			for (i = 1; i <= rowId; i++) {
+				var sellingPrice = $("#row" + i + "_price_2");
+				var currentValue = parseFloat(sellingPrice.val());
+				var result = currentValue + currentValue * ratio / 100;
+				sellingPrice.val(result.toFixed(1));
+			}
+		}
+		
 	</script>
 {% endblock %}
 {% block content %}
@@ -368,7 +385,14 @@
 			    </tr>
 			    <tr>
 			    	<td colspan="2">
-			    			<div class="create-new-order-table-title">Список запчастей заказа</div>
+			    			<div style="text-align:center;">
+				    			<div class="create-new-order-table-title">Список запчастей заказа</div>
+				    			<div id="widget" style="text-align: center; display:none ">
+				    				<input id="percent-ratio" type="text" value=""/>
+				    				<input type="button" value="Умножить" onclick="multiplySellPrice()"/>
+				    				<div>Позволяет увеличить цену Продажи для всех запчастей заказа на заданный процент</div>
+				    			</div>
+			    			</div>
 							<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
 								<thead>
 									<tr class="table-header">
@@ -377,7 +401,7 @@
 										<td>Номер</td>
 										<td>Бренд</td>
 										<td>Комментарии</td>
-										<td style="width: 55px;">Закупка</td>
+										<td style="width: 55px;" onclick="showHideWidget()">Закупка</td>
 										<td style="width: 55px;">Продажа</td>
 										<td style="width: 50px;">Вал.</td>
 										<td style="width: 30px;">Кол.</td>
