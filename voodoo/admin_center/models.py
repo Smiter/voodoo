@@ -174,7 +174,8 @@ class OrderItem(models.Model):
     object_id = models.PositiveIntegerField(blank=True, null=True)
     objects = ItemManager()
     creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
-
+    status_expired_date = DateTimeField(verbose_name='Дата просрочки заказа', max_length=120, blank=True, null=True)
+    
     def __unicode__(self):
         return self.code
 

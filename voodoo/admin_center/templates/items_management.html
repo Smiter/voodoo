@@ -5,6 +5,12 @@
 $(function() {
     $("#id_added_after").datepicker({dateFormat: 'dd.mm.yy'});
     $("#id_added_before").datepicker({dateFormat: 'dd.mm.yy'});
+    $("#id_expired_date").datepicker({dateFormat: 'dd.mm.yy'});
+    
+    $("#id_expired_items").click(function () { 
+    	$("#id_expired_date").val($.datepicker.formatDate('dd.mm.yy', new Date()));
+	});
+	
     $("#items_management").tablesorter();
 });
     
@@ -16,9 +22,11 @@ $(document).ready(function() {
 	$("#id_item_brand").autocomplete({
 		source: "/admin_center/autocomplete_brand/"
 	});
-
  });
  
+function autocompleteDateToNow(){
+	$("#id_expired_date").val($.datepicker.formatDate('dd.mm.yy', new Date()));
+}
 function editAjax(item_id) {
 	if (validateForm(item_id)) {
 		$.ajax({
@@ -76,8 +84,76 @@ function validateForm(item_id) {
 {% block content %}
 <h3>Управление Запчастями</h3>
 <form name="items_management_form" action="/admin_center/items_management" method="POST">
-	<table>
-		{{ form.as_table }}
+	<div>
+		
+	</div>
+	<table class="orders_management_filter_table">
+		<tr>
+			<th>
+		        <label for="id_order_id">{{ form.order_id.label }}</label>
+			</th>
+			<td>
+		        {{ form.order_id.errors }}
+		        {{ form.order_id }}
+			</td>
+			<th>
+		        <label for="id_item_status">{{ form.item_status.label }}</label>
+			</th>
+			<td>
+		        {{ form.item_status.errors }}
+		        {{ form.item_status }}
+			</td>
+			<th>
+		        <label for="id_added_after">{{ form.added_after.label }}</label>
+			</th>
+			<td>
+		        {{ form.added_after.errors }}
+		        {{ form.added_after }}
+			</td>
+			<th>
+		        <label for="id_added_before">{{ form.added_before.label }}</label>
+			</th>
+			<td>
+		        {{ form.added_before.errors }}
+		        {{ form.added_before }}
+			</td>
+		</tr>
+	</table>
+	<table class="orders_management_filter_table">
+		<tr>
+			<th>
+		        <label for="id_supplier">{{ form.supplier.label }}</label>
+			</th>
+			<td>
+		        {{ form.supplier.errors }}
+		        {{ form.supplier }}
+			</td>
+			<th>
+		        <label for="id_item_code">{{ form.item_code.label }}</label>
+			</th>
+			<td>
+		        {{ form.item_code.errors }}
+		        {{ form.item_code }}
+			</td>
+		</tr>
+	</table>
+	<table class="orders_management_filter_table">
+		<tr>
+			<td>
+		        {{ form.expired_items.errors }}
+		        {{ form.expired_items }}
+			</td>
+			<th>
+		        <label for="id_expired_items">{{ form.expired_items.label }}</label>
+			</th>
+			<th>
+		        <label for="id_expired_date">{{ form.expired_date.label }}</label>
+			</th>
+			<td>
+		        {{ form.expired_date.errors }}
+		        {{ form.expired_date }}
+			</td>
+		</tr>
 	</table>
 	<input type="submit" value="Применить фильтр">
 </form>
@@ -104,7 +180,7 @@ function validateForm(item_id) {
 		<tbody>
 			{% for row in results %}
 			<tr id="row_id_{{ row.id }}" class="highlightable">
-				<td><a href="order_edit/{{ row.order.id }}/">{{ row.id }}</a></td>
+				<td><a href="order_edit/{{ row.order.id }}/">{{ row.order.id }}</a></td>
 				<td>{{ row.creation_date|date:"d.m.y" }}</td>
 				<td><input id="order_item_{{ row.id }}_code" value="{{ row.code }}" style="min-width:180px; width: 100%;"></td>
 				<td><input id="order_item_{{ row.id }}_brand" value="{{ row.brand }}" style="min-width:120px; width: 100%;"></td>

@@ -18,6 +18,7 @@ from django.http import Http404
 from django.forms.models import modelform_factory
 from django.db.models.loading import get_model
 from django.db.models import Q
+import time
 #from django.db import models
 
 @login_required(login_url='/admin_center/login/')
@@ -369,6 +370,8 @@ def items_management(request):
             added_before = None
             supplier = None
             code = None
+            expired_items = False
+            expired_date = None
             
             # TODO validating to properly values
             if request.POST["order_id"] != '' :
@@ -388,6 +391,9 @@ def items_management(request):
                 
             if request.POST["item_code"] != '' :
                 code = request.POST["item_code"]
+            
+            expired_items = form.cleaned_data['expired_items']
+            expired_date = form.cleaned_data['expired_date']
                     
             # Fetching results
             results = OrderItem.objects.all()
@@ -403,6 +409,9 @@ def items_management(request):
                 results = results.filter(supplier_id=supplier)
             if code is not None:
                 results = results.filter(code=code)
+            if expired_items:
+                expired_selected_date = datetime.datetime.combine(expired_date, datetime.datetime.now().time())
+                results = OrderItem.objects.filter(Q(status_expired_date__lte=expired_selected_date) & Q(status=3))
             # message
             if results:
                 message = 'Найдены следующие запчасти...'
@@ -580,8 +589,12 @@ def saveItemsForOrder(request, order):
                     print u"OrderItem с кодом '" + code + u"' не существует"
             if supplier_id:
                 supplier = Supplier.objects.get(id=supplier_id)
+                
+                if status.status == u'Заказан':
+                    status_expired_date = datetime.datetime.now() + datetime.timedelta(hours=float(supplier.time_out))
             else:
                 supplier = None
+                status_expired_date = None
             if item is not None:
                 # updating current item
                 item.code = code
@@ -593,12 +606,21 @@ def saveItemsForOrder(request, order):
                 item.count = count
                 item.supplier = supplier
                 item.delivery_time = delivery_time
+                
+                item_edited = item.status != status
+                if (item_edited ):
+                    new_status_is_ordered = status.status == u'Заказан'
+                    if new_status_is_ordered:
+                        item.status_expired_date = status_expired_date
+                    else:
+                        item.status_expired_date = None
                 item.status = status
+                    
                 item.save()
             else:
                 #creating new item
                 item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2, 
-                    currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=None)
+                    currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=None, status_expired_date=status_expired_date)
                 item.save()
 
 
