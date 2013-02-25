@@ -5,6 +5,7 @@ from voodoo.admin_center.models import OrderItem, ItemStatus
 import models
 from voodoo.mainsite.models import Profile
 
+
 CART_ID = 'CART-ID'
 
 
@@ -28,19 +29,11 @@ class Cart:
             cart = self.new(request)
         self.cart = cart
         if request.user.is_authenticated():
-            try:
-                self.profile = Profile.objects.get(user=request.user)
-            except Profile.DoesNotExist:
-                self.profile = None
+            self.user = request.user
             
     def __iter__(self):
         for item in self.cart.orderitem_set.all():
             yield item
-
-    def syncPrices(self):
-        for item in self:
-            item.unit_price = item.product.price
-            item.save()
 
     def new(self, request):
         cart = models.Cart(creation_date=datetime.datetime.now())
@@ -56,12 +49,14 @@ class Cart:
             )
         except OrderItem.DoesNotExist:
             item = OrderItem()
+            if hasattr(self, 'user'):
+                item.user = self.user
             item.cart = self.cart
             item.product = product
             item.code = product.code
             item.brand = product.brand
-            item.price_1 = product.price
-            item.price_2 = float(product.price) - float(product.price) / 100 * float(self.profile.discount_group.discount)
+            item.price_1 = product.price_with_currency
+            item.price_2 = item.get_price_with_discount()
             item.supplier = product.supplier
             item.count = quantity
             item.status = ItemStatus.objects.get(status=u'Сообщен')
@@ -70,24 +65,23 @@ class Cart:
             print "Продукт уже добавлен в корзину"
             # raise ItemAlreadyExists
 
-    def remove(self, product):
+    def remove(self, item_id):
         try:
             item = OrderItem.objects.get(
                 cart=self.cart,
-                product=product,
+                id=item_id,
             )
         except OrderItem.DoesNotExist:
             raise ItemDoesNotExist
         else:
             item.delete()
 
-    def update(self, product, quantity):
+    def update(self, item_id, quantity):
         try:
             item = OrderItem.objects.get(
                 cart=self.cart,
-                product=product,
+                id=item_id,
             )
-            item.price_2 = float(product.price) - float(product.price) / 100 * float(self.profile.discount_group.discount)
             item.count = quantity
             item.save()
         except OrderItem.DoesNotExist:
@@ -104,7 +98,7 @@ class Cart:
         return len(self.cart.orderitem_set.all())
 
     def getTotalPrice(self):
-        return sum([(item.total_price) for item in self])
+        return int(sum([(item.total_price) for item in self]))
 
     def getTotalPricesAsStrList(self):
         return [str(item.total_price) for item in self]

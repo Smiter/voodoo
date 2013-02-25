@@ -26,3 +26,16 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
+
+
+# import newrelic.agent
+
+# newrelic.agent.initialize('/home/smiter/python_home/projects/birt_django/voodoo/voodoo/newrelic-1.10.2.38/newrelic.ini')
+
+# import os
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "voodoo.settings")
+
+# from django.core.wsgi import get_wsgi_application
+
+# application = get_wsgi_application()
+# application = newrelic.agent.wsgi_application()(application)

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding: UTF-8
-
 from django.db import models
 from django.db.models import *
 from django.core.validators import MaxLengthValidator
@@ -8,6 +7,8 @@ from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
 from voodoo.mainsite.basket.models import Cart
 from django.contrib.contenttypes.models import ContentType
+from voodoo.mainsite.models import Profile
+
 
 
 class Menu(models.Model):
@@ -118,6 +119,7 @@ class Currency(models.Model):
     def __unicode__(self):
         return self.code
     
+
 class Product(models.Model):
     code = CharField(verbose_name='Номер', max_length=120)
     brand = CharField(verbose_name='Бдэнд', max_length=120)
@@ -127,6 +129,10 @@ class Product(models.Model):
     supplier = models.ForeignKey(Supplier)
     currency = models.ForeignKey(Currency)
     date_of_import = DateTimeField(verbose_name='Дата импорта', max_length=120, auto_now_add=True)
+
+    def get_price_with_currency(self):
+        return float(self.price * self.currency.ratio)
+    price_with_currency = property(get_price_with_currency)
 
     def __unicode__(self):
         return self.code
@@ -147,6 +153,7 @@ class ItemStatus(models.Model):
     
     def __unicode__(self):
         return self.status
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, blank=True, null=True)
@@ -171,9 +178,20 @@ class OrderItem(models.Model):
     def __unicode__(self):
         return self.code
 
+    def get_price_with_discount(self):
+        discount = self.get_profile_discount()
+        if not discount:
+            discount = 0
+        return float(self.product.price_with_currency - (float(self.product.price_with_currency) / float(100)) * float(discount))
+
     def total_price(self):
-        return self.count * self.price_2
+        return self.count * self.get_price_with_discount()
     total_price = property(total_price)
+
+    def get_profile_discount(self):
+        if self.user:
+            return Profile.objects.get(user=self.user).discount_group.discount
+        return None
 
     # product
     def get_product(self):

@@ -7,7 +7,6 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from registration.models import RegistrationProfile
 from registration.models import RegistrationManager
-from voodoo.admin_center.models import DiscountGroup, Order
 
 
 CLIENT_TYPE = (
@@ -84,7 +83,7 @@ class Profile(models.Model):
     carrier_default = models.CharField(verbose_name='Перевозчик по умолчанию', choices=CARRIER_CHOICES, max_length=120, blank=True, null=True)
     carrier_select = models.CharField(max_length=120, blank=True, null=True)
     font_color = models.CharField(max_length=120, blank=True, null=True)
-    discount_group = models.ForeignKey(DiscountGroup, default=1, blank=True, null=True)
+    discount_group = models.ForeignKey('admin_center.DiscountGroup', default=1, blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % self.user
@@ -146,4 +145,4 @@ class Sendings(models.Model):
 
 
 class VinRequest(models.Model):
-    order = models.ForeignKey(Order)
+    order = models.ForeignKey('admin_center.Order')

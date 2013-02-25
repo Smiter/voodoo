@@ -35,20 +35,17 @@ $(function(){
 				id = $('.item_id', this).val()
 				ids[id] = $('.num_detail', this).val()
 			});
-			console.log(ids)
 			$.ajax({
               type: "POST",
               url: '/update_basket/',
               data: ids
               }).done(function( items ) {
+                console.log(items)
               	var total_basket_price = 0
               	$("#basket_form table tbody tr").each(function(index,value) {
-					$('.total_price', this).text(items[index])
-					if(items[index])
-						total_basket_price = total_basket_price + parseFloat(items[index])
-					
+					$('.total_price', this).text(items['prices'][index])
 				});
-				$('#total_price_basket').text(total_basket_price+" грн.")
+				$('#total_price_basket').text(items['total_price'] + " грн.")
               })
 	});
 
@@ -94,7 +91,7 @@ $(function(){
         <tbody>
         	{% for item in cart %}
         	        <tr>
-        	        	<td><input name="item_id" class="item_id" type="hidden" value="{{ item.product.id }}"></td>
+        	        	<td><input name="item_id" class="item_id" type="hidden" value="{{ item.id }}"></td>
         	        	{# <td><img width="100" height="100" src="/static/images/{{item.product.image}}"></td> #}
                         <td><p style="margin-top:44px;" class="float-left">{{ item.product.code }}</p></td>
         	            <td><p style="margin-top:44px;" class="float-left">{{ item.product.brand }}</p></td>

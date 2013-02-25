@@ -106,7 +106,7 @@ def sendings(request):
                 result = Sendings.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
 
             if not result:
-                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+                error = u'Не найдено отправок удовлетворяющих фильтру поиска.'
     else:
         form = SendingsForm()
     return render_to_response('sendings.html', {'form': form, 'layout': "inline", 'result': result, 'error': error}, context_instance=RequestContext(request))
@@ -127,7 +127,7 @@ def prepays(request):
             except:
                 result = Prepays.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
             if not result:
-                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+                error = u'Не найдено проплат удовлетворяющих фильтру поиска.'
     else:
         form = SendingsForm()
     return render_to_response('prepays.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
@@ -190,7 +190,7 @@ def show_vin(request):
                     creation_date__range=(request.POST["min_date"] + ' 00:00:01',
                                           request.POST["max_date"] + ' 23:59:00')))
             if not result:
-                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+                error = u'Не найдено подборов удовлетворяющих фильтру поиска.'
     else:
         form = SendingsForm()
     return render_to_response('show_vin.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
@@ -252,22 +252,21 @@ def orders(request):
             try:
                 min_date = datetime.strptime(request.POST["min_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 00:00:01'
                 max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d') + ' 23:59:00'
-                result = Order.objects.filter(user=request.user, creation_date__range=(min_date, max_date))
+                result = OrderItem.objects.filter(user=request.user, creation_date__range=(min_date, max_date))
             except:
-                orders = Order.objects.filter(user=request.user, creation_date__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
                 status = request.POST["status"]
                 if status == u'Все':
-                    result = OrderItem.objects.filter(order__in=orders)
+                    result = OrderItem.objects.filter(user=request.user, creation_date__range=(request.POST["min_date"] + ' 00:00:01', request.POST["max_date"] + ' 23:59:00'))
                 else:
                     if status == u'Принят':
                         status = u'Сообщен'
-                        result = OrderItem.objects.filter(order__in=orders, status=ItemStatus.objects.get(status=status))
+                        result = OrderItem.objects.filter(status=ItemStatus.objects.get(status=status))
                     elif status == u'Заказан':
-                        result = OrderItem.objects.filter(order__in=orders, status__in=[ItemStatus.objects.get(status=u'Заказан'), ItemStatus.objects.get(status=u'Оформлен')])
+                        result = OrderItem.objects.filter(status__in=[ItemStatus.objects.get(status=u'Заказан'), ItemStatus.objects.get(status=u'Оформлен')])
                     else:
-                        result = OrderItem.objects.filter(order__in=orders, status=ItemStatus.objects.get(status=status))
+                        result = OrderItem.objects.filter(status=ItemStatus.objects.get(status=status))
             if not result:
-                error = u'Ненайдено отправок удовлетворяющих фильтру поиска.'
+                error = u'Не найдено заказов удовлетворяющих фильтру поиска.'
     else:
         form = OrdersForm()
     return render_to_response('orders.html', {'form': form, 'result': result, 'error': error}, context_instance=RequestContext(request))
@@ -276,11 +275,13 @@ def orders(request):
 def search_product(request):
     print "SEARCH"
     detail_code = request.GET['detail_id']
-    profile = Profile.objects.get(user=request.user)
+    if request.user.is_authenticated():
+        profile = Profile.objects.get(user=request.user)
+        discount = profile.discount_group.discount
+    else:
+        discount = 0
     if detail_code == "":
         result = None
     else:
-        result = Product.objects.filter(code__contains=detail_code.replace('-', '').replace(' ', ''))
-        for product in result:
-            product.price = float(product.price) - float(product.price) / 100 * float(profile.discount_group.discount)
-    return render_to_response('search.html',  dict(result=result, detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))
+        result = Product.objects.filter(code__icontains=detail_code.replace('-', '').replace(' ', ''))
+    return render_to_response('search.html',  dict(result=result, discount=discount, detail_id=request.GET['detail_id'], error=u'Ничего не найдено.'), context_instance=RequestContext(request))

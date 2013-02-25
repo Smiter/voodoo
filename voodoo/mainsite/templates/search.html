@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load admin_center_extras %}
 {% block javascript%}
 <script type="text/javascript">
 </script>
@@ -21,12 +22,11 @@
     </thead>
     <tbody>
         {% for row in result %}
-        
             <tr>
               <td>{{ row.brand }}</td>
               <td>{{ row.code }}</td>
               <td>{{ row.description }}</td>
-              <td>{{ row.price }} </td>
+              <td> {{row.price_with_currency|price_with_discount:discount}} грн.</td>
               <td>{{ row.supplier.name }}</td>
               <td><form  method="POST" action="/add_to_cart/">
                       <input type="hidden" name="product_id" value="{{row.id}}">

@@ -20,22 +20,23 @@ def add_to_cart(request):
 
 def get_basket(request):
     cart = Cart(request)
-    cart.syncPrices()
     return render_to_response('basket.html',  dict(cart=cart, products=Product.objects.all(), total_price=cart.getTotalPrice()), context_instance=RequestContext(request))
 
 
 def update_basket(request):
-    for product_id, quantity in request.POST.iteritems():
-        product = Product.objects.get(id=product_id)
+    for item_id, quantity in request.POST.iteritems():
         cart = Cart(request)
-        cart.update(product, quantity)
-    return HttpResponse(dumps(cart.getTotalPricesAsStrList()), mimetype="application/json")
+        cart.update(item_id, quantity)
+        result = {
+        'prices': cart.getTotalPricesAsStrList(),
+        'total_price': cart.getTotalPrice()
+        }
+    return HttpResponse(dumps(result), mimetype="application/json")
 
 
 def del_item(request):
-    product = Product.objects.get(id=request.POST["id"])
     cart = Cart(request)
-    cart.remove(product)
+    cart.remove(request.POST["id"])
     return HttpResponse(dumps(cart.getTotalPricesAsStrList()), mimetype="application/json")
 
 
@@ -46,14 +47,23 @@ def make_order(request):
     if not user.is_authenticated():
         order = Order(client_name=u'Не зарегистрирован, ' + request.POST["name"], client_phone=request.POST["phone"], order_status=OrderStatus.objects.get(status='Принят'))
         order.order_info = "\n".join([item.product.brand + " " + str(item.count) for item in cart])
-        print order.order_info
         order.save()
         for item in cart:
             item.order = order
+            item.code = item.product.code
+            item.brand = item.product.brand
+            item.price_1 = item.product.price_with_currency
+            item.price_2 = item.get_price_with_discount()
+            item.supplier = item.product.supplier
             item.save()
     else:
         for item in cart:
             item.user = user
+            item.code = item.product.code
+            item.brand = item.product.brand
+            item.price_1 = item.product.price_with_currency
+            item.price_2 = item.get_price_with_discount()
+            item.supplier = item.product.supplier
             item.save()
     cart.cart.checked_out = True
     cart.cart.save()

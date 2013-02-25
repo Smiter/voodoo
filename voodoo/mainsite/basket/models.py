@@ -10,8 +10,8 @@ class Cart(models.Model):
     checked_out = models.BooleanField(default=False, verbose_name=('checked out'))
 
     class Meta:
-        verbose_name = _('cart')
-        verbose_name_plural = _('carts')
+        verbose_name = _('Корзина')
+        verbose_name_plural = _('Корзины')
         ordering = ('-creation_date',)
 
     def __unicode__(self):
