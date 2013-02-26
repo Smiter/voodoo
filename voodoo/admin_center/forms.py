@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import *
 from voodoo.admin_center.models import *
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import datetime
 import os.path
 
@@ -45,8 +45,8 @@ class OrdersManagementForm(forms.Form):
     required_css_class = 'required'
     order_filter_number = forms.CharField(label='Номер заказа', required=False)
     order_filter_status = forms.ModelChoiceField(label="Статус заказа", queryset=OrderStatus.objects.all(), initial="1", required=False)
-    order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
-    order_filter_creation_date_2 = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    order_filter_creation_date_1 = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.now() - datetime.timedelta(days=7))
+    order_filter_creation_date_2 = forms.DateField(label='и', required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.now())
     order_filter_text = forms.CharField(label='Искать текст', required=False)
     order_filter_order_part = forms.ChoiceField(label='в инфе о', choices=ORDER_PART_CHOICES, required=False)
     

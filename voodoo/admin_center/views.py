@@ -109,12 +109,6 @@ def order_delete(request, id):
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def orders_management(request):
-    #TODO
-    message = ''
-    # default results
-    results = Order.objects.filter(order_status_id=1)
-    if len(results) == 0:
-        message = u'Ничего не найдено.'
     if request.method == 'POST':
         form = OrdersManagementForm(request.POST or None)
         if form.is_valid():
@@ -174,13 +168,24 @@ def orders_management(request):
                     #инфа о заказе. поле полная формулировка заказа
                     results = results.filter(Q(order_info__icontains=search_text) | 
                                              Q(order_additional_information__icontains=search_text))
-            # message
-            if results:
-                message = 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)'
-            else:
-                message = 'Ничего не найдено.'
     else:
+        message = ''
+        # default results
         form = OrdersManagementForm()
+        
+        order_status_initial = form['order_filter_status'].field.initial
+        order_creation_date_1_initial = form['order_filter_creation_date_1'].field.initial
+        order_creation_date_2_initial = form['order_filter_creation_date_2'].field.initial
+        
+        results = Order.objects.filter(Q(order_status_id=order_status_initial) & 
+                                       Q(creation_date__gte=order_creation_date_1_initial) & 
+                                       Q(creation_date__lte=order_creation_date_2_initial))
+    # message
+    if results:
+        message = 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)'
+    else:
+        message = 'Ничего не найдено.'
+        
     return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
