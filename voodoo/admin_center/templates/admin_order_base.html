@@ -76,7 +76,7 @@
 								'<td><input id="row' + rowId + '_price_2" name="row' + rowId + '_price_2" type="text" style="width:55px; text-align:right;" value="0.0" onchange="refreshTotal()"/></td>' +
 								'<td>' +
 									'{% if currencyList %}' +
-										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency">' + 
+										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency" onchange="refreshTotal()">' + 
 											'{% for currency in currencyList %}' +
 												'<option value="{{ currency }}">{{ currency }}</option>' +
 											'{% endfor %}' +
@@ -127,21 +127,55 @@
 			var totalSumm1Element = document.getElementById("total_sum_1");
 			var totalSumm2Element = document.getElementById("total_sum_2");
 			
-			var totalSumm1 = 0;
-			var totalSumm2 = 0;
+			var totalSumm1UAH = 0;
+			var totalSumm2UAH = 0;
+			
+			var totalSumm1USD = 0;
+			var totalSumm2USD = 0;
+			
+			var totalSumm1EUR = 0;
+			var totalSumm2EUR = 0;
 			
 			for (var i = 1; i <= rowId; i++) {
-				sum1 = parseFloat(document.getElementById("row" + i + "_price_1").value);
-				sum2 = parseFloat(document.getElementById("row" + i + "_price_2").value)
-				count = parseFloat(document.getElementById("row" + i + "_count").value);
+				var sum1 = parseFloat(document.getElementById("row" + i + "_price_1").value);
+				var sum2 = parseFloat(document.getElementById("row" + i + "_price_2").value)
+				var count = parseFloat(document.getElementById("row" + i + "_count").value);
+				var curr = document.getElementById("row" + i + "_currency").value
 				
-				totalSumm1 += sum1 * count;
-				totalSumm2 += sum2 * count;
+				if (curr == 'UAH') {
+					totalSumm1UAH += sum1 * count;
+					totalSumm2UAH += sum2 * count;
+				} else if (curr == 'USD') {
+					totalSumm1USD += sum1 * count;
+					totalSumm2USD += sum2 * count;
+				} else if (curr == 'EUR') {
+					totalSumm1EUR += sum1 * count;
+					totalSumm2EUR += sum2 * count;
+				}
 				
 			}
 			
-			totalSumm1Element.innerHTML = totalSumm1.toFixed(1);
-			totalSumm2Element.innerHTML = totalSumm2.toFixed(1);
+			var totalSum1Str = '';
+			var totalSum2Str = '';
+			
+			if (totalSumm1UAH > 0 || totalSumm2UAH > 0) {
+				var totalSum1Str = totalSum1Str + totalSumm1UAH.toFixed(1) + '&nbsp;UAH<br>';
+				var totalSum2Str = totalSum2Str + totalSumm2UAH.toFixed(1) + '&nbsp;UAH<br>';
+			}
+			
+			if (totalSumm1USD > 0 || totalSumm2USD > 0) {
+				var totalSum1Str = totalSum1Str + totalSumm1USD.toFixed(1) + '&nbsp;USD<br>';
+				var totalSum2Str = totalSum2Str + totalSumm2USD.toFixed(1) + '&nbsp;USD<br>';
+			}
+			
+			if (totalSumm1EUR > 0 || totalSumm2EUR > 0) {
+				var totalSum1Str = totalSum1Str + totalSumm1EUR.toFixed(1) + '&nbsp;EUR<br>';
+				var totalSum2Str = totalSum2Str + totalSumm2EUR.toFixed(1) + '&nbsp;EUR<br>';
+			}
+			
+			
+			totalSumm1Element.innerHTML = totalSum1Str;
+			totalSumm2Element.innerHTML = totalSum2Str;
 		}
 		
 		function fillDeliveryTime(sel, row) {
@@ -224,9 +258,12 @@
 			var ratio = parseFloat($('#percent-ratio').val());
 			
 			for (i = 1; i <= rowId; i++) {
+				var orderPrice = $("#row" + i + "_price_1");
 				var sellingPrice = $("#row" + i + "_price_2");
-				var currentValue = parseFloat(sellingPrice.val());
+				
+				var currentValue = parseFloat(orderPrice.val());
 				var result = currentValue + currentValue * ratio / 100;
+				
 				sellingPrice.val(result.toFixed(1));
 			}
 		}
@@ -390,7 +427,7 @@
 				    			<div id="widget" style="text-align: center; display:none ">
 				    				<input id="percent-ratio" type="text" value=""/>
 				    				<input type="button" value="Умножить" onclick="multiplySellPrice()"/>
-				    				<div>Позволяет увеличить цену Продажи для всех запчастей заказа на заданный процент</div>
+				    				<div>Позволяет задать цену Продажи для всех запчастей заказа используя Закупочную цену и заданую наценку</div>
 				    			</div>
 			    			</div>
 							<table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
@@ -401,7 +438,7 @@
 										<td>Номер</td>
 										<td>Бренд</td>
 										<td>Комментарии</td>
-										<td style="width: 55px;" onclick="showHideWidget()">Закупка</td>
+										<td class="highlightable_pointer" style="width: 55px;" onclick="showHideWidget()">Закупка</td>
 										<td style="width: 55px;">Продажа</td>
 										<td style="width: 50px;">Вал.</td>
 										<td style="width: 30px;">Кол.</td>
@@ -418,7 +455,7 @@
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
-										<td style="font-weight: bold;">Всего:</td>
+										<td style="font-weight: bold; text-align: right;">Всего:</td>
 										<td id="total_sum_1">&nbsp;</td>
 										<td id="total_sum_2">&nbsp;</td>
 										<td>&nbsp;</td>
