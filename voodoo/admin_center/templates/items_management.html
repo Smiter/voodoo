@@ -206,7 +206,7 @@ function validateForm(item_id) {
 				<td><input id="order_item_{{ row.id }}_delivery_time" value="{{ row.delivery_time }}" style="width:100px"></td>
 				<td>
 					{% if statusList %}
-						<select id="order_item_{{ row.id }}_status">
+						<select id="order_item_{{ row.id }}_status" onChange="makeElementColorable(this)" >
 							{% for status in statusList %}
 								{% ifequal status.status row.status.status %}
 									<option value="{{ status }}" selected="selected">{{ status }}</option>
@@ -235,6 +235,8 @@ function validateForm(item_id) {
 				$("#order_item_{{ row.id }}_brand").autocomplete({
 					source: "/admin_center/autocomplete_brand/"
 				});
+				
+				makeOrderItemStatusesColorable($("#order_item_{{ row.id }}_status option"));
 			</script>
 			{% endfor %}
 		</tbody>

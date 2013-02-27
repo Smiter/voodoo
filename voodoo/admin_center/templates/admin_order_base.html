@@ -3,29 +3,54 @@
 {% endblock %}
 {% block javascript %}
 	<script type="text/javascript">
-		$(document).ready(function() {
+		var rowId = 0;
+		
+		$(document).ready(function() {			enableAutocompletes();
+			
+			var orderStatus = $("#id_order_status option");
+			makeOrderStatusSelectColorable(orderStatus);
+			
+			$("#id_order_status").change(function() {
+				if ($(this).val() == 1) {
+					$(this).css({'color': 'black', 'font-weight':'bold'});
+				}
+				if ($(this).val() == 2) {
+					$(this).css({'color': 'green', 'font-weight':'bold'});
+				}
+				if ($(this).val() == 3) {
+					$(this).css({'color': 'red', 'font-weight':'bold'});
+				}
+			});			
+			$("#id_order_status").change();
+ 		});
+
+		function enableAutocompletes() {
 			$("#id_client_phone").autocomplete({
 					source: "/admin_center/autocomplete_client_phone/" + $("#id_client_name").val() + "/"
 				}
-			);
+			);
+
 			$("#id_client_name").autocomplete({
 				source: "/admin_center/autocomplete_client_name/",
 				select: function(event, ui) {
 				    jQuery.get("/admin_center/autocomplete_client_latest_phone/", {client: ui.item.value}, function(result) {
 						$("#id_client_phone").val(result);
 		    		});
-		    							$("#id_client_phone").autocomplete({
+		    		
+					$("#id_client_phone").autocomplete({
 							source: "/admin_center/autocomplete_client_phone/" + ui.item.value + "/"
 						}
 					);
-				   },			});
+				   },
+			});
 			
 			$("#id_client_name").change(function() {
 				$("#id_client_phone").autocomplete({
 							source: "/admin_center/autocomplete_client_phone/" + $("#id_client_name").val() + "/"
 						}
 					);
-			}); 		});		var rowId = 0;
+			});
+		}
 		
 		function convertStringsToTableRows() {
 			// filling ItemTable by each line from order_info
@@ -101,7 +126,7 @@
 								'<td><input id="row' + rowId + '_delivery_time" name="row' + rowId + '_delivery_time" type="text" style="width:100px"/></td>' +
 								'<td>' +
 								'{% if statusList %}' +
-									'<select id="row' + rowId + '_status" name="row' + rowId + '_status">' +
+									'<select id="row' + rowId + '_status" name="row' + rowId + '_status" onChange="makeElementColorable(this)">' +
 										'{% for status in statusList %}' +
 											'<option value="{{ status }}">{{ status }}</option>' +
 										'{% endfor %}' +
@@ -121,6 +146,10 @@
 			$("#row" + rowId + "_brand").autocomplete({
 				source: "/admin_center/autocomplete_brand/"
 			});
+			
+			$("#row" + rowId + "_status").change();
+			makeOrderItemStatusesColorable($("#row" + rowId + "_status option"));
+			
 		}
 		
 		function refreshTotal() {
