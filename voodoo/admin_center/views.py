@@ -602,14 +602,13 @@ def saveItemsForOrder(request, order):
                     item = OrderItem.objects.get(id=id)
                 except OrderItem.DoesNotExist:
                     print u"OrderItem с кодом '" + code + u"' не существует"
+            supplier = None
+            status_expired_date = None
             if supplier_id:
                 supplier = Supplier.objects.get(id=supplier_id)
                 
                 if status.status == u'Заказан':
                     status_expired_date = datetime.datetime.now() + datetime.timedelta(hours=float(supplier.time_out))
-            else:
-                supplier = None
-                status_expired_date = None
             if item is not None:
                 # updating current item
                 item.code = code
