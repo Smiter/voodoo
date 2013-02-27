@@ -154,3 +154,7 @@ ui, li {
 .orders_management_filter_table th, td{
 	vertical-align: middle;
 }
+.hasDatepicker {
+	width: 70px;
+	text-align: center;
+}

@@ -359,13 +359,6 @@ def user_management(request):
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def items_management(request):
-    #TODO
-    #filter
-    message = ''
-    # default results
-    results = OrderItem.objects.filter(status_id=2)
-    if len(results) == 0:
-        message = u'Ничего не найдено.'
     if request.method == 'POST':
         form = ItemsManagementForm(request.POST or None)
         if form.is_valid():
@@ -423,7 +416,24 @@ def items_management(request):
             else:
                 message = 'Ничего не найдено.'
     else:
+        message = ''
         form = ItemsManagementForm()
+        
+        item_status_initial = form['item_status'].field.initial
+        item_creation_date_1_initial = form['added_after'].field.initial
+        item_creation_date_2_initial = form['added_before'].field.initial
+        
+        # default results
+        results = OrderItem.objects.filter(Q(status_id=item_status_initial) & 
+                                       Q(creation_date__gte=item_creation_date_1_initial) & 
+                                       Q(creation_date__lte=item_creation_date_2_initial))
+        
+        # message
+        if results:
+            message = 'Найдены следующие заказы(для полного просмотра выберите нужный в списке)'
+        else:
+            message = 'Ничего не найдено.'
+        
     return direct_to_template(request, 'items_management.html', {'form': form, 'results': results, 'message': message})
 
 @login_required(login_url='/admin_center/login/')

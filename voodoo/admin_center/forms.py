@@ -109,8 +109,8 @@ class UserManagementForm(forms.Form):
 class ItemsManagementForm(forms.Form):
     order_id = forms.CharField(label='Номер заказа', required=False)
     item_status = forms.ModelChoiceField(label='Статус запчасти', queryset=ItemStatus.objects.all(), initial='2', required=False)
-    added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
-    added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    added_after = forms.DateField(label='Создан между', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.combine(datetime.datetime.now() - datetime.timedelta(days=7), datetime.time.min))
+    added_before = forms.DateField(label='и', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.max))
     
     supplier = forms.ModelChoiceField(label="Поставщик", queryset=Supplier.objects.all(), required=False)
     item_code = forms.CharField(label='Номер запчасти', required=False)
