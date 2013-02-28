@@ -14,6 +14,7 @@ $(function() {
     $("#items_management").tablesorter();
     
     makeColoredUrgentItems();
+    makeColoredEditedItems();
 });
     
 $(document).ready(function() {
@@ -25,14 +26,30 @@ $(document).ready(function() {
 		source: "/admin_center/autocomplete_brand/"
 	});
  });
- 
+
+function makeColoredEditedItems() {
+	{% for row in results %}
+		var rowId = '{{ row.id }}';
+		var row = $('#row_id_' + rowId);
+		var rowInputs = $('#row_id_' + rowId + ' :input');
+		
+		rowInputs.each(function() {
+			this.row = row;
+			$(this).click(function() {
+				this.row.addClass("highlightable-edited");
+			});
+		});
+	{% endfor %}
+}
+
 function makeColoredUrgentItems() {
 	{% for row in results %}
 		var rowId = '{{ row.id }}';
 		var row = $('#row_id_' + rowId);
 		var itemDeliveryTime = $('#order_item_{{ row.id }}_delivery_time').val();
+		
 		if (itemDeliveryTime == 'Срочно') {
-			row.css({'background-color': '#89AAFF'});
+			row.addClass("highlightable-urgent");
 		}
 	{% endfor %}
 }
@@ -56,10 +73,10 @@ function editAjax(item_id) {
 		    		'status': $('#order_item_' + item_id + '_status option:selected').val(),
 		    		},
 		    success: function(){
-		        
+				$("#row_id_" + item_id).removeClass("highlightable-edited");
 		    }
 		});
-	} 
+	}
 }
 
 function deleteAjax(item_id) {

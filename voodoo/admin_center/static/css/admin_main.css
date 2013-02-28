@@ -123,6 +123,22 @@
 	background-color: #ECECEC;
 }
 
+.highlightable-urgent {
+	background-color: #89AAFF;
+}
+
+.highlightable-urgent:hover {
+	background-color: #2F69FC;
+}
+
+.highlightable-edited {
+	background-color: #FFFE89;
+}
+
+.highlightable-edited:hover {
+	background-color: #FCFF00;
+}
+
 #order_details td, #items_management td {
 	padding: 5px 8px 5px 5px;
 	text-align: center;
