@@ -12,6 +12,8 @@ $(function() {
 	});
 	
     $("#items_management").tablesorter();
+    
+    makeColoredUrgentItems();
 });
     
 $(document).ready(function() {
@@ -23,6 +25,11 @@ $(document).ready(function() {
 		source: "/admin_center/autocomplete_brand/"
 	});
  });
+ 
+function makeColoredUrgentItems(rowId) {
+	var rowId = 'row_id_4';
+	$('#' + rowId).css({'background-color': 'blue'});
+}
  
 function autocompleteDateToNow(){
 	$("#id_expired_date").val($.datepicker.formatDate('dd.mm.yy', new Date()));
@@ -154,7 +161,9 @@ function validateForm(item_id) {
 			</td>
 		</tr>
 	</table>
-	<input type="submit" value="Применить фильтр">
+	<div style="text-align: center;">
+		<input type="submit" value="Применить фильтр">
+	</div>
 </form>
 {% if results %}
 	<div>{{message}}</div>

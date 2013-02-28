@@ -147,10 +147,7 @@
 				source: "/admin_center/autocomplete_brand/"
 			});
 			
-			$("#row" + rowId + "_status").change();
-			makeOrderItemStatusesColorable($("#row" + rowId + "_status option"));
-			
-		}
+			makeOrderItemStatusesColorable($("#row" + rowId + "_status option"));		}
 		
 		function refreshTotal() {
 			var totalSumm1Element = document.getElementById("total_sum_1");
@@ -272,6 +269,8 @@
 					document.getElementById("row" + rowId + "_supplier").value = '{{ item.supplier.id }}';
 					document.getElementById("row" + rowId + "_delivery_time").value = '{{ item.delivery_time }}';
 					document.getElementById("row" + rowId + "_status").value = '{{ item.status }}';
+					
+					$("#row" + rowId + "_status").change();
 				{% endfor %}
 			{% else %}
 				addRowIntoTable();
