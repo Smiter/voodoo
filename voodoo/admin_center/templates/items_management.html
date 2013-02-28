@@ -26,9 +26,15 @@ $(document).ready(function() {
 	});
  });
  
-function makeColoredUrgentItems(rowId) {
-	var rowId = 'row_id_4';
-	$('#' + rowId).css({'background-color': 'blue'});
+function makeColoredUrgentItems() {
+	{% for row in results %}
+		var rowId = '{{ row.id }}';
+		var row = $('#row_id_' + rowId);
+		var itemDeliveryTime = $('#order_item_{{ row.id }}_delivery_time').val();
+		if (itemDeliveryTime == 'Срочно') {
+			row.css({'background-color': '#89AAFF'});
+		}
+	{% endfor %}
 }
  
 function autocompleteDateToNow(){
