@@ -305,6 +305,7 @@ function validateForm(item_id) {
 				});
 				
 				makeOrderItemStatusesColorable($("#order_item_{{ row.id }}_status option"));
+				$("#order_item_{{ row.id }}_status").change();
 			</script>
 			{% endfor %}
 		</tbody>
