@@ -15,6 +15,8 @@ $(function() {
     
     makeColoredUrgentItems();
     makeColoredEditedItems();
+    // TODO
+    // makeColoredOrderedItems();
 });
     
 $(document).ready(function() {
@@ -27,15 +29,27 @@ $(document).ready(function() {
 	});
  });
 
+function makeColoredOrderedItems() {
+	{% for row in results %}
+		var tableRowId = '{{ row.id }}';
+		var tableRow = $('#row_id_' + tableRowId);
+		
+		var timeClosingOrder = '{{ row.supplier.time_closing_order }}';
+		var now = new Date();
+		
+		row.addClass("highlightable-edited");
+	{% endfor %}
+}
+
 function makeColoredEditedItems() {
 	{% for row in results %}
-		var rowId = '{{ row.id }}';
-		var row = $('#row_id_' + rowId);
-		var rowInputs = $('#row_id_' + rowId + ' :input');
+		var tableRowId = '{{ row.id }}';
+		var tableRow = $('#row_id_' + tableRowId);
+		var tableRowInputs = $('#row_id_' + tableRowId + ' :input');
 		
-		rowInputs.each(function() {
-			this.row = row;
-			$(this).click(function() {
+		tableRowInputs.each(function() {
+			this.row = tableRow;
+			$(this).change(function() {
 				this.row.addClass("highlightable-edited");
 			});
 		});

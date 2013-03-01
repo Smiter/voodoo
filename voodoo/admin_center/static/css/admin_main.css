@@ -131,6 +131,30 @@
 	background-color: #2F69FC;
 }
 
+.highlightable-green {
+	background-color: #12ce04;
+}
+
+.highlightable-green:hover {
+	background-color: #11ee00;
+}
+
+.highlightable-red {
+	background-color: #ff0000;
+}
+
+.highlightable-red:hover {
+	background-color: #c50000;
+}
+
+.highlightable-orange {
+	background-color: #ffb412;
+}
+
+.highlightable-orange:hover {
+	background-color: #ffcc5d;
+}
+
 .highlightable-edited {
 	background-color: #FFFE89;
 }
