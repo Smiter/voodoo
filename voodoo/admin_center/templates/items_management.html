@@ -36,8 +36,7 @@ function makeColoredOrderedItems() {
 	{% for row in results %}
 		var tableRowId = '{{ row.id }}';
 		var tableRow = $('#row_id_' + tableRowId);
-		
-		if('{{ row.supplier}}' != 'None') {
+		if('{{ row.supplier}}' != 'None' && '{{row.status}}' == 'Оформлен' ) {
 			var timeClosingOrderString = '{{ row.supplier.time_closing_order }}';
 			var supplierClosingOrderTime = timeStringToSeconds(timeClosingOrderString);
 			var timeDifferenceSeconds = supplierClosingOrderTime - currentTime;
