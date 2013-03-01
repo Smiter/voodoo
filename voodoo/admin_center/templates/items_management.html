@@ -15,8 +15,7 @@ $(function() {
     
     makeColoredUrgentItems();
     makeColoredEditedItems();
-    // TODO
-    // makeColoredOrderedItems();
+    makeColoredOrderedItems();
 });
     
 $(document).ready(function() {
@@ -30,15 +29,39 @@ $(document).ready(function() {
  });
 
 function makeColoredOrderedItems() {
+	var now = new Date();
+	var nowStr = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+	var currentTime = timeStringToSeconds(nowStr);
+	
 	{% for row in results %}
 		var tableRowId = '{{ row.id }}';
 		var tableRow = $('#row_id_' + tableRowId);
 		
-		var timeClosingOrder = '{{ row.supplier.time_closing_order }}';
-		var now = new Date();
+		if('{{ row.supplier}}' != 'None') {
+			var timeClosingOrderString = '{{ row.supplier.time_closing_order }}';
+			var supplierClosingOrderTime = timeStringToSeconds(timeClosingOrderString);
+			var timeDifferenceSeconds = supplierClosingOrderTime - currentTime;
+			
+			if (timeDifferenceSeconds > 0) {
+				if (timeDifferenceSeconds < 180){
+					// less then 3 minutes
+					tableRow.addClass("highlightable-red");
+				} else if (timeDifferenceSeconds < 3600) {
+					// less then 1 hour
+					tableRow.addClass("highlightable-orange");
+				} else if (timeDifferenceSeconds < 7200){
+					// less then 2 hours
+					tableRow.addClass("highlightable-green");
+				}
+			}
+		}
 		
-		row.addClass("highlightable-edited");
 	{% endfor %}
+}
+
+function timeStringToSeconds(time) {
+    time = time.split(/:/);
+    return parseInt(time[0] * 3600) + parseInt(time[1] * 60) + parseInt(time[2]);
 }
 
 function makeColoredEditedItems() {
