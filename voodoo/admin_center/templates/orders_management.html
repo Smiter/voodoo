@@ -17,7 +17,15 @@
 			    }
 			});
 		}
-}
+	}
+	
+	function printOrder(row, orderId) {
+		var printWindow = window.open();
+		printWindow.document.write('Не нужно в меня тыкать, я ещё маленькая.');
+		printWindow.window.print();
+		printWindow.document.close();
+	}
+	
 </script>
 {% endblock %}
 {% block content %}
@@ -92,7 +100,7 @@
 				<th style="width: 150px;">Заказчик</th>
 				<th>Информация о заказе</th>
 				<th style="width: 100px;">Статус заказа</th>
-				<th style="width: 65px;">Действия</th>
+				<th style="width: 75px;">Действия</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -111,6 +119,7 @@
 					<div style="text-align: center" >
 						<input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = 'order_edit/{{ row.id }}';">
 						<input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteAjax({{ row.id }}); return false;">
+						<input class="highlightable_pointer" type="image" src="/static/images/printer.png" width="15" height="15" onclick="printOrder({{ row }}, {{ row.id }}); return false;">
 					</div>
 				</td>
 			</tr>
