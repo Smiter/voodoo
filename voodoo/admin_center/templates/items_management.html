@@ -3,6 +3,14 @@
 
 <script type="text/javascript">
 $(function() {
+	$("#id_item_code").autocomplete({
+		source: "/admin_center/autocomplete_code/"
+	});
+				
+	$("#id_item_brand").autocomplete({
+		source: "/admin_center/autocomplete_brand/"
+	});
+	
     $("#id_added_after").datepicker({dateFormat: 'dd.mm.yy'});
     $("#id_added_before").datepicker({dateFormat: 'dd.mm.yy'});
     $("#id_expired_date").datepicker({dateFormat: 'dd.mm.yy'});
@@ -14,20 +22,9 @@ $(function() {
     $("#items_management").tablesorter();
     
     makeColoredUrgentItems();
-    makeColoredEditedItems();
-    makeColoredOrderedItems();
+    makeColoredEditedItems();    makeColoredOrderedItems();
 });
     
-$(document).ready(function() {
-	$("#id_item_code").autocomplete({
-		source: "/admin_center/autocomplete_code/"
-	});
-				
-	$("#id_item_brand").autocomplete({
-		source: "/admin_center/autocomplete_brand/"
-	});
- });
-
 function makeColoredOrderedItems() {
 	var now = new Date();
 	var nowStr = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
@@ -115,17 +112,6 @@ function editAjax(item_id) {
 	}
 }
 
-function deleteAjax(item_id) {
-	if (confirm("Удалить запчасть?")) {
-		$.ajax({
-		    url: "item_delete/"+ item_id +"/",
-		    type: "POST",
-		    success: function() {
-		    	$('#row_id_' + item_id).remove();
-		    }
-		});
-	}
-}
 
 function validateForm(item_id) {
 	var price_1 = parseFloat(document.getElementById("order_item_" + item_id +"_price_1").value);
@@ -290,7 +276,7 @@ function validateForm(item_id) {
 				<td>
 					<div style="text-align: center">
 						<input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="editAjax({{ row.id }}); return false;">
-						<input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteAjax({{ row.id }}); return false;">
+						<input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteOrderItemAjax({{ row.id }}, {{ row.id }}); return false;">
 					</div>
 					
 				</td>

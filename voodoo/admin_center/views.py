@@ -583,59 +583,62 @@ def make_decimal_from_string(string):
 def saveItemsForOrder(request, order):
     rowCount = int(request.POST['row_count'])
     for i in range(1, rowCount + 1):
-        item = None
-        id = request.POST['row%s_id' % i]
-        code = request.POST['row%s_code' % i]
-        brand = request.POST['row%s_brand' % i]
-        comment = request.POST['row%s_comment' % i]
-        price_1 = make_decimal_from_string(request.POST['row%s_price_1' % i])
-        price_2 = make_decimal_from_string(request.POST['row%s_price_2' % i])
-        currency = request.POST['row%s_currency' % i]
-        count = request.POST['row%s_count' % i]
-        supplier_id = request.POST['row%s_supplier' % i]
-        delivery_time = request.POST['row%s_delivery_time' % i]
-        status = ItemStatus.objects.get(status=request.POST['row%s_status' % i])
-        # working only with rows where 'code' is not empty
-        if (code):
-            if id != '':
-                try:
-                    item = OrderItem.objects.get(id=id)
-                except OrderItem.DoesNotExist:
-                    print u"OrderItem с кодом '" + code + u"' не существует"
-            supplier = None
-            status_expired_date = None
-            if supplier_id:
-                supplier = Supplier.objects.get(id=supplier_id)
-                
-                if status.status == u'Заказан':
-                    status_expired_date = datetime.datetime.now() + datetime.timedelta(hours=float(supplier.time_out))
-            if item is not None:
-                # updating current item
-                item.code = code
-                item.brand = brand
-                item.comment = comment
-                item.price_1 = price_1
-                item.price_2 = price_2
-                item.currency = currency
-                item.count = count
-                item.supplier = supplier
-                item.delivery_time = delivery_time
-                
-                item_edited = item.status != status
-                if (item_edited ):
-                    new_status_is_ordered = status.status == u'Заказан'
-                    if new_status_is_ordered:
-                        item.status_expired_date = status_expired_date
-                    else:
-                        item.status_expired_date = None
-                item.status = status
+        try:
+            item = None
+            id = request.POST['row%s_id' % i]
+            code = request.POST['row%s_code' % i]
+            brand = request.POST['row%s_brand' % i]
+            comment = request.POST['row%s_comment' % i]
+            price_1 = make_decimal_from_string(request.POST['row%s_price_1' % i])
+            price_2 = make_decimal_from_string(request.POST['row%s_price_2' % i])
+            currency = request.POST['row%s_currency' % i]
+            count = request.POST['row%s_count' % i]
+            supplier_id = request.POST['row%s_supplier' % i]
+            delivery_time = request.POST['row%s_delivery_time' % i]
+            status = ItemStatus.objects.get(status=request.POST['row%s_status' % i])
+            # working only with rows where 'code' is not empty
+            if (code):
+                if id != '':
+                    try:
+                        item = OrderItem.objects.get(id=id)
+                    except OrderItem.DoesNotExist:
+                        print u"OrderItem с кодом '" + code + u"' не существует"
+                supplier = None
+                status_expired_date = None
+                if supplier_id:
+                    supplier = Supplier.objects.get(id=supplier_id)
                     
-                item.save()
-            else:
-                #creating new item
-                item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2, 
-                    currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=None, status_expired_date=status_expired_date)
-                item.save()
+                    if status.status == u'Заказан':
+                        status_expired_date = datetime.datetime.now() + datetime.timedelta(hours=float(supplier.time_out))
+                if item is not None:
+                    # updating current item
+                    item.code = code
+                    item.brand = brand
+                    item.comment = comment
+                    item.price_1 = price_1
+                    item.price_2 = price_2
+                    item.currency = currency
+                    item.count = count
+                    item.supplier = supplier
+                    item.delivery_time = delivery_time
+                    
+                    item_edited = item.status != status
+                    if (item_edited ):
+                        new_status_is_ordered = status.status == u'Заказан'
+                        if new_status_is_ordered:
+                            item.status_expired_date = status_expired_date
+                        else:
+                            item.status_expired_date = None
+                    item.status = status
+                        
+                    item.save()
+                else:
+                    #creating new item
+                    item = OrderItem(order=order, code=code, brand=brand, comment=comment, price_1=price_1, price_2=price_2, 
+                        currency=currency, count=count, supplier=supplier, delivery_time=delivery_time, status=status, product=None, status_expired_date=status_expired_date)
+                    item.save()
+        except:
+            print u'Order Item with id:%s skipped' % i
 
 
 @login_required(login_url='/admin_center/login/')

@@ -88,11 +88,11 @@
 			rowId += 1;
 			var table = document.getElementById("order_details");
 			var newRow = table.insertRow(table.getElementsByTagName("tr").length - 2);
-			newRow.id = 'row_' + rowId;
+			newRow.id = 'row_id_' + rowId;
 			newRow.innerHTML = 	'<td id="row' + rowId + '_number">'+ rowId + '.</td>' + 
 								'<td>&nbsp;</td>' +
 								'<td>' +
-									'<input id="row' + rowId + '_id" name="row' + rowId + '_id" type="hidden"/>' + 
+									'<input id="row' + rowId + '_id" name="row' + rowId + '_id" type="hidden" value=""/>' + 
 									'<input id="row' + rowId + '_code" name="row' + rowId + '_code" type="text" style="width:100%; min-width:180px;"/>' +
 								'</td>' +
 								'<td><input id="row' + rowId + '_brand" name="row' + rowId + '_brand" type="text" style="width:100%; min-width:120px;"/></td>' +
@@ -135,7 +135,11 @@
 										'Нет ни одного статуса' +
 									'{% endif %}' +
 								'</td>' +
-								'<td>&nbsp;</td>';
+								'<td>' +
+									'<div style="text-align: center">' +
+										'<input id="delete_row_' + rowId + '" class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15">' +
+									'</div>' +
+								'</td>';
 								
 			document.getElementById("row_count").value = rowId;
 			
@@ -147,6 +151,7 @@
 				source: "/admin_center/autocomplete_brand/"
 			});
 			
+			$("#row" + rowId + "_status").change();
 			makeOrderItemStatusesColorable($("#row" + rowId + "_status option"));		}
 		
 		function refreshTotal() {
@@ -271,6 +276,13 @@
 					document.getElementById("row" + rowId + "_status").value = '{{ item.status }}';
 					
 					$("#row" + rowId + "_status").change();
+					
+					$('#delete_row_' + rowId).click({itemId: '{{ item.id }}', rowId: rowId}, function(event) {
+						deleteOrderItemAjax(event.data.itemId, event.data.rowId);
+						
+						return false;
+					});
+					
 				{% endfor %}
 			{% else %}
 				addRowIntoTable();
