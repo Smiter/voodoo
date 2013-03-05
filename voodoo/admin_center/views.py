@@ -692,3 +692,11 @@ def edit_model(request, modelname, id):
     form.required_css_class = 'required'
     return direct_to_template(request, 'edit_model.html', {'form': form, 'id': id, 'title': title, 'modelname': modelname})
 
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def order_print(request, id):
+    message =''
+    order = Order.objects.get(id=id)
+    order_items = OrderItem.objects.filter(order_id=order.id)
+        
+    return direct_to_template(request, 'order_print.html', {'message': message, 'order': order, 'order_items': order_items})

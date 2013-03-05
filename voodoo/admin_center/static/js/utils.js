@@ -34,10 +34,9 @@ function deleteOrderAjax(item_id) {
 	}
 }
 
-function printOrder(row, orderId) {
-	var printWindow = window.open();
-	printWindow.document.write('Не нужно в меня тыкать, я ещё маленькая.');
-	printWindow.window.print();
-
-	printWindow.document.close();
+function printOrder(orderId) {
+	var printWindow = window.open('/admin_center/order_print/' + orderId);
+	
+	// printWindow.window.print();
+	return false;
 }

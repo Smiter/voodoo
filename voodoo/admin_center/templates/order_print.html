@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Admin Center</title>
+	{% load i18n admin_modify adminmedia %}
+</head>
+<body>
+	<div>
+		<table>
+			<tr>
+				<th>
+			        <label for="id_order_creation_date">Дата, время создания:</label>
+				</th>
+				<td>
+			        {{ order.creation_date }}
+				</td>
+			</tr>
+			<tr>
+				<th>
+			        <label for="id_order_status">Статус:</label>
+				</th>
+				<td>
+			        {{ order.order_status }}
+				</td>
+			</tr>
+			<tr>
+				<th>
+			        <label for="id_order_info">Полная формулировка:</label>
+				</th>
+				<td>
+			        {{ order.order_info }}
+				</td>
+			</tr>
+			<tr>
+				<th>
+			        <label for="id_order_additional_information">Доп. информация:</label>
+				</th>
+				<td>
+			        {{ order.order_additional_information }}
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+			        Клиент
+				</td>
+			</tr>
+			<tr>
+				<th>
+			        <label for="id_client_name">Ф.И.О. или название:</label>
+				</th>
+				<td>
+			        {{ order.client_name }}
+				</td>
+			</tr>
+			<tr>
+				<th>
+			        <label for="id_client_phone">Контактные телефоны:</label>
+				</th>
+				<td>
+			        {{ order.client_phone }}
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+			        Авто
+				</td>
+			</tr>
+			<tr>
+				<th>
+			        <label for="id_car_vin">VIN:</label>
+				</th>
+				<td>
+			        {{ order.car_vin }}
+				</td>
+			</tr>
+	    </table>
+	</div>
+    <br>
+    <div>
+	    <table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+			<thead>
+				<tr class="table-header">
+					<td style="width: 30px;">№</td>
+					<td>Номер</td>
+					<td>Бренд</td>
+					<td>Комментарии</td>
+					<td class="highlightable_pointer" style="width: 55px;" onclick="showHideWidget()">Закупка</td>
+					<td style="width: 55px;">Продажа</td>
+					<td style="width: 50px;">Вал.</td>
+					<td style="width: 30px;">Кол.</td>
+					<td>Поставщик</td>
+					<td style="width: 100px;">Срок поставки</td>
+					<td style="width: 95px;">Статус</td>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in order_items %}
+					<tr>
+						<td>.</td>
+						<td>{{ item.code }}</td>
+						<td>{{ item.brand }}</td>
+						<td>{{ item.comment }}</td>
+						<td>{{ item.price_1 }}</td>
+						<td>{{ item.price_2 }}</td>
+						<td>{{ item.currency }}</td>
+						<td>{{ item.count }}</td>
+						<td>{{ item.supplier }}</td>
+						<td>{{ item.delivery_time }}</td>
+						<td>{{ item.status }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr class="create-new-order-table-footer">
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td style="font-weight: bold; text-align: right;">Всего:</td>
+					<td id="total_sum_1">&nbsp;</td>
+					<td id="total_sum_2">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div><form><input type="button" value=" Печать " onclick="window.print();return false;" /></form></div> 
+</body>
+</html>
