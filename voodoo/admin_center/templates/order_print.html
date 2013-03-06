@@ -4,10 +4,79 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Admin Center</title>
 	{% load i18n admin_modify adminmedia %}
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+	<link rel=StyleSheet href="{{STATIC_URL}}css/admin_print.css" type="text/css"/>
+	
+<script type="text/javascript">
+	var rowId = 1;
+	
+	$(function() {
+		$(".numerable").each(function() {
+			$(this).text(rowId + ".");
+			rowId++;
+		});
+	
+		refreshTotal();
+	});
+	
+	function refreshTotal() {
+		var totalSumm1Element = $("#total_sum_1");
+		var totalSumm2Element = $("#total_sum_2");
+		
+		var totalSumm1UAH = 0;
+		var totalSumm2UAH = 0;
+		
+		var totalSumm1USD = 0;
+		var totalSumm2USD = 0;
+		
+		var totalSumm1EUR = 0;
+		var totalSumm2EUR = 0;
+		
+		{% for item in order_items %}
+			var sum1 = parseFloat('{{ item.price_1 }}');
+			var sum2 = parseFloat('{{ item.price_2 }}');
+			var count = parseFloat('{{ item.count }}');
+			var curr = '{{ item.currency }}';
+						if (curr == 'UAH') {
+				totalSumm1UAH += sum1 * count;
+				totalSumm2UAH += sum2 * count;
+			} else if (curr == 'USD') {
+				totalSumm1USD += sum1 * count;
+				totalSumm2USD += sum2 * count;
+			} else if (curr == 'EUR') {
+				totalSumm1EUR += sum1 * count;
+				totalSumm2EUR += sum2 * count;
+			}
+		{% endfor %}
+		
+		var totalSum1Str = '';
+		var totalSum2Str = '';
+		
+		if (totalSumm1UAH > 0 || totalSumm2UAH > 0) {
+			var totalSum1Str = totalSum1Str + totalSumm1UAH.toFixed(1) + ' UAH\n';
+			var totalSum2Str = totalSum2Str + totalSumm2UAH.toFixed(1) + ' UAH\n';
+		}
+		
+		if (totalSumm1USD > 0 || totalSumm2USD > 0) {
+			var totalSum1Str = totalSum1Str + totalSumm1USD.toFixed(1) + ' USD\n';
+			var totalSum2Str = totalSum2Str + totalSumm2USD.toFixed(1) + ' USD\n';
+		}
+		
+		if (totalSumm1EUR > 0 || totalSumm2EUR > 0) {
+			var totalSum1Str = totalSum1Str + totalSumm1EUR.toFixed(1) + ' EUR\n';
+			var totalSum2Str = totalSum2Str + totalSumm2EUR.toFixed(1) + ' EUR\n';
+		}
+		
+		
+		totalSumm1Element.text(totalSum1Str);
+		totalSumm2Element.text(totalSum2Str);
+	}
+</script>
 </head>
 <body>
-	<div>
-		<table>
+	<div class="content">
+		<div class="title">Информация по заказу № {{ order.id }}</div>
+		<table class="order-info">
 			<tr>
 				<th>
 			        <label for="id_order_creation_date">Дата, время создания:</label>
@@ -41,7 +110,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2">
+				<td colspan="2" class="subtitle">
 			        Клиент
 				</td>
 			</tr>
@@ -62,7 +131,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2">
+				<td colspan="2" class="subtitle">
 			        Авто
 				</td>
 			</tr>
@@ -75,10 +144,8 @@
 				</td>
 			</tr>
 	    </table>
-	</div>
-    <br>
-    <div>
-	    <table id="order_details" border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
+    	<div class="title">Запчасти к заказу № {{ order.id }}</div>
+	    <table class="order-items">
 			<thead>
 				<tr class="table-header">
 					<td style="width: 30px;">№</td>
@@ -97,12 +164,12 @@
 			<tbody>
 				{% for item in order_items %}
 					<tr>
-						<td>.</td>
+						<td class="numerable">.</td>
 						<td>{{ item.code }}</td>
 						<td>{{ item.brand }}</td>
 						<td>{{ item.comment }}</td>
-						<td>{{ item.price_1 }}</td>
-						<td>{{ item.price_2 }}</td>
+						<td class="price_1">{{ item.price_1 }}</td>
+						<td class="price_2">{{ item.price_2 }}</td>
 						<td>{{ item.currency }}</td>
 						<td>{{ item.count }}</td>
 						<td>{{ item.supplier }}</td>
@@ -128,6 +195,6 @@
 			</tfoot>
 		</table>
 	</div>
-	<div><form><input type="button" value=" Печать " onclick="window.print();return false;" /></form></div> 
+	<div style="text-align: center; padding: 10px;"><form><input type="button" value=" Печать " onclick="window.print();return false;" /></form></div> 
 </body>
 </html>

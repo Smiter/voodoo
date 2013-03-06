@@ -1,0 +1,51 @@
+.content {
+	font-family: Tahoma;
+    font-size: 12px;
+    line-height: 13px;
+}
+.title {
+	font-size: 16px;
+	text-align: center;
+	font-weight: bold;
+	padding: 10px;
+}
+
+.order-info {
+	width: 100%;
+	border: 1px #CCCCCC solid;
+	border-collapse: collapse;
+}
+
+.order-info th { 
+	text-align: left;
+	width: 200px;
+    padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 1px solid #CCCCCC; /* Граница вокруг ячеек */
+}
+.order-info td { 
+    padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 1px solid #CCCCCC; /* Граница вокруг ячеек */
+}
+
+.subtitle {
+	font-weight: bold;
+	text-align: center;
+	background-color: #CCCCCC;
+}
+
+.order-items {
+	width: 100%;
+	border: 1px #CCCCCC solid;
+	border-collapse: collapse;
+}
+
+.table-header {
+	font-weight: bold;
+	text-align: center;
+	background-color: #CCCCCC;
+}
+
+.order-items td {
+	padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 1px solid #CCCCCC; /* Граница вокруг ячеек */
+}
