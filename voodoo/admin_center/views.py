@@ -171,11 +171,11 @@ def orders_management(request):
     else:
         message = ''
         # default results
-        form = OrdersManagementForm()
+        order_creation_date_1_initial = datetime.datetime.combine(datetime.datetime.now().date() - datetime.timedelta(days=7), datetime.time.min)
+        order_creation_date_2_initial = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.max)
         
+        form = OrdersManagementForm(initial={'order_filter_creation_date_1': order_creation_date_1_initial, 'order_filter_creation_date_2': order_creation_date_2_initial })
         order_status_initial = form['order_filter_status'].field.initial
-        order_creation_date_1_initial = form['order_filter_creation_date_1'].field.initial
-        order_creation_date_2_initial = form['order_filter_creation_date_2'].field.initial
         
         results = Order.objects.filter(Q(order_status_id=order_status_initial) & 
                                        Q(creation_date__gte=order_creation_date_1_initial) & 
