@@ -467,6 +467,21 @@ def autocomplete_client_name(request):
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def autocomplete_client_login(request):
+    if request.method == 'GET':
+        GET = request.GET
+        if GET.has_key('term'):
+            q = request.GET.get( 'term' )
+            
+            users = User.objects.filter(username__istartswith = q).values('username')
+            results = []
+            for user in users:
+                results.append(user['username'])
+                
+            return HttpResponse(json.dumps(results), mimetype="text/plain")
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def autocomplete_client_phone(request, client):
     if request.method == 'GET':
         GET = request.GET
@@ -700,3 +715,30 @@ def order_print(request, id):
     order_items = OrderItem.objects.filter(order_id=order.id)
         
     return direct_to_template(request, 'order_print.html', {'message': message, 'order': order, 'order_items': order_items})
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def shipment_create(request):
+    message = ''
+    form = ShipmentForm()
+    
+    if request.method == 'POST':
+        form = ShipmentForm(request.POST or None)
+        
+        if form.is_valid():
+            shipment = form.save(commit=False)
+            
+            if 'for_client' in request.POST:
+                shipment.type = ShipmentType.objects.get(code = 'for_client')
+            if 'from_client' in request.POST:
+                shipment.type = ShipmentType.objects.get(code = 'from_client')
+            if 'from_supplier' in request.POST:
+                shipment.type = ShipmentType.objects.get(code = 'from_supplier')
+            if 'returning' in request.POST:
+                shipment.type = ShipmentType.objects.get(code = 'returning')
+            
+            shipment.save()
+            print shipment
+            message = u'Отправка создана. ID: %s' % shipment.id
+            
+    return direct_to_template(request, 'shipment_create.html', {'form': form, 'message': message})

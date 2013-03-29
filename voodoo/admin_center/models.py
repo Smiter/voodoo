@@ -214,3 +214,32 @@ class DiscountGroup(models.Model):
 
     class Meta:
         verbose_name = "Группа скидок"
+
+
+class ShipmentType(models.Model):
+    code = CharField(verbose_name='Код отправки', max_length=120, blank=True, null=True)
+    name = CharField(verbose_name='Тип отправки', max_length=120, blank=True, null=True)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = "Тип отправки"
+
+class Shipment(models.Model):
+    type = models.ForeignKey(ShipmentType, blank=True, null=True)
+    declaration_number = CharField(verbose_name='Номер декларации', max_length=120, blank=True, null=True)
+    creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
+    comment = CharField(verbose_name='Комментарий', max_length=120, blank=True, null=True)
+    price = CharField(verbose_name='Сумма', max_length=120, blank=True, null=True)
+    supplier = CharField(verbose_name='Поставщик', max_length=120, blank=True, null=True)
+    arrival_date = DateTimeField(verbose_name='Дата прибытия', max_length=120, blank=True, null=True)
+    recived = BooleanField(verbose_name='Товар получен')
+    
+    user_login = CharField(verbose_name='Логин Клиента', max_length=120, blank=True, null=True)
+    user_fio = CharField(verbose_name='Фамилия имя отчество', max_length=120, blank=True, null=True)
+    user_notified = BooleanField(verbose_name='Клиент уведомлен')
+    
+    transporter_name = CharField(verbose_name='Перевозчик', max_length=120, blank=True, null=True)
+    transporter_department_number = CharField(verbose_name='Отделение', max_length=120, blank=True, null=True)
+    transporter_count_of_places = CharField(verbose_name='Количество мест', max_length=120, blank=True, null=True)

@@ -1,0 +1,306 @@
+{% extends 'admin_base.html' %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+	$(function() {
+		
+		var $inputs = $('#shipment_create :input');
+		$inputs.each(function () {
+             if ($(this).attr('id') == 'id_arrival_date') {
+             	$(this).datepicker({dateFormat: 'dd.mm.yy'});
+             }
+             
+             if ($(this).attr('id') == 'id_user_login') {
+             	$(this).autocomplete({
+					source: "/admin_center/autocomplete_client_login/"
+				});
+             }
+         });
+		
+		hideAllForms();
+		
+		type = $('#id_type');
+		type.change(function() {
+			hideAllForms();
+			
+			if ($(this).val() == '1') {
+				$('#for_client').show();
+			} else if ($(this).val() == '2') {
+				$('#from_supplier').show();
+			} else if ($(this).val() == '3') {
+				$('#from_client').show();
+			} else if ($(this).val() == '4') {
+				$('#returning').show();
+			}
+		});
+		type.change();
+	});
+	
+	function hideAllForms() {
+		$('#for_client').hide();
+		$('#from_supplier').hide();
+		$('#from_client').hide();
+		$('#returning').hide();
+	
+	}
+	
+</script>
+{% endblock %}
+{% block content %}
+<h3>Создание отправки</h3>
+Инофрмация об отправке
+{% if message %}
+	<div class="info">
+		{{ message }}
+	</div>
+{% endif %}
+<div id="shipment_create" class="shipment_create">
+<table>
+	<tr>
+		<th>
+			<label for="type">{{ form.type.label }}</label>
+		</th>
+		<td>
+			{{ form.type.errors }}
+			{{ form.type }}
+		</td>
+	</tr>
+</table>
+	
+<form id="for_client" method="post">
+    <table>
+    	<tr>
+			<th>
+		        <label for="user_login">{{ form.user_login.label }}</label>
+			</th>
+			<td>
+		        {{ form.user_login.errors }}
+		        {{ form.user_login }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="user_fio">{{ form.user_fio.label }}</label>
+			</th>
+			<td>
+		        {{ form.user_fio.errors }}
+		        {{ form.user_fio }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="transporter_name">{{ form.transporter_name.label }}</label>
+			</th>
+			<td>
+		        {{ form.transporter_name.errors }}
+		        {{ form.transporter_name }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="transporter_department_number">{{ form.transporter_department_number.label }}</label>
+			</th>
+			<td>
+		        {{ form.transporter_department_number.errors }}
+		        {{ form.transporter_department_number }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="transporter_count_of_places">{{ form.transporter_count_of_places.label }}</label>
+			</th>
+			<td>
+		        {{ form.transporter_count_of_places.errors }}
+		        {{ form.transporter_count_of_places }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="declaration_number">{{ form.declaration_number.label }}</label>
+			</th>
+			<td>
+		        {{ form.declaration_number.errors }}
+		        {{ form.declaration_number }}
+			</td>
+    	</tr>
+    </table>
+    
+    <div style="text-align: center;"><input type="submit" value="Создать отправку" name="for_client"/></div>
+</form>
+
+<form id="from_supplier" method="post">    
+    <table>
+    	<tr>
+			<th>
+		        <label for="supplier">{{ form.supplier.label }}</label>
+			</th>
+			<td>
+		        {{ form.supplier.errors }}
+		        {{ form.supplier }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="transporter_name">{{ form.transporter_name.label }}</label>
+			</th>
+			<td>
+		        {{ form.transporter_name.errors }}
+		        {{ form.transporter_name }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="declaration_number">{{ form.declaration_number.label }}</label>
+			</th>
+			<td>
+		        {{ form.declaration_number.errors }}
+		        {{ form.declaration_number }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="arrival_date">{{ form.arrival_date.label }}</label>
+			</th>
+			<td>
+		        {{ form.arrival_date.errors }}
+		        {{ form.arrival_date }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="transporter_count_of_places">{{ form.transporter_count_of_places.label }}</label>
+			</th>
+			<td>
+		        {{ form.transporter_count_of_places.errors }}
+		        {{ form.transporter_count_of_places }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="recived">{{ form.recived.label }}</label>
+			</th>
+			<td>
+		        {{ form.recived.errors }}
+		        {{ form.recived }}
+			</td>
+    	</tr>
+    </table>
+    
+    <div style="text-align: center;"><input type="submit" value="Создать отправку" name="from_supplier"/></div>
+</form>
+
+<form id="from_client" method="post">
+    <table >
+    	<tr>
+			<th>
+		        <label for="user_login">{{ form.user_login.label }}</label>
+			</th>
+			<td>
+		        {{ form.user_login.errors }}
+		        {{ form.user_login }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="supplier">{{ form.supplier.label }}</label>
+			</th>
+			<td>
+		        {{ form.supplier.errors }}
+		        {{ form.supplier }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="declaration_number">{{ form.declaration_number.label }}</label>
+			</th>
+			<td>
+		        {{ form.declaration_number.errors }}
+		        {{ form.declaration_number }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="comment">{{ form.comment.label }}</label>
+			</th>
+			<td>
+		        {{ form.comment.errors }}
+		        {{ form.comment }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="recived">{{ form.recived.label }}</label>
+			</th>
+			<td>
+		        {{ form.recived.errors }}
+		        {{ form.recived }}
+			</td>
+    	</tr>
+    </table>
+    
+    <div style="text-align: center;"><input type="submit" value="Создать отправку" name="from_client"/></div>
+</form>
+
+<form id="returning">
+    <table>
+    	<tr>
+			<th>
+		        <label for="user_fio">{{ form.user_fio.label }}</label>
+			</th>
+			<td>
+		        {{ form.user_fio.errors }}
+		        {{ form.user_fio }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="transporter_name">{{ form.transporter_name.label }}</label>
+			</th>
+			<td>
+		        {{ form.transporter_name.errors }}
+		        {{ form.transporter_name }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="declaration_number">{{ form.declaration_number.label }}</label>
+			</th>
+			<td>
+		        {{ form.declaration_number.errors }}
+		        {{ form.declaration_number }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="arrival_date">{{ form.arrival_date.label }}</label>
+			</th>
+			<td>
+		        {{ form.arrival_date.errors }}
+		        {{ form.arrival_date }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="price">{{ form.price.label }}</label>
+			</th>
+			<td>
+		        {{ form.price.errors }}
+		        {{ form.price }}
+			</td>
+    	</tr>
+    	<tr>
+			<th>
+		        <label for="user_notified">{{ form.user_notified.label }}</label>
+			</th>
+			<td>
+		        {{ form.user_notified.errors }}
+		        {{ form.user_notified }}
+			</td>
+    	</tr>
+    </table>
+    
+    <div style="text-align: center;"><input type="submit" value="Создать отправку" name="returning"/></div>
+</form>
+</div>
+{% endblock %}

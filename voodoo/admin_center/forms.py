@@ -117,3 +117,14 @@ class ItemsManagementForm(forms.Form):
     expired_items = forms.BooleanField(label='Выборка "просроченных" запчастей', required=False)
     expired_date = forms.DateField(label='по дату', required=False)
 
+class ShipmentForm(forms.ModelForm):
+    type = forms.ModelChoiceField(label='Тип отправки', queryset=ShipmentType.objects.all(), empty_label=None, required=False)
+    arrival_date = forms.DateField(label='Дата прибытия', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.now())
+    
+    class Meta:
+        model = Shipment
+        widgets = {
+                   'comment': forms.Textarea(
+                                             attrs={'style': 'max-height:60px;min-height:60px;'
+                                                    + 'max-width:550px;min-width:550px'}),
+                   }
