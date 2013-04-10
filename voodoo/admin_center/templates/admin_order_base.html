@@ -322,7 +322,7 @@
 		{{ message }}
 	</div>
 {% endif %}
-<form name="order_create_form" action="/admin_center/order_{% block form_name %}{% endblock %}" method="POST" onsubmit="return validateForm()">
+<form class="order-create-edit-form" name="order_create_form" action="/admin_center/order_{% block form_name %}{% endblock %}" method="POST" onsubmit="return validateForm()">
 		{% csrf_token %}
 		{{ form.non_field_errors }}
 		<div>
