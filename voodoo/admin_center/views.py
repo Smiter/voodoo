@@ -420,8 +420,8 @@ def items_management(request):
         form = ItemsManagementForm()
         
         item_status_initial = form['item_status'].field.initial
-        item_creation_date_1_initial = form['added_after'].field.initial
-        item_creation_date_2_initial = form['added_before'].field.initial
+        item_creation_date_1_initial = datetime.datetime.combine(datetime.datetime.now() - datetime.timedelta(days=7), datetime.time.min)
+        item_creation_date_2_initial = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.max)
         
         # default results
         results = OrderItem.objects.filter(Q(status_id=item_status_initial) & 
