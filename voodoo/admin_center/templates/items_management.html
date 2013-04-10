@@ -242,7 +242,7 @@ function validateForm(item_id) {
 				<td><input id="order_item_{{ row.id }}_price_2" value="{{ row.price_2 }}" style="width:50px; text-align:right;"></td>
 				<td>
 					{% if currencyList %}
-					<select id="order_item_{{ row.id }}_currency"> 
+					<select id="order_item_{{ row.id }}_currency" onChange="makeCurrencyElementColorable(this)"> 
 						{% for currency in currencyList %}
 							{% ifequal currency.code row.currency %}
 								<option value="{{ currency }}" selected="selected">{{ currency }}</option>
@@ -291,7 +291,10 @@ function validateForm(item_id) {
 				});
 				
 				makeOrderItemStatusesColorable($("#order_item_{{ row.id }}_status option"));
+				makeCurrencySelectColorable($("#order_item_{{ row.id }}_currency option"));
+				
 				$("#order_item_{{ row.id }}_status").change();
+				$("#order_item_{{ row.id }}_currency").change();
 			</script>
 			{% endfor %}
 		</tbody>

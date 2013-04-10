@@ -44,3 +44,23 @@ function makeOrderStatusSelectColorable(select) {
 	select.each(function() {
 		makeOrderStatusSelectElementColorable(this);	});
 }
+
+function makeCurrencySelectColorable(select) {
+	select.each(function() {
+		makeCurrencyElementColorable(this);
+	});
+}
+
+function makeCurrencyElementColorable(el) {
+	if ($(el).val() == 'UAH') {
+		$(el).css({'color': 'orange', 'font-weight':'bold'});
+	}
+	
+	if ($(el).val() == 'USD') {
+		$(el).css({'color': 'green', 'font-weight':'bold'});
+	}
+	
+	if ($(el).val() == 'EUR') {
+		$(el).css({'color': 'blue', 'font-weight':'bold'});
+	}
+}

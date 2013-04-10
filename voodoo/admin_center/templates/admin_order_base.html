@@ -20,7 +20,8 @@
 				if ($(this).val() == 3) {
 					$(this).css({'color': 'red', 'font-weight':'bold'});
 				}
-			});			
+			});
+			
 			$("#id_order_status").change();
  		});
 
@@ -101,7 +102,7 @@
 								'<td><input id="row' + rowId + '_price_2" name="row' + rowId + '_price_2" type="text" style="width:55px; text-align:right;" value="0.0" onchange="refreshTotal()"/></td>' +
 								'<td>' +
 									'{% if currencyList %}' +
-										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency" onchange="refreshTotal()">' + 
+										'<select id="row' + rowId + '_currency" name="row' + rowId + '_currency" onchange="refreshTotal(); makeCurrencyElementColorable(this)">' + 
 											'{% for currency in currencyList %}' +
 												'<option value="{{ currency }}">{{ currency }}</option>' +
 											'{% endfor %}' +
@@ -152,8 +153,10 @@
 			});
 			
 			$("#row" + rowId + "_price_1").change();
-			
+			$("#row" + rowId + "_currency").change();
 			$("#row" + rowId + "_status").change();
+			
+			makeCurrencySelectColorable($("#row" + rowId + "_currency option"));
 			makeOrderItemStatusesColorable($("#row" + rowId + "_status option"));		}
 		
 		function refreshTotal() {

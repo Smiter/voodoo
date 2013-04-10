@@ -417,11 +417,12 @@ def items_management(request):
                 message = 'Ничего не найдено.'
     else:
         message = ''
-        form = ItemsManagementForm()
         
-        item_status_initial = form['item_status'].field.initial
         item_creation_date_1_initial = datetime.datetime.combine(datetime.datetime.now() - datetime.timedelta(days=7), datetime.time.min)
         item_creation_date_2_initial = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.max)
+        
+        form = ItemsManagementForm(initial={'added_after': item_creation_date_1_initial, 'added_before': item_creation_date_2_initial })
+        item_status_initial = form['item_status'].field.initial
         
         # default results
         results = OrderItem.objects.filter(Q(status_id=item_status_initial) & 
