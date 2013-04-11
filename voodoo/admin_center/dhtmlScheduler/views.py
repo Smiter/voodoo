@@ -3,8 +3,10 @@ from django.shortcuts import render_to_response
 
 from voodoo.admin_center.dhtmlScheduler.models import Event, Event2
 from django.views.generic.simple import direct_to_template
+from django.contrib.auth.decorators import login_required, permission_required
 
-
+@login_required(login_url='/admin_center/login/')
+@permission_required('dhtmlScheduler.add_event', login_url='/admin_center/permission_error/')
 def eventsXML(request, event_model):
     """
     For now, return the whole event DB.
@@ -15,7 +17,8 @@ def eventsXML(request, event_model):
                               {'eventList' : eventList, 'userList' : users},
                                 mimetype="application/xhtml+xml")
 
-
+@login_required(login_url='/admin_center/login/')
+@permission_required('dhtmlScheduler.add_event', login_url='/admin_center/permission_error/')
 def dataprocessor(request, event_model):
     """
     QueryDict data format:
@@ -110,6 +113,7 @@ def dataprocessor(request, event_model):
     return render_to_response('dataprocessor.xml', {"responseList": responseList},
                                     mimetype="application/xhtml+xml")
 
-
+@login_required(login_url='/admin_center/login/')
+@permission_required('dhtmlScheduler.add_event', login_url='/admin_center/permission_error/')
 def showCalendar(request, template_name):
     return direct_to_template(request, template_name)

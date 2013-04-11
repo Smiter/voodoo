@@ -1,9 +1,40 @@
 <div id="menu">
 	{% if menu_elements %}
 		<ul style="list-style-type: none;">
-		{% for element in menu_elements %}
-			<li><a href="/admin_center/{{element.link}}">{{element.title}}</a></li>
-		{% endfor %}
+			
+		{% if perms.admin_center.add_order %}
+			<li><a href="order_create">Создание заказа</a></li>
+		{% endif %}
+		{% if perms.admin_center.change_order %}
+			<li><a href="orders_management">Наши заказы</a></li>
+		{% endif %}
+		{% if perms.admin_center.change_orderitem %}
+			<li><a href="items_management">Запчасти</a></li>
+		{% endif %}
+		{% if perms.admin_center.add_order %}
+			<li><a href="shipment_create">Создание отправки</a></li>
+		{% endif %}
+		{% if perms.admin_center.change_order %}
+			<li><a href="shipment_management">Отправки</a></li>
+		{% endif %}
+		{% if perms.admin_center.change_order %}
+			<li><a href="orders_import">Импорт заказов</a></li>
+		{% endif %}
+		{% if perms.admin_center.add_product %}
+			<li><a href="xls_import">XLS импорт</a></li>
+		{% endif %}
+		{% if perms.dhtmlScheduler.add_event %}
+			<li><a href="service">Автосервис</a></li>
+		{% endif %}
+		{% if perms.admin_center.change_user %}
+			<li><a href="user_management">Пользователи</a></li>
+		{% endif %}
+		{% if perms.admin_center.add_order %}
+			<li><a href="suppliers_list">Поставщики</a></li>
+		{% endif %}
+		{% if perms.admin_center.change_discountgroup %}
+			<li><a href="discount_list">Группы скидок</a></li>
+		{% endif %}
 		<li><a href="{% url auth_logout %}?next=/admin_center/login">Выход</a></li>
 		</ul>
 	{% else %}
