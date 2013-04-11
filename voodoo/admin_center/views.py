@@ -22,14 +22,19 @@ import time
 #from django.db import models
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def permission_error(request):
+    return direct_to_template(request, 'permission_error.html', {})
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def admin_center(request):
     #TODO add checking for super user
     return direct_to_template(request, 'admin_center.html', {})
 
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.add_order', login_url='/admin_center/permission_error/')
 def order_create(request):
     message = u''
     if request.method == 'POST':
@@ -55,7 +60,8 @@ def order_create(request):
     return direct_to_template(request, 'order_create.html', {'form': form, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_order', login_url='/admin_center/permission_error/')
 def order_edit(request, id):
     message =''
     if request.method == 'POST':
@@ -98,7 +104,8 @@ def order_edit(request, id):
     return direct_to_template(request, 'order_edit.html', {'form': form, 'message': message, 'order': order, 'order_items': order_items})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.delete_order', login_url='/admin_center/permission_error/')
 def order_delete(request, id):
     if request.method == 'POST':
         order = Order.objects.get(id=id)
@@ -107,7 +114,8 @@ def order_delete(request, id):
     return HttpResponse('')
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_order', login_url='/admin_center/permission_error/')
 def orders_management(request):
     if request.method == 'POST':
         form = OrdersManagementForm(request.POST or None)
@@ -189,14 +197,16 @@ def orders_management(request):
     return direct_to_template(request, 'orders_management.html', {'form': form, 'results': results, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_order', login_url='/admin_center/permission_error/')
 def orders_import(request):
     results = OrderItem.objects.filter(order=None, cart__checked_out=True)
     return direct_to_template(request, 'orders_import.html', {'results': results})
 
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_order', login_url='/admin_center/permission_error/')
 def orders_import_submit(request):
     detail_checkboxes = request.POST.getlist("detail_checkboxes[]")
     results = OrderItem.objects.filter(order=None, cart__checked_out=True)
@@ -273,7 +283,8 @@ def readCodeFromRow(column_number, row):
     return result
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.add_product', login_url='/admin_center/permission_error/')
 def xls_import(request):
     message = ''
     if request.method == 'POST':
@@ -342,7 +353,8 @@ def xls_import(request):
 # TODO use permission system
 #@permission_required('polls.can_vote', login_url='/admin_center/login/')
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('auth.change_user', login_url='/admin_center/permission_error/')
 def user_management(request):
     message = ''
     
@@ -357,7 +369,8 @@ def user_management(request):
     return direct_to_template(request, 'user_management.html', {'form': form, 'message': message, 'results': results})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_orderitem', login_url='/admin_center/permission_error/')
 def items_management(request):
     if request.method == 'POST':
         form = ItemsManagementForm(request.POST or None)
@@ -438,7 +451,7 @@ def items_management(request):
     return direct_to_template(request, 'items_management.html', {'form': form, 'results': results, 'message': message})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def getMenuElements():
     menu_elements = Menu.getActiveElements(Menu())
     for element in menu_elements:
@@ -454,7 +467,7 @@ def beforeImport(supplier):
         product.save()
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def autocomplete_client_name(request):
     if request.method == 'GET':
         GET = request.GET
@@ -467,7 +480,7 @@ def autocomplete_client_name(request):
             return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def autocomplete_client_login(request):
     if request.method == 'GET':
         GET = request.GET
@@ -482,7 +495,7 @@ def autocomplete_client_login(request):
             return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def autocomplete_client_phone(request, client):
     if request.method == 'GET':
         GET = request.GET
@@ -495,7 +508,7 @@ def autocomplete_client_phone(request, client):
             return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def autocomplete_client_latest_phone(request):
     if request.method == 'GET':
         GET = request.GET
@@ -509,7 +522,7 @@ def autocomplete_client_latest_phone(request):
             
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def autocomplete_code(request):
     if request.method == 'GET':
         GET = request.GET
@@ -522,7 +535,7 @@ def autocomplete_code(request):
             return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def autocomplete_brand(request):
     if request.method == 'GET':
         GET = request.GET
@@ -535,7 +548,8 @@ def autocomplete_brand(request):
             return HttpResponse(json.dumps(results), mimetype="text/plain")
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_orderitem', login_url='/admin_center/permission_error/')
 def item_ajax_edit(request, id):
     if request.method == 'POST':
         item = OrderItem.objects.get(id = id)
@@ -557,7 +571,8 @@ def item_ajax_edit(request, id):
     return HttpResponse()
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.delete_orderitem', login_url='/admin_center/permission_error/')
 def item_delete(request, id):
     if request.method == 'POST':
         item = OrderItem.objects.get(id=id)
@@ -566,7 +581,7 @@ def item_delete(request, id):
     return HttpResponse('')
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def feeds_currency(request):
     response_data = dict()
     currencyList = Currency.objects.all()
@@ -577,7 +592,7 @@ def feeds_currency(request):
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def feeds_status(request):
     response_data = dict()
     statusList = ItemStatus.objects.all()
@@ -596,6 +611,8 @@ def make_decimal_from_string(string):
         print "Can not cast string '%s' to Decimal" % string
     return result
 
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.change_orderitem', login_url='/admin_center/permission_error/')
 def saveItemsForOrder(request, order):
     rowCount = int(request.POST['row_count'])
     for i in range(1, rowCount + 1):
@@ -658,14 +675,22 @@ def saveItemsForOrder(request, order):
 
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.add_order', login_url='/admin_center/permission_error/')
 def suppliers_list(request):
     results = Supplier.objects.all()
     return direct_to_template(request, 'suppliers_list.html', {'results': results})
 
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.add_discountgroup', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.change_discountgroup', login_url='/admin_center/permission_error/')
+def discount_list(request):
+    results = DiscountGroup.objects.all()
+    return direct_to_template(request, 'discount_list.html', {'results': results})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def delete_model(request, modelname, id):
     if request.method == 'POST':
         Model = get_model('admin_center', modelname)
@@ -679,7 +704,7 @@ def delete_model(request, modelname, id):
 
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 def edit_model(request, modelname, id):
     Model = get_model('admin_center', modelname)
     if not Model:
@@ -710,6 +735,7 @@ def edit_model(request, modelname, id):
 
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.change_order', login_url='/admin_center/login/')
 def order_print(request, id):
     message =''
     order = Order.objects.get(id=id)
@@ -718,7 +744,8 @@ def order_print(request, id):
     return direct_to_template(request, 'order_print.html', {'message': message, 'order': order, 'order_items': order_items})
 
 @login_required(login_url='/admin_center/login/')
-@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
+@permission_required('admin_center.add_order', login_url='/admin_center/permission_error/')
 def shipment_create(request):
     message = ''
     form = ShipmentForm()

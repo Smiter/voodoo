@@ -5,8 +5,10 @@
 {% endblock %}
 {% block content %}
 <h3>Поставщики</h3>
-<input type="button" value="Добавить поставщика"
- onclick="window.location = 'edit/supplier/add/?return_url={{ request.path }}';">
+{% if perms.admin_center.add_supplier %}
+	<input type="button" value="Добавить поставщика"
+ 		onclick="window.location = 'edit/supplier/add/?return_url={{ request.path }}';">
+{% endif %}
 {% if results %}
         <table border="1" bordercolor="#9B9B9B" style="background-color:#FFFFFF;" width="100%" cellpadding="3" cellspacing="3">
         <thead>
@@ -33,8 +35,12 @@
                 <td>{{ row.time_closing_order }}</td>
                 <td>
                     <div style="text-align: center" >
-                        <input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = 'edit/supplier/{{ row.id }}?return_url={{ request.path }}';">
-                        <input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteAjax({{ row.id }},'supplier'); return false;">
+                    	{% if perms.admin_center.change_supplier %}
+                        	<input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = 'edit/supplier/{{ row.id }}?return_url={{ request.path }}';">
+                        {% endif %}
+                        {% if perms.admin_center.delete_supplier %}
+                        	<input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteAjax({{ row.id }},'supplier'); return false;">
+                    	{% endif %}
                     </div>
                 </td>
             </tr>
