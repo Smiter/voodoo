@@ -3,39 +3,39 @@
 		<ul style="list-style-type: none;">
 			
 		{% if perms.admin_center.add_order %}
-			<li><a href="order_create">Создание заказа</a></li>
+			<li><a href="/admin_center/order_create"><img src="/static/images/menu/order_create.png" alt="Создание заказа"/></a><a href="/admin_center/order_create">Создание заказа</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_order %}
-			<li><a href="orders_management">Наши заказы</a></li>
+			<li><a href="/admin_center/orders_management"><img src="/static/images/menu/orders_management.png" alt="Наши заказы"/></a><a href="/admin_center/orders_management">Наши заказы</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_orderitem %}
-			<li><a href="items_management">Запчасти</a></li>
+			<li><a href="/admin_center/items_management"><img src="/static/images/menu/items_management.png" alt="Запчасти"/></a><a href="/admin_center/items_management">Запчасти</a></li>
 		{% endif %}
 		{% if perms.admin_center.add_order %}
-			<li><a href="shipment_create">Создание отправки</a></li>
+			<li><a href="/admin_center/shipment_create"><img src="/static/images/menu/order_create.png" alt="Создание отправки"/></a><a href="/admin_center/shipment_create">Создание отправки</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_order %}
-			<li><a href="shipment_management">Отправки</a></li>
+			<li><a href="/admin_center/shipment_management"><img src="/static/images/menu/order_create.png" alt="Отправки"/></a><a href="/admin_center/shipment_management">Отправки</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_order %}
-			<li><a href="orders_import">Импорт заказов</a></li>
+			<li><a href="/admin_center/orders_import"><img src="/static/images/menu/orders_import.png" alt="Импорт заказов"/></a><a href="/admin_center/orders_import">Импорт заказов</a></li>
 		{% endif %}
 		{% if perms.admin_center.add_product %}
-			<li><a href="xls_import">XLS импорт</a></li>
+			<li><a href="/admin_center/xls_import"><img src="/static/images/menu/xls_import.png" alt="XLS импорт"/></a><a href="/admin_center/xls_import">XLS импорт</a></li>
 		{% endif %}
 		{% if perms.dhtmlScheduler.add_event %}
-			<li><a href="service">Автосервис</a></li>
+			<li><a href="/admin_center/service"><img src="/static/images/menu/service.png" alt="Автосервис"/></a><a href="/admin_center/service">Автосервис</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_user %}
-			<li><a href="user_management">Пользователи</a></li>
+			<li><a href="/admin_center/user_management"><img src="/static/images/menu/user_management.png" alt="Пользователи"/></a><a href="/admin_center/user_management">Пользователи</a></li>
 		{% endif %}
 		{% if perms.admin_center.add_order %}
-			<li><a href="suppliers_list">Поставщики</a></li>
+			<li><a href="/admin_center/suppliers_list"><img src="/static/images/menu/order_create.png" alt="Поставщики"/></a><a href="/admin_center/suppliers_list">Поставщики</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_discountgroup %}
-			<li><a href="discount_list">Группы скидок</a></li>
+			<li><a href="/admin_center/discount_list"><img src="/static/images/menu/order_create.png" alt="Группы скидок"/></a><a href="/admin_center/discount_list">Группы скидок</a></li>
 		{% endif %}
-		<li><a href="{% url auth_logout %}?next=/admin_center/login">Выход</a></li>
+		<li><a href="{% url auth_logout %}?next=/admin_center/login"><img src="/static/images/menu/logout.png" alt="Выход"/><a href="{% url auth_logout %}?next=/admin_center/login">Выход</a></li>
 		</ul>
 	{% else %}
 		<p>noting to display</p>
