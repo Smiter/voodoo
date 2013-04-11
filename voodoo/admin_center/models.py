@@ -243,3 +243,4 @@ class Shipment(models.Model):
     transporter_name = CharField(verbose_name='Перевозчик', max_length=120, blank=True, null=True)
     transporter_department_number = CharField(verbose_name='Отделение', max_length=120, blank=True, null=True)
     transporter_count_of_places = CharField(verbose_name='Количество мест', max_length=120, blank=True, null=True)
+

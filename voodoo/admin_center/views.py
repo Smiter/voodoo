@@ -368,6 +368,83 @@ def user_management(request):
     
     return direct_to_template(request, 'user_management.html', {'form': form, 'message': message, 'results': results})
 
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def shipment_management(request):
+    results = {}
+    message = ''
+    results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'), declaration_number='').values()
+    second_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client')).exclude(declaration_number='').values()
+    from_supplier_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_supplier')).values()
+    from_client_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_client')).values()
+    returning_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='returning')).values()
+    # print second_results
+    if request.method == 'POST':
+        form = ShipmentFilterForm(request.POST)
+        if form.is_valid():
+            print form.cleaned_data['shipment_type']
+            print form.cleaned_data['shipment_filter_creation_date_1']
+            print form.cleaned_data['shipment_filter_creation_date_2']
+            print form.cleaned_data['shipment_filter_receiver']
+            print form.cleaned_data['shipment_filter_carrier']
+
+    else:
+        # print results
+        form = ShipmentFilterForm()
+    return direct_to_template(request, 'shipment_management.html', {'form': form, 'second_results': second_results, 'results': results, 'from_supplier_results': from_supplier_results, 'from_client_results': from_client_results, 'returning_results': returning_results, 'message': message})
+
+
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def shipment_ajax_add_declaration(request, id):
+    if request.method == 'POST':
+        item = Shipment.objects.get(id=id)
+        item.declaration_number = request.POST['declaration_number']
+        item.save()
+        return HttpResponse()
+
+
+@login_required(login_url='/admin_center/login/')
+@permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
+def shipment_item_ajax_edit(request, id):
+    if request.method == 'POST':
+        item = Shipment.objects.get(id=id)
+        if request.POST.get('shipment_login'):
+            item.user_login = request.POST['shipment_login']
+        if request.POST.get('shipment_transporter_name'):
+            item.transporter_name = request.POST['shipment_transporter_name']
+        if request.POST.get('shipment_transporter_department_number'):
+            item.transporter_department_number = request.POST['shipment_transporter_department_number']
+        if request.POST.get('shipment_transporter_count_of_places'):
+            item.transporter_count_of_places = request.POST['shipment_transporter_count_of_places']
+        if request.POST.get('shipment_user_fio'):
+            item.user_fio = request.POST['shipment_user_fio']
+        if request.POST.get('shipment_declaration_number'):
+            item.declaration_number = request.POST['shipment_declaration_number']
+        if request.POST.get('shipment_supplier'):
+            item.supplier = request.POST['shipment_supplier']
+        if request.POST.get('shipment_comment'):
+            item.comment = request.POST['shipment_comment']
+        if request.POST.get('shipment_arrival_date'):
+            item.arrival_date = datetime.datetime.strptime(request.POST["shipment_arrival_date"] + " 00:00:00", '%d.%m.%y %H:%M:%S')
+        if request.POST.get('shipment_recived'):
+            if request.POST['shipment_recived'] == 'true':
+                item.recived = True
+            else:
+                item.recived = False
+        if request.POST.get('shipment_price'):
+            item.price = request.POST['shipment_price']
+        if request.POST.get('shipment_user_notified'):
+            if request.POST['shipment_user_notified'] == 'true':
+                item.user_notified = True
+            else:
+                item.user_notified = False
+        item.save()
+        return HttpResponse()
+
+
 @login_required(login_url='/admin_center/login/')
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/permission_error/')
 @permission_required('admin_center.change_orderitem', login_url='/admin_center/permission_error/')
@@ -767,6 +844,7 @@ def shipment_create(request):
             
             shipment.save()
             print shipment
+            print shipment.type
             message = u'Отправка создана. ID: %s' % shipment.id
             
     return direct_to_template(request, 'shipment_create.html', {'form': form, 'message': message})

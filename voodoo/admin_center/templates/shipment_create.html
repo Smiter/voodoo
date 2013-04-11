@@ -27,9 +27,9 @@
 			if ($(this).val() == '1') {
 				$('#for_client').show();
 			} else if ($(this).val() == '2') {
-				$('#from_supplier').show();
-			} else if ($(this).val() == '3') {
 				$('#from_client').show();
+			} else if ($(this).val() == '3') {
+				$('#from_supplier').show();
 			} else if ($(this).val() == '4') {
 				$('#returning').show();
 			}
@@ -242,7 +242,7 @@
     <div style="text-align: center;"><input type="submit" value="Создать отправку" name="from_client"/></div>
 </form>
 
-<form id="returning">
+<form id="returning" method="post">
     <table>
     	<tr>
 			<th>

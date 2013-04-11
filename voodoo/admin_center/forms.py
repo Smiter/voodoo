@@ -128,3 +128,13 @@ class ShipmentForm(forms.ModelForm):
                                              attrs={'style': 'max-height:60px;min-height:60px;'
                                                     + 'max-width:550px;min-width:550px'}),
                    }
+
+
+class ShipmentFilterForm(forms.Form):
+    required_css_class = 'required'
+    shipment_type = forms.ModelChoiceField(label="Тип отправок", queryset=ShipmentType.objects.all(), initial="1", required=False)
+    shipment_filter_creation_date_1 = forms.DateField(label='Создан между', initial=date.today() - timedelta(days=7), required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    shipment_filter_creation_date_2 = forms.DateField(label='и', initial=datetime.datetime.now(), required=False, widget=forms.DateInput(format = '%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    shipment_filter_receiver = forms.CharField(label='Получатель', required=False)
+    shipment_filter_carrier = forms.CharField(label='Перевозчик', required=False)
+    
