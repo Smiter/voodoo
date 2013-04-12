@@ -117,10 +117,13 @@ class ItemsManagementForm(forms.Form):
     expired_items = forms.BooleanField(label='Выборка "просроченных" запчастей', required=False)
     expired_date = forms.DateField(label='по дату', required=False)
 
-class ShipmentForm(forms.ModelForm):
+class ShipmentForClientForm(forms.ModelForm):
     type = forms.ModelChoiceField(label='Тип отправки', queryset=ShipmentType.objects.all(), empty_label=None, required=False)
-    arrival_date = forms.DateField(label='Дата прибытия', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.now())
-    
+    class Meta:
+        model = Shipment
+        widgets = {}
+
+class ShipmentFromClientForm(forms.ModelForm):
     class Meta:
         model = Shipment
         widgets = {
@@ -129,7 +132,18 @@ class ShipmentForm(forms.ModelForm):
                                                     + 'max-width:550px;min-width:550px'}),
                    }
 
+class ShipmentFromSupplierForm(forms.ModelForm):
+    arrival_date = forms.DateField(label='Дата прибытия', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.now())
+    class Meta:
+        model = Shipment
+        widgets = {}
 
+class ShipmentReturningForm(forms.ModelForm):
+    arrival_returning_date = forms.DateField(label='Дата прибытия', required=False, widget=forms.DateInput(format='%d.%m.%Y'), input_formats=('%d.%m.%Y',), initial=datetime.datetime.now())
+    class Meta:
+        model = Shipment
+        widgets = {}
+                
 class ShipmentFilterForm(forms.Form):
     required_css_class = 'required'
     shipment_type = forms.ModelChoiceField(label="Тип отправок", queryset=ShipmentType.objects.all(), initial="1", required=False)

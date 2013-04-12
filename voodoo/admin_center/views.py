@@ -825,26 +825,45 @@ def order_print(request, id):
 @permission_required('admin_center.add_order', login_url='/admin_center/permission_error/')
 def shipment_create(request):
     message = ''
-    form = ShipmentForm()
+    formForClient = ShipmentForClientForm()
+    formFromClient = ShipmentFromClientForm()
+    formFromSupplier = ShipmentFromSupplierForm()
+    formReturning = ShipmentReturningForm()
     
     if request.method == 'POST':
-        form = ShipmentForm(request.POST or None)
+        #checking what form  is submited
+        if request.POST.get('for_client'):
+            formForClient = ShipmentForClientForm(request.POST or None)
+            shipment = formForClient.save(commit=False)
+            shipment.type = ShipmentType.objects.get(code = 'for_client')
+            
+        if request.POST.get('from_client'):
+            formFromClient = ShipmentFromClientForm(request.POST or None)
+            shipment = formFromClient.save(commit=False)
+            shipment.type = ShipmentType.objects.get(code = 'from_client')
         
-        if form.is_valid():
-            shipment = form.save(commit=False)
+        if request.POST.get('from_supplier'):
+            formFromSupplier = ShipmentFromSupplierForm(request.POST or None)
+            shipment = formFromSupplier.save(commit=False)
+            shipment.type = ShipmentType.objects.get(code = 'from_supplier')
             
-            if 'for_client' in request.POST:
-                shipment.type = ShipmentType.objects.get(code = 'for_client')
-            if 'from_client' in request.POST:
-                shipment.type = ShipmentType.objects.get(code = 'from_client')
-            if 'from_supplier' in request.POST:
-                shipment.type = ShipmentType.objects.get(code = 'from_supplier')
-            if 'returning' in request.POST:
-                shipment.type = ShipmentType.objects.get(code = 'returning')
+        if request.POST.get('returning'):
+            formReturning = ShipmentReturningForm(request.POST or None)
+            shipment = formReturning.save(commit=False)
+            shipment.type = ShipmentType.objects.get(code = 'returning')
+        
+        shipment.save()
+        message = u'Отправка создана. ID: %s' % shipment.id
+        
+        formForClient = ShipmentForClientForm()
+        formFromClient = ShipmentFromClientForm()
+        formFromSupplier = ShipmentFromSupplierForm()
+        formReturning = ShipmentReturningForm()
+        
             
-            shipment.save()
-            print shipment
-            print shipment.type
-            message = u'Отправка создана. ID: %s' % shipment.id
-            
-    return direct_to_template(request, 'shipment_create.html', {'form': form, 'message': message})
+    return direct_to_template(request, 'shipment_create.html', {'formForClient': formForClient, 
+                                                                'formFromClient': formFromClient, 
+                                                                'formFromSupplier': formFromSupplier,
+                                                                'formReturning': formReturning,
+                                                                'message': message
+                                                                })
