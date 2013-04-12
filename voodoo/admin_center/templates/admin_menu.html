@@ -1,5 +1,4 @@
 <div id="menu">
-	{% if menu_elements %}
 		<ul style="list-style-type: none;">
 			
 		{% if perms.admin_center.add_order %}
@@ -24,7 +23,7 @@
 			<li><a href="/admin_center/xls_import"><img src="/static/images/menu/xls_import.png" alt="XLS импорт"/></a><a href="/admin_center/xls_import">XLS импорт</a></li>
 		{% endif %}
 		{% if perms.dhtmlScheduler.add_event %}
-			<li><a href="/admin_center/service"><img src="/static/images/menu/service.png" alt="Автосервис"/></a><a href="/admin_center/service">Автосервис</a></li>
+			<li><a href="/admin_center/service/calendar1"><img src="/static/images/menu/service.png" alt="Автосервис"/></a><a href="/admin_center/service/calendar1">Автосервис</a></li>
 		{% endif %}
 		{% if perms.admin_center.change_user %}
 			<li><a href="/admin_center/user_management"><img src="/static/images/menu/user_management.png" alt="Пользователи"/></a><a href="/admin_center/user_management">Пользователи</a></li>
@@ -37,8 +36,4 @@
 		{% endif %}
 		<li><a href="{% url auth_logout %}?next=/admin_center/login"><img src="/static/images/menu/logout.png" alt="Выход"/><a href="{% url auth_logout %}?next=/admin_center/login">Выход</a></li>
 		</ul>
-	{% else %}
-		<p>noting to display</p>
-	{% endif %}
-	
 </div>
