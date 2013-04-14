@@ -14,7 +14,7 @@ from django.core.serializers import serialize
 from django.utils.simplejson import dumps, loads, JSONEncoder
 from django.db.models.query import QuerySet
 from django.contrib.auth.decorators import login_required
-from voodoo.admin_center.models import Product, OrderItem, OrderStatus, ItemStatus
+from voodoo.admin_center.models import Product, OrderItem, OrderStatus, ItemStatus, ShipmentType, Shipment
 
 
 class DjangoJSONEncoder(JSONEncoder):
@@ -74,14 +74,33 @@ def order_dispatch(request):
         profile = Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
         profile = None
-    initial = {"city_recipient": profile.city if profile else "", "name_recipient": request.user.username}
+    city = ""
+    user_fio = ""
+    transporter_name = ""
+    carrier = u'Ваш перевозчик'
+    if profile:
+        city = profile.city
+        user_fio = profile.fio
+        carrier = profile.carrier_default
+        your_carrier = profile.carrier_select
+
+
+    # carrier_select
+    initial = {'carrier': carrier, 'your_carrier': your_carrier, "city": city, "user_fio": user_fio}
     if request.method == 'POST':
         form = OrderDispatchForm(request.POST)
         if form.is_valid():
             success = True
-            order = form.save(commit=False)
-            order.user = request.user
-            order.save()
+            shipment = form.save(commit=False)
+            shipment.user_login = request.user.username
+            shipment.type = ShipmentType.objects.get(code='for_client')
+            print "carrier = ", form.cleaned_data['carrier']
+            if form.cleaned_data['carrier'] == u'Ваш перевозчик':
+                shipment.transporter_name = form.cleaned_data['your_carrier']
+            else:
+                shipment.transporter_name = form.cleaned_data['carrier']
+
+            shipment.save()
             return HttpResponseRedirect("/order_dispatch/")
     else:
         form = OrderDispatchForm(initial=initial)
@@ -103,7 +122,10 @@ def sendings(request):
                 max_date = datetime.strptime(request.POST["max_date"], '%d.%m.%Y').strftime('%Y-%m-%d')
                 result = Sendings.objects.filter(user=request.user, date__range=(min_date, max_date))
             except:
-                result = Sendings.objects.filter(user=request.user, date__range=(request.POST["min_date"], request.POST["max_date"]))
+                shipment_filter_creation_date_1 = datetime.strptime(request.POST["min_date"] + " 00:00:00", '%Y-%m-%d %H:%M:%S')
+                shipment_filter_creation_date_2 = datetime.strptime(request.POST["max_date"] + " 23:59:59", '%Y-%m-%d %H:%M:%S')
+                result = Shipment.objects.filter(user_login=request.user.username, type=ShipmentType.objects.get(code='for_client'),
+                 creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).exclude(declaration_number='')
 
             if not result:
                 error = u'Не найдено отправок удовлетворяющих фильтру поиска.'

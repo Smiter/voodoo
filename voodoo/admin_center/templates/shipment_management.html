@@ -10,7 +10,7 @@
     function editAjax(item_id, tableid) {
         console.log($('#' + tableid + ' #shipment_recived_' + item_id).prop('checked'))
         $.ajax({
-            url: "shipment_item_ajax_edit/"+ item_id +"/",
+            url: "/admin_center/shipment_item_ajax_edit/"+ item_id +"/",
             type: "POST",
             data:   {'shipment_login': $('#' + tableid + ' #shipment_login_' + item_id).val(), 
                     'shipment_transporter_name': $('#' + tableid + ' #shipment_transporter_name_' + item_id).val(),
@@ -24,6 +24,7 @@
                     'shipment_price': $('#' + tableid + ' #shipment_price_' + item_id).val(),
                     'shipment_user_notified': $('#' + tableid + ' #shipment_user_notified_' + item_id).prop('checked'),
                     'shipment_arrival_date': $('#' + tableid + ' #shipment_arrival_date_' + item_id).val(),
+                    'shipment_city': $('#' + tableid + ' #shipment_city_' + item_id).val(),
                 },
             success: function(){
                 $('#' + tableid +' #shipment_pencil_'+item_id).css('background-color', 'white')
@@ -36,7 +37,7 @@
     function moveToSecondTable(row_id, car_icon){
         if ($("#shipment_declaration_number_"+row_id).val() != '' ){
             $.ajax({
-                url: "shipment_ajax_add_declaration/"+ row_id +"/",
+                url: "/admin_center/shipment_ajax_add_declaration/"+ row_id +"/",
                 type: "POST",
                 data:   { 'declaration_number': $('#shipment_declaration_number_' + row_id).val() },
                 success: function(){
@@ -46,10 +47,12 @@
                             '<td style="text-align: center;">' + row_id + '</td>' +
                             '<td style="text-align: center;">' + $('#shipment_creation_date_' + row_id).text() +'</td>' +
                             '<td><input id="shipment_login_' + row_id + '" value="' + $('#shipment_login_' + row_id).val() + '" autocomplete="off" onkeyup="highlight_pencil({{row.id}})"></td>' +
-                            '<td><input id="shipment_transporter_name_' + row_id + '" value="' + $('#shipment_transporter_name_' + row_id).val() + '" autocomplete="off"></td>' +
+                            '<td><input id="shipment_city_' + row_id + '" value="' + $('#shipment_city_' + row_id).val() + '" autocomplete="off"></td>' +
+                            '<td><input id="shipment_transporter_name_' + row_id + '" value="' + $('#shipment_transporter_name_' + row_id).val() +'" autocomplete="off"></td>' +
                             '<td><input id="shipment_transporter_department_number_' + row_id + '" value="' + $('#shipment_transporter_department_number_' + row_id).val() +'" autocomplete="off"></td>' +
                             '<td><input id="shipment_transporter_count_of_places_' + row_id + '" value="' + $('#shipment_transporter_count_of_places_' + row_id).val() + '" autocomplete="off"></td>' +
                             '<td><input id="shipment_user_fio_' + row_id + '" value="' + $('#shipment_user_fio_' + row_id).val() + '" autocomplete="off"></td>' +
+                            '<td><textarea id="shipment_comment_' + row_id + '" autocomplete="off" rows="1" cols="20" onkeyup="highlight_pencil({{row.id}})">'+ $('#shipment_comment_' + row_id).val() +'</textarea></td>' +
                             '<td><input id="shipment_declaration_number_' + row_id + '" value="' + $('#shipment_declaration_number_' + row_id).val() + '" autocomplete="off"></td>' +
                             '<td>' +
                                 '<div style="text-align: center">' +
@@ -69,7 +72,7 @@
 {% endblock %}
 {% block content %}
 <h3>Управление отправками</h3>
-<form name="shipment_management_form" action="/admin_center/shipment_management" method="POST">
+<form name="shipment_management_form" action="/admin_center/shipment_management/" method="POST">
     <div>
         <table class="orders_management_filter_table">
             <tr>
@@ -132,14 +135,16 @@
         <thead>
             <tr class="table-header">
                 <th style="width: 50px;">#</th>
-                <th style="width: 110px;">Добавлено</th>
-                <th style="width: 150px;">Клиент</th>
+                <th style="width: 80px;">Добавлено</th>
+                <th style="width: 100px;">Клиент</th>
+                <th style="width: 100px;">Город</th>
                 <th style="width: 150px;">Перевозчик</th>
                 <th style="width: 100px;">Отделение</th>
                 <th style="width: 100px;">КМ</th>
                 <th style="width: 75px;">Получатель</th>
+                <th style="width: 75px;">Комментарий</th>
                 <th style="width: 75px;">Номер декларации</th>
-                <th style="width: 65px;">Действия</th>
+                <th style="width: 150px;">Действия</th>
             </tr>
         </thead>
         <tbody>
@@ -149,10 +154,12 @@
                 <td style="text-align: center;">{{ row.id }}</td>
                 <td id="shipment_creation_date_{{row.id}}" style="text-align: center;">{{ row.creation_date|date:"d.m.y" }}</td>
                 <td><input id="shipment_login_{{row.id}}" value="{{ row.user_login }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
+                <td><input id="shipment_city_{{row.id}}" value="{{ row.city }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
                 <td><input id="shipment_transporter_name_{{row.id}}" value="{{ row.transporter_name }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
                 <td><input id="shipment_transporter_department_number_{{row.id}}" value="{{ row.transporter_department_number }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
                 <td><input id="shipment_transporter_count_of_places_{{row.id}}" value="{{ row.transporter_count_of_places }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
                 <td><input id="shipment_user_fio_{{row.id}}" value="{{ row.user_fio }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
+                <td><textarea id="shipment_comment_{{row.id}}" autocomplete="off" rows="1" cols="20" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')">{{ row.comment }}</textarea></td>
                 <td><input id="shipment_declaration_number_{{row.id}}" value="{{ row.declaration_number }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
                 <td>
                     <div style="text-align: center">
@@ -178,10 +185,12 @@
                 <th style="width: 50px;">#</th>
                 <th style="width: 110px;">Добавлено</th>
                 <th style="width: 150px;">Клиент</th>
+                <th style="width: 150px;">Город</th>
                 <th style="width: 150px;">Перевозчик</th>
                 <th style="width: 100px;">Отделение</th>
                 <th style="width: 100px;">КМ</th>
                 <th style="width: 75px;">Получатель</th>
+                <th style="width: 75px;">Комментарий</th>
                 <th style="width: 75px;">Номер декларации</th>
                 <th style="width: 65px;">Действия</th>
             </tr>
@@ -192,10 +201,12 @@
                     <td style="text-align: center;">{{ row.id }}</td>
                     <td id="table2_shipment_creation_date_{{row.id}}" style="text-align: center;">{{ row.creation_date|date:"d.m.y" }}</td>
                     <td><input id="shipment_login_{{row.id}}" value="{{ row.user_login }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')"></td>
+                    <td><input id="shipment_city_{{row.id}}" value="{{ row.city }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_1')"></td>
                     <td><input id="shipment_transporter_name_{{row.id}}" value="{{ row.transporter_name }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')"></td>
                     <td><input id="shipment_transporter_department_number_{{row.id}}" value="{{ row.transporter_department_number }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')"></td>
                     <td><input id="shipment_transporter_count_of_places_{{row.id}}" value="{{ row.transporter_count_of_places }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')"></td>
                     <td><input id="shipment_user_fio_{{row.id}}" value="{{ row.user_fio }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')"></td>
+                    <td><textarea id="shipment_comment_{{row.id}}" autocomplete="off" rows="1" cols="20" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')">{{ row.comment }}</textarea></td>
                     <td><input id="shipment_declaration_number_{{row.id}}" value="{{ row.declaration_number }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_for_client_2')"></td>
                     <td>
                         <div style="text-align: center">
@@ -233,7 +244,7 @@
                     <td id="table2_shipment_creation_date_{{row.id}}" style="text-align: center;">{{ row.creation_date|date:"d.m.y" }}</td>
                     <td><input id="shipment_login_{{row.id}}" value="{{ row.user_login }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_from_client')"></td>
                     <td><input id="shipment_supplier_{{row.id}}" value="{{ row.supplier }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_from_client')"></td>
-                    <td><input id="shipment_comment_{{row.id}}" value="{{ row.comment }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_from_client')"></td>
+                    <td><textarea id="shipment_comment_{{row.id}}" rows="1" cols="50" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_from_client')">{{ row.comment }}</textarea></td>
                     <td><input type="checkbox" id="shipment_recived_{{row.id}}" {%if row.recived %} checked {%endif%} autocomplete="off" onmouseup="highlight_pencil({{row.id}}, 'table_from_client')"></td>
                     <td><input id="shipment_declaration_number_{{row.id}}" value="{{ row.declaration_number }}" autocomplete="off" onkeyup="highlight_pencil({{row.id}}, 'table_from_client')"></td>
                     <td>

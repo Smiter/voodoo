@@ -24,7 +24,8 @@
 			<th>Дата</th>
 			<th>Получатель</th>
 			<th>Город</th>
-			<th>Склад</th>
+			<th>Перевозчик</th>
+			<th>Отделение</th>
 			<th>Номер декларации</th>
 		</tr>
 	</thead>
@@ -32,10 +33,11 @@
 		{% for row in result %}
 		
 			<tr>
-			  <td>{{ row.date }}</td>
-			  <td>{{ row.receiver }}</td>
+			  <td>{{ row.creation_date }}</td>
+			  <td>{{ row.user_fio }}</td>
 			  <td>{{ row.city }}</td>
-			  <td>{{ row.warehouse }}</td>
+			  <td>{{ row.transporter_name }}</td>
+			  <td>{{ row.transporter_department_number }}</td>
 			  <td>{{ row.declaration_number }}</td>
 			</tr>
 		{% endfor %}

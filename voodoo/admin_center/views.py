@@ -373,23 +373,81 @@ def user_management(request):
 @permission_required('admin_center.view_admin_center', login_url='/admin_center/login/')
 def shipment_management(request):
     results = {}
+    second_results = {}
+    from_supplier_results = {}
+    from_client_results = {}
+    returning_results = {}
     message = ''
-    results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'), declaration_number='').values()
-    second_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client')).exclude(declaration_number='').values()
-    from_supplier_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_supplier')).values()
-    from_client_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_client')).values()
-    returning_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='returning')).values()
     # print second_results
     if request.method == 'POST':
         form = ShipmentFilterForm(request.POST)
         if form.is_valid():
-            print form.cleaned_data['shipment_type']
-            print form.cleaned_data['shipment_filter_creation_date_1']
-            print form.cleaned_data['shipment_filter_creation_date_2']
-            print form.cleaned_data['shipment_filter_receiver']
-            print form.cleaned_data['shipment_filter_carrier']
 
+            shipment_type = form.cleaned_data['shipment_type']
+            shipment_filter_creation_date_1 = datetime.datetime.strptime(request.POST["shipment_filter_creation_date_1"] + " 00:00:00", '%d.%m.%Y %H:%M:%S')
+            shipment_filter_creation_date_2 = datetime.datetime.strptime(request.POST["shipment_filter_creation_date_2"] + " 23:59:59", '%d.%m.%Y %H:%M:%S')
+            shipment_filter_receiver = form.cleaned_data['shipment_filter_receiver']
+            shipment_filter_carrier = form.cleaned_data['shipment_filter_carrier']
+            if not shipment_type:
+                results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'), declaration_number='',
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+                second_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).exclude(declaration_number='').values()
+                from_client_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_client'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+                from_supplier_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_supplier'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+                returning_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='returning'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+            else: 
+                if shipment_type.name == u"Для клиента":
+                    results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'), declaration_number='',
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+                    second_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).exclude(declaration_number='').values()
+                if shipment_type.name == u"От Клиента":
+                    from_client_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_client'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+                if shipment_type.name == u"От Поставщика":
+                    from_supplier_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_supplier'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+                if shipment_type.name == u"Оборотка":
+                    returning_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='returning'),
+                     creation_date__range=(shipment_filter_creation_date_1, shipment_filter_creation_date_2)).values()
+
+
+            if shipment_filter_receiver != '':
+                if results:
+                    results = results.filter(user_fio__icontains=shipment_filter_receiver)
+                if second_results:
+                    second_results = second_results.filter(user_fio__icontains=shipment_filter_receiver)
+                if from_client_results:
+                    from_client_results = from_client_results.filter(user_fio__icontains=shipment_filter_receiver)
+                if from_supplier_results:
+                    from_supplier_results = from_supplier_results.filter(user_fio__icontains=shipment_filter_receiver)
+                if returning_results:
+                    returning_results = returning_results.filter(user_fio__icontains=shipment_filter_receiver)
+
+
+            if shipment_filter_carrier != '':
+                if results:
+                    results = results.filter(transporter_name__icontains=shipment_filter_carrier)
+                if second_results:
+                    second_results = second_results.filter(transporter_name__icontains=shipment_filter_carrier)
+                if from_client_results:
+                    from_client_results = from_client_results.filter(transporter_name__icontains=shipment_filter_carrier)
+                if from_supplier_results:
+                    from_supplier_results = from_supplier_results.filter(transporter_name__icontains=shipment_filter_carrier)
+                if returning_results:
+                    returning_results = returning_results.filter(transporter_name__icontains=shipment_filter_carrier)
+                
     else:
+        results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client'), declaration_number='').values()
+        second_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='for_client')).exclude(declaration_number='').values()
+        from_supplier_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_supplier')).values()
+        from_client_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='from_client')).values()
+        returning_results = Shipment.objects.filter(type=ShipmentType.objects.get(code='returning')).values()
+        
         # print results
         form = ShipmentFilterForm()
     return direct_to_template(request, 'shipment_management.html', {'form': form, 'second_results': second_results, 'results': results, 'from_supplier_results': from_supplier_results, 'from_client_results': from_client_results, 'returning_results': returning_results, 'message': message})
@@ -413,6 +471,8 @@ def shipment_item_ajax_edit(request, id):
         item = Shipment.objects.get(id=id)
         if request.POST.get('shipment_login'):
             item.user_login = request.POST['shipment_login']
+        if request.POST.get('shipment_city'):
+            item.city = request.POST['shipment_city']
         if request.POST.get('shipment_transporter_name'):
             item.transporter_name = request.POST['shipment_transporter_name']
         if request.POST.get('shipment_transporter_department_number'):

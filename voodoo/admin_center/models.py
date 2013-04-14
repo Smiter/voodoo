@@ -228,19 +228,21 @@ class ShipmentType(models.Model):
 
 class Shipment(models.Model):
     type = models.ForeignKey(ShipmentType, blank=True, null=True)
-    declaration_number = CharField(verbose_name='Номер декларации', max_length=120, blank=True, null=True)
+    declaration_number = CharField(verbose_name='Номер декларации', max_length=120, blank=True, null=True, default='')
     creation_date = DateTimeField(verbose_name='Дата создания', max_length=120, auto_now_add=True)
-    comment = CharField(verbose_name='Комментарий', max_length=120, blank=True, null=True)
+    comment = CharField(verbose_name='Комментарий', max_length=120, blank=True, null=True, default='')
     price = CharField(verbose_name='Сумма', max_length=120, blank=True, null=True)
     supplier = CharField(verbose_name='Поставщик', max_length=120, blank=True, null=True)
     arrival_date = DateTimeField(verbose_name='Дата прибытия', max_length=120, blank=True, null=True)
     recived = BooleanField(verbose_name='Товар получен')
+    city = CharField(verbose_name='Город', max_length=120, blank=True, null=True)
+
     
     user_login = CharField(verbose_name='Логин Клиента', max_length=120, blank=True, null=True)
-    user_fio = CharField(verbose_name='Фамилия имя отчество', max_length=120, blank=True, null=True)
+    user_fio = CharField(verbose_name='Получатель', max_length=120, blank=True, null=True)
     user_notified = BooleanField(verbose_name='Клиент уведомлен')
     
     transporter_name = CharField(verbose_name='Перевозчик', max_length=120, blank=True, null=True)
     transporter_department_number = CharField(verbose_name='Отделение', max_length=120, blank=True, null=True)
-    transporter_count_of_places = CharField(verbose_name='Количество мест', max_length=120, blank=True, null=True)
+    transporter_count_of_places = CharField(verbose_name='Количество мест', max_length=120, blank=True, null=True, default='')
 

@@ -7,7 +7,7 @@ import re
 from captcha.fields import CaptchaField
 from models import *
 from bootstrap_toolkit.widgets import BootstrapDateInput
-from voodoo.admin_center.models import Order
+from voodoo.admin_center.models import Order, Shipment
 
 
 def check_pass_on_numbers(text):
@@ -156,11 +156,15 @@ class PrepaysForm(ModelForm):
 
 class OrderDispatchForm(ModelForm):
     required_css_class = 'required'
+    carrier = ChoiceField(
+        label="Перевозчик",
+        widget=Select(),
+        choices=CARRIER_CHOICES)
     your_carrier = CharField(label="Ваш перевозчик", required=False)
 
     class Meta:
-        model = OrderDispatch
-        fields = ('carrier', 'your_carrier', 'department', 'city_recipient', 'name_recipient', 'comment')
+        model = Shipment
+        fields = ('carrier', 'your_carrier', 'transporter_department_number', 'city', 'user_fio', 'comment')
         widgets = {
             'comment': Textarea(
             attrs={'style': 'max-height:60px;min-height:60px;'
@@ -175,6 +179,13 @@ class OrderDispatchForm(ModelForm):
             if your_carrier == "":
                 raise forms.ValidationError('Укажите вашего перевозчика')
         return your_carrier
+
+    def __init__(self, *args, **kwargs):
+        super(OrderDispatchForm, self).__init__(*args, **kwargs)
+        self.fields['transporter_department_number'].required = True
+        self.fields['city'].required = True
+        self.fields['user_fio'].required = True
+
 
 
 import datetime
