@@ -58,7 +58,7 @@ class XlsImportForm(forms.Form):
     #TODO добавить подсказку
     file = forms.FileField(label='Файл для импорта')
     column_number = forms.IntegerField(label='Столбец "Код"', min_value = 1)
-    column_brand = forms.IntegerField(label='Столбец "Бдэнд"', min_value = 1)
+    column_brand = forms.IntegerField(label='Столбец "Брэнд"', min_value = 1)
     column_description = forms.IntegerField(label='Столбец "Описание"', min_value = 1, required=False)
     column_count = forms.IntegerField(label='Столбец "Количество"', min_value = 1)
     column_price = forms.IntegerField(label='Столбец "Цена"', min_value = 1)
