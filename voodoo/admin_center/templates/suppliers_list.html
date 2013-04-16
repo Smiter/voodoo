@@ -36,7 +36,7 @@
                 <td>
                     <div style="text-align: center" >
                     	{% if perms.admin_center.change_supplier %}
-                        	<input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = 'edit/supplier/{{ row.id }}?return_url={{ request.path }}';">
+                        	<input class="highlightable_pointer" type="image" src="/static/images/pencil.gif" width="15" height="15" onclick="document.location = '/admin_center/user_management/edit/supplier/{{ row.id }}?return_url={{ request.path }}';">
                         {% endif %}
                         {% if perms.admin_center.delete_supplier %}
                         	<input class="highlightable_pointer" type="image" src="/static/images/delete.png" width="15" height="15" onclick="deleteAjax({{ row.id }},'supplier'); return false;">

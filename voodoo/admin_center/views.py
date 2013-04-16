@@ -54,7 +54,7 @@ def order_create(request):
             message = u'Заказ создан. ID: %s' % order.id
             
             # TODO forward with message if it possible
-            return HttpResponseRedirect("order_edit/%s/" % order.id)
+            return HttpResponseRedirect("/admin_center/order_edit/%s/" % order.id)
     else:
         form = OrderForm()
     return direct_to_template(request, 'order_create.html', {'form': form, 'message': message})

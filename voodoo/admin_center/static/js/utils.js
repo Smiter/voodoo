@@ -35,7 +35,7 @@ function deleteOrderAjax(item_id) {
 }
 
 function printOrder(orderId) {
-	var printWindow = window.open('/admin_center/order_print/' + orderId);
+	var printWindow = window.open('/admin_center/order_print/' + orderId + '/');
 	
 	// printWindow.window.print();
 	return false;
