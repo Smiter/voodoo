@@ -14,7 +14,7 @@ def verbose_name_plural(value):
 @register.filter
 def price_with_discount(value, discount):
     base_price = float(value)
-    additional_price = base_price * (0.5 - float(discount) / 100)
+    additional_price = base_price * (float(discount) / 100)
     
     result = base_price + additional_price
     
